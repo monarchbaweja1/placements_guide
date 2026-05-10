@@ -5040,119 +5040,118 @@ function showScreen(id) {
     const el = document.getElementById(s);
     if (el) el.classList.toggle('hidden', s !== id);
   });
-  // Hide prog selector if showing auth screen
-  const prog = document.getElementById('progSelector');
-  if (prog) prog.style.display = 'none';
 }
 
 function enterHub() {
-  // Hide ALL auth layers completely
-  document.getElementById('screen-email').classList.add('hidden');
-  document.getElementById('screen-otp').classList.add('hidden');
-  const ls = document.getElementById('loginScreen');
-  if (ls) ls.style.display = 'none';
   document.querySelectorAll('.auth-screen').forEach(s => s.classList.add('hidden'));
   document.getElementById('progSelector').style.display = 'flex';
-  document.getElementById('backBtn').style.display = 'none';
 }
 
 // ── On load: check existing session
 sbIndex.auth.getSession().then(({ data: { session } }) => {
   if (session?.user) {
-    // Already logged in — show email screen with "Enter Hub" button
-    document.getElementById('alreadySignedIn').style.display = 'block';
-    document.getElementById('emailFormWrap').style.display = 'none';
-    document.getElementById('asiEmail').textContent = session.user.email;
-    showScreen('screen-email');
+    enterHub();
   } else {
     showScreen('screen-email');
   }
 });
 
 sbIndex.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_OUT') {
-    document.getElementById('alreadySignedIn').style.display = 'none';
-    document.getElementById('emailFormWrap').style.display = 'block';
+  if (event === 'SIGNED_IN' && session?.user) {
+    enterHub();
+  } else if (event === 'SIGNED_OUT') {
     showScreen('screen-email');
   }
 });
 
+// ── Status helper
+function showAuthStatus(msg, type) {
+  const ids = ['authEmailStatus','authOtpStatus'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = 'auth-status ' + type + ' show'; el.textContent = msg; }
+  });
+}
+
 // ── Step 1: Send OTP
 window.sendOTP = async function() {
-  const email = document.getElementById('authEmail').value.trim();
+  const email = (document.getElementById('authEmail')?.value || '').trim();
   if (!email || !email.includes('@')) {
-    showToastIdx('Enter a valid email address', 'err'); return;
+    showAuthStatus('Enter a valid email address.', 'err'); return;
   }
-  const btn = document.getElementById('sendOtpBtn');
-  btn.disabled = true; btn.textContent = 'Sending...';
+  const btn = document.getElementById('authSendBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
 
   const { error } = await sbIndex.auth.signInWithOtp({
     email,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: undefined  // Forces OTP code, not magic link
-    }
+    options: { shouldCreateUser: true }
   });
 
   if (error) {
-    showToastIdx('Error: ' + error.message, 'err');
-    btn.disabled = false; btn.textContent = 'Continue with Email →'; return;
+    showAuthStatus('Error: ' + error.message, 'err');
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Continue with Email <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'; }
+    return;
   }
 
   _authEmail = email;
-  document.getElementById('otpEmailShow').textContent = email;
+  const badge = document.getElementById('otpEmailBadge');
+  if (badge) badge.textContent = '✉️ ' + email;
   showScreen('screen-otp');
-  document.getElementById('otp0').focus();
-  btn.disabled = false; btn.textContent = 'Continue with Email →';
+  startOtpTimer();
+  document.getElementById('otp0')?.focus();
+  if (btn) { btn.disabled = false; btn.innerHTML = 'Continue with Email <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'; }
 };
 
 // ── Step 2: Verify OTP
 window.verifyOTP = async function() {
   const token = ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7']
-    .map(id => document.getElementById(id).value).join('');
-  if (token.length !== 8) { showToastIdx('Enter all 8 digits', 'err'); return; }
+    .map(id => document.getElementById(id)?.value || '').join('');
+  if (token.length !== 8) { showAuthStatus('Enter all 8 digits.', 'err'); return; }
 
-  const btn = document.getElementById('verifyOtpBtn');
-  btn.disabled = true; btn.textContent = 'Verifying...';
+  const btn = document.getElementById('authVerifyBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Verifying…'; }
 
   const { data, error } = await sbIndex.auth.verifyOtp({
     email: _authEmail, token, type: 'email'
   });
 
   if (error) {
-    showToastIdx('Wrong code. Try again.', 'err');
-    btn.disabled = false; btn.textContent = 'Verify & Continue →';
+    showAuthStatus('Incorrect code. Try again.', 'err');
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Verify &amp; Enter Hub <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'; }
     ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
-      document.getElementById(id).value = '';
-      document.getElementById(id).classList.remove('filled');
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('filled'); }
     });
-    document.getElementById('otp0').focus();
+    document.getElementById('otp0')?.focus();
     return;
   }
 
   if (data?.user) {
-    showToastIdx('✅ Signed in!', 'ok');
-    setTimeout(() => enterHub(), 400);
+    showAuthStatus('✅ Verified! Opening hub…', 'ok');
+    setTimeout(() => enterHub(), 500);
   }
 };
 
 // ── Resend
 window.resendOTP = async function() {
+  if (!_authEmail) return;
   await sbIndex.auth.signInWithOtp({ email: _authEmail, options: { shouldCreateUser: true } });
-  showToastIdx('New code sent!', 'ok');
+  showAuthStatus('New code sent!', 'ok');
   ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
-    document.getElementById(id).value = '';
-    document.getElementById(id).classList.remove('filled');
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.classList.remove('filled'); }
   });
-  document.getElementById('otp0').focus();
+  document.getElementById('otp0')?.focus();
+  startOtpTimer();
 };
 
 // ── Back to email
 window.backToEmail = function() {
+  clearOtpTimer();
   showScreen('screen-email');
   ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
-    document.getElementById(id).value = '';
-    document.getElementById(id).classList.remove('filled');
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.classList.remove('filled'); }
   });
 };
 
