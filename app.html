@@ -3,31 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GIM BDA Placement Hub — Batch 2025-27</title>
+<title>GIM BDA Placement Hub — Login & Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg: #06090f;
-  --bg2: #0c1220;
-  --bg3: #111d35;
-  --card: #0f1c33;
-  --border: #1a2f50;
-  --border2: #243d6a;
-  --accent: #3b82f6;
-  --accent-glow: rgba(59,130,246,0.15);
-  --cyan: #06b6d4;
-  --green: #22c55e;
-  --orange: #f59e0b;
-  --red: #ef4444;
-  --purple: #a78bfa;
-  --text: #e2e8f0;
-  --text2: #94a3b8;
-  --text3: #475569;
-  --font-head: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --radius: 12px;
+  --bg:#06090f; --bg2:#0c1220; --bg3:#111d35; --card:#0f1c33;
+  --border:#1a2f50; --border2:#243d6a;
+  --accent:#3b82f6; --cyan:#06b6d4; --green:#22c55e;
+  --orange:#f59e0b; --red:#ef4444; --purple:#a78bfa;
+  --text:#e2e8f0; --text2:#94a3b8; --text3:#475569;
+  --font-head:'Syne',sans-serif; --font-body:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace; --r:12px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -36,906 +24,444 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 
-/* ── LOADING SCREEN ── */
-#loadingScreen{
-  position:fixed;inset:0;background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  z-index:9999;transition:opacity 0.4s;
-}
-.loader-logo{font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--accent);letter-spacing:2px;margin-bottom:24px}
-.loader-bar{width:200px;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
-.loader-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));border-radius:2px;animation:load 1.5s ease forwards}
-@keyframes load{from{width:0}to{width:100%}}
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+.ld-logo{font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--accent);letter-spacing:3px;margin-bottom:20px}
+.ld-bar{width:180px;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));animation:ldfill 1.2s ease forwards}
+@keyframes ldfill{from{width:0}to{width:100%}}
 
 /* ── SCREENS ── */
 .screen{display:none;min-height:100vh}
-.screen.active{display:block}
+.screen.on{display:flex}
 
-/* ════════════════════════════════════
-   LOGIN SCREEN
-════════════════════════════════════ */
-#loginScreen{
-  display:none;
-  min-height:100vh;
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(59,130,246,0.12), transparent),
-              radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6,182,212,0.06), transparent),
-              var(--bg);
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-}
-#loginScreen.active{display:flex}
-.login-card{
-  background:var(--card);
-  border:1px solid var(--border2);
-  border-radius:20px;
-  padding:48px;
-  max-width:440px;
-  width:90%;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-.login-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--accent),var(--cyan),var(--purple));
-}
-.login-badge{
-  display:inline-block;
-  background:rgba(59,130,246,0.1);
-  border:1px solid rgba(59,130,246,0.2);
-  border-radius:20px;
-  padding:5px 16px;
-  font-family:var(--font-mono);
-  font-size:11px;
-  color:var(--accent);
-  letter-spacing:1px;
-  margin-bottom:20px;
-}
-.login-title{
-  font-family:var(--font-head);
-  font-size:30px;
-  font-weight:800;
-  line-height:1.2;
-  margin-bottom:10px;
-}
-.login-title span{color:var(--accent)}
-.login-sub{color:var(--text2);font-size:14px;margin-bottom:32px;line-height:1.6}
-.google-btn{
-  display:flex;align-items:center;justify-content:center;gap:12px;
-  width:100%;padding:14px 24px;
-  background:#fff;color:#1f2937;
-  border:none;border-radius:12px;
-  font-family:var(--font-body);font-size:15px;font-weight:600;
-  cursor:pointer;transition:all 0.2s;
-  box-shadow:0 2px 8px rgba(0,0,0,0.3);
-}
-.google-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
-.google-btn svg{width:20px;height:20px;flex-shrink:0}
-.login-disclaimer{font-size:12px;color:var(--text3);margin-top:20px;font-family:var(--font-mono)}
-.login-stats{
-  display:flex;justify-content:center;gap:24px;
-  margin-top:32px;padding-top:24px;
-  border-top:1px solid var(--border);
-}
-.ls-item{text-align:center}
-.ls-num{font-family:var(--font-head);font-size:24px;font-weight:800;color:var(--accent)}
-.ls-label{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
+/* ══ LOGIN ══ */
+#s-login{align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 50% at 50% -5%,rgba(59,130,246,.1),transparent),var(--bg)}
+.login-wrap{width:90%;max-width:420px}
+.login-card{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:44px;position:relative;overflow:hidden;text-align:center}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan),var(--purple))}
+.lc-badge{display:inline-block;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:20px;padding:4px 14px;font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:1px;margin-bottom:18px}
+.lc-title{font-family:var(--font-head);font-size:28px;font-weight:800;line-height:1.2;margin-bottom:8px}
+.lc-title span{color:var(--accent)}
+.lc-sub{color:var(--text2);font-size:13.5px;margin-bottom:28px}
+.lc-input{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:10px}
+.lc-input:focus{border-color:var(--accent)}
+.lc-input::placeholder{color:var(--text3)}
+.lc-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--cyan));border:none;border-radius:var(--r);color:#fff;font-family:var(--font-head);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.lc-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.3)}
+.lc-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.lc-note{font-size:12px;color:var(--text3);font-family:var(--font-mono);margin-top:16px;line-height:1.6}
+.lc-stats{display:flex;justify-content:center;gap:24px;margin-top:28px;padding-top:22px;border-top:1px solid var(--border)}
+.lcs-n{font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--accent)}
+.lcs-l{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
+.magic-sent{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:16px;color:var(--green);font-size:13px;text-align:center;display:none;margin-top:12px}
 
-/* ════════════════════════════════════
-   ONBOARDING SCREEN
-════════════════════════════════════ */
-#onboardScreen{
-  display:none;min-height:100vh;
-  align-items:center;justify-content:center;
-  background:var(--bg);padding:40px 20px;
-}
-#onboardScreen.active{display:flex}
-.onboard-card{
-  background:var(--card);border:1px solid var(--border2);
-  border-radius:20px;padding:40px;
-  max-width:600px;width:100%;
-  position:relative;overflow:hidden;
-}
-.onboard-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--green),var(--accent));
-}
-.onboard-step{
-  font-family:var(--font-mono);font-size:11px;
-  color:var(--green);letter-spacing:2px;margin-bottom:8px;
-}
-.onboard-title{
-  font-family:var(--font-head);font-size:26px;font-weight:800;
-  margin-bottom:6px;
-}
-.onboard-sub{color:var(--text2);font-size:14px;margin-bottom:28px}
+/* ══ ONBOARD ══ */
+#s-onboard{align-items:center;justify-content:center;padding:40px 20px;background:var(--bg)}
+.ob-card{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:36px;max-width:580px;width:100%;position:relative;overflow:hidden}
+.ob-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--accent))}
+.ob-step{font-family:var(--font-mono);font-size:11px;color:var(--green);letter-spacing:2px;margin-bottom:6px}
+.ob-title{font-family:var(--font-head);font-size:24px;font-weight:800;margin-bottom:4px}
+.ob-sub{color:var(--text2);font-size:13px;margin-bottom:24px}
 
-.form-group{margin-bottom:18px}
-.form-label{font-size:12px;font-weight:600;color:var(--text2);font-family:var(--font-mono);letter-spacing:0.5px;margin-bottom:8px;display:block}
-.form-input{
-  width:100%;padding:11px 14px;
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--radius);color:var(--text);
-  font-family:var(--font-body);font-size:14px;
-  transition:border-color 0.2s;outline:none;
-}
-.form-input:focus{border-color:var(--accent)}
-.form-input::placeholder{color:var(--text3)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* Forms */
+.fg{margin-bottom:16px}
+.fl{font-size:11px;font-weight:600;color:var(--text2);font-family:var(--font-mono);letter-spacing:.5px;margin-bottom:7px;display:block}
+.fi{width:100%;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:var(--font-body);font-size:14px;transition:border-color .2s;outline:none}
+.fi:focus{border-color:var(--accent)}
+.fi::placeholder{color:var(--text3)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);font-size:12px;cursor:pointer;transition:all .15s;color:var(--text2);font-family:var(--font-mono)}
+.chip.sel{background:rgba(59,130,246,.12);border-color:var(--accent);color:var(--accent)}
+.chip.gsel{background:rgba(34,197,94,.1);border-color:var(--green);color:var(--green)}
+.co-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;max-height:190px;overflow-y:auto;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r)}
+.sbtn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--cyan));border:none;border-radius:var(--r);color:#fff;font-family:var(--font-head);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:6px}
+.sbtn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,.3)}
+.sbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-.company-select-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:8px;max-height:200px;overflow-y:auto;
-  padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);
-}
-.company-chip{
-  padding:6px 10px;border-radius:8px;
-  border:1px solid var(--border);background:var(--bg2);
-  font-size:12px;cursor:pointer;transition:all 0.15s;
-  color:var(--text2);text-align:center;
-  font-family:var(--font-mono);
-}
-.company-chip.selected{background:rgba(59,130,246,0.15);border-color:var(--accent);color:var(--accent)}
+/* ══ APP ══ */
+#s-app{flex-direction:row}
+.sidebar{width:230px;min-width:230px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sb-top{padding:18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{font-family:var(--font-head);font-size:17px;font-weight:800;color:var(--accent);letter-spacing:1px;line-height:1.2}
+.sb-sub{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:2px}
+.sb-user{display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid var(--border)}
+.sb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.sb-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-roll{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
+.nav-sec{padding:8px 0}
+.nav-lbl{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;padding:3px 16px 7px}
+.nl{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent}
+.nl:hover,.nl.on{color:var(--accent);background:rgba(59,130,246,.06);border-left-color:var(--accent)}
+.nl .ic{font-size:14px;width:16px;text-align:center}
+.nb{margin-left:auto;font-size:10px;background:var(--accent);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700}
+.nb.g{background:var(--green)}
+.sb-bot{margin-top:auto;padding:13px 16px;border-top:1px solid var(--border)}
+.so-btn{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text3);cursor:pointer;transition:color .2s;font-family:var(--font-mono)}
+.so-btn:hover{color:var(--red)}
 
-.role-chips{display:flex;flex-wrap:wrap;gap:8px}
-.role-chip{
-  padding:7px 14px;border-radius:20px;
-  border:1px solid var(--border);background:var(--bg3);
-  font-size:12px;cursor:pointer;transition:all 0.15s;color:var(--text2);
-}
-.role-chip.selected{background:rgba(34,197,94,0.1);border-color:var(--green);color:var(--green)}
-
-.submit-btn{
-  width:100%;padding:14px;
-  background:linear-gradient(135deg,var(--accent),var(--cyan));
-  border:none;border-radius:var(--radius);
-  color:#fff;font-family:var(--font-head);font-size:16px;font-weight:700;
-  cursor:pointer;transition:all 0.2s;margin-top:8px;
-  letter-spacing:0.5px;
-}
-.submit-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,0.3)}
-.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-
-/* ════════════════════════════════════
-   MAIN APP SCREEN
-════════════════════════════════════ */
-#appScreen{display:none}
-#appScreen.active{display:flex;min-height:100vh}
-
-/* Sidebar */
-.sidebar{
-  width:240px;min-width:240px;
-  background:var(--bg2);border-right:1px solid var(--border);
-  position:fixed;top:0;left:0;height:100vh;
-  overflow-y:auto;z-index:100;
-  display:flex;flex-direction:column;
-}
-.sidebar-top{padding:20px 18px;border-bottom:1px solid var(--border)}
-.s-logo{
-  font-family:var(--font-head);font-size:18px;font-weight:800;
-  color:var(--accent);letter-spacing:1px;line-height:1.2;
-}
-.s-logo-sub{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:3px}
-
-.user-chip{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 18px;border-bottom:1px solid var(--border);
-}
-.user-av{
-  width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--purple));
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-head);font-size:13px;font-weight:800;
-  color:#fff;flex-shrink:0;overflow:hidden;
-}
-.user-av img{width:100%;height:100%;object-fit:cover}
-.user-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.user-roll{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
-
-.nav-group{padding:10px 0}
-.nav-group-label{
-  font-family:var(--font-mono);font-size:10px;color:var(--text3);
-  letter-spacing:2px;text-transform:uppercase;
-  padding:4px 18px 8px;
-}
-.nav-link{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 18px;cursor:pointer;
-  color:var(--text2);font-size:13.5px;font-weight:500;
-  transition:all 0.15s;border-left:2px solid transparent;
-}
-.nav-link:hover,.nav-link.active{
-  color:var(--accent);background:rgba(59,130,246,0.06);
-  border-left-color:var(--accent);
-}
-.nav-link .icon{font-size:15px;width:18px;text-align:center}
-.nav-badge{
-  margin-left:auto;font-size:10px;
-  background:var(--accent);color:#fff;
-  padding:1px 6px;border-radius:10px;font-weight:700;
-}
-.nav-badge.green{background:var(--green)}
-.sidebar-bottom{
-  margin-top:auto;padding:14px 18px;
-  border-top:1px solid var(--border);
-}
-.signout-btn{
-  display:flex;align-items:center;gap:8px;
-  font-size:13px;color:var(--text3);cursor:pointer;
-  transition:color 0.2s;font-family:var(--font-mono);
-}
-.signout-btn:hover{color:var(--red)}
-
-/* Main content */
-.main-content{margin-left:240px;flex:1;min-height:100vh}
-.topbar{
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:14px 32px;position:sticky;top:0;z-index:50;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.topbar-title{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:0.5px}
-.topbar-title span{color:var(--accent)}
-.status-pill{
-  display:flex;align-items:center;gap:8px;
-  padding:6px 14px;border-radius:20px;
-  border:1px solid var(--border2);
-  font-size:12px;font-family:var(--font-mono);color:var(--text2);
-  cursor:pointer;transition:all 0.2s;
-}
+/* Main */
+.main{margin-left:230px;flex:1;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 28px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between}
+.tb-title{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:.5px}
+.tb-title span{color:var(--accent)}
+.status-pill{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);font-size:12px;font-family:var(--font-mono);color:var(--text2);cursor:pointer;transition:all .2s}
 .status-pill:hover{border-color:var(--accent);color:var(--accent)}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-
-.page-content{padding:32px}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pc{padding:28px}
 .page{display:none}
-.page.active{display:block;animation:fadeUp 0.3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page.on{display:block;animation:fu .25s ease}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── Page headers ── */
-.page-header{margin-bottom:28px}
-.page-tag{
-  font-family:var(--font-mono);font-size:11px;color:var(--accent);
-  letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;
-}
-.page-title{
-  font-family:var(--font-head);font-size:36px;font-weight:800;
-  line-height:1.1;text-transform:uppercase;
-}
-.page-title .hi{color:var(--accent)}
-.page-sub{color:var(--text2);font-size:14px;margin-top:6px}
+/* Page header */
+.ph-tag{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:6px}
+.ph-title{font-family:var(--font-head);font-size:32px;font-weight:800;line-height:1.1;text-transform:uppercase;margin-bottom:4px}
+.ph-title .hi{color:var(--accent)}
+.ph-sub{color:var(--text2);font-size:13px;margin-bottom:24px}
 
-/* ── Cards ── */
-.card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:20px;
-  transition:border-color 0.2s;
-}
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;transition:border-color .2s}
 .card:hover{border-color:var(--border2)}
-.card-title{font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:0.5px;margin-bottom:14px;color:var(--cyan)}
+.ct{font-family:var(--font-head);font-size:13px;font-weight:700;letter-spacing:.5px;margin-bottom:12px;color:var(--cyan)}
 
-/* ── Dashboard ── */
-.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
-.dash-stat{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;
-}
-.dash-stat::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,transparent 60%,rgba(59,130,246,0.03));
-}
-.ds-num{font-family:var(--font-head);font-size:34px;font-weight:800;line-height:1}
-.ds-label{font-size:12px;color:var(--text2);margin-top:6px}
-.ds-accent{color:var(--accent)}
-.ds-green{color:var(--green)}
-.ds-orange{color:var(--orange)}
-.ds-purple{color:var(--purple)}
+/* Stat grid */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.sn{font-family:var(--font-head);font-size:32px;font-weight:800;line-height:1}
+.sl{font-size:12px;color:var(--text2);margin-top:5px}
+.ca{color:var(--accent)}.cg{color:var(--green)}.co{color:var(--orange)}.cp{color:var(--purple)}
 
-/* ── Placement Tracker ── */
-.tracker-stages{display:flex;gap:0;margin-bottom:24px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
-.stage-btn{
-  flex:1;padding:10px 8px;text-align:center;
-  font-size:12px;font-weight:600;cursor:pointer;
-  background:var(--card);color:var(--text3);
-  border:none;border-right:1px solid var(--border);
-  transition:all 0.2s;font-family:var(--font-mono);
-}
-.stage-btn:last-child{border-right:none}
-.stage-btn.active{background:var(--accent);color:#fff}
-.stage-btn:hover:not(.active){color:var(--text);background:var(--bg3)}
+/* Tracker */
+.stages{display:flex;gap:0;margin-bottom:16px;border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.stg{flex:1;padding:9px 6px;text-align:center;font-size:11px;font-weight:600;cursor:pointer;background:var(--card);color:var(--text3);border:none;border-right:1px solid var(--border);transition:all .2s;font-family:var(--font-mono)}
+.stg:last-child{border-right:none}
+.stg.on{background:var(--accent);color:#fff}
+.stg:hover:not(.on){color:var(--text);background:var(--bg3)}
+.int-log{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.ic{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+.ic-co{font-weight:700;font-size:14px}
+.ic-meta{font-size:12px;color:var(--text2);font-family:var(--font-mono);margin-top:2px}
+.ic-notes{font-size:12px;color:var(--text2);margin-top:5px;border-top:1px solid var(--border);padding-top:5px}
+.ist{padding:2px 9px;border-radius:8px;font-size:10px;font-weight:700;font-family:var(--font-mono)}
+.ist.pass{background:rgba(34,197,94,.1);color:var(--green)}
+.ist.fail{background:rgba(239,68,68,.1);color:var(--red)}
+.ist.pending{background:rgba(245,158,11,.1);color:var(--orange)}
+.ist.offer{background:rgba(59,130,246,.1);color:var(--accent)}
+.add-btn{display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:var(--r);border:1px dashed var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font-body);font-size:13px;transition:all .2s;width:100%;justify-content:center;margin-top:10px}
+.add-btn:hover{border-color:var(--accent);color:var(--accent)}
+.offer-banner{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(6,182,212,.05));border:1px solid rgba(34,197,94,.2);border-radius:var(--r);padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:16px;display:none}
+.ob-em{font-size:28px}
+.ob-co{font-family:var(--font-head);font-size:18px;font-weight:800}
+.ob-ro{color:var(--text2);font-size:12px}
+.ob-ctc{font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--green);margin-left:auto}
 
-.interview-log{display:flex;flex-direction:column;gap:12px;margin-top:16px}
-.int-card{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:10px;padding:14px;
-  display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;
-}
-.int-company{font-weight:700;font-size:14px}
-.int-meta{font-size:12px;color:var(--text2);font-family:var(--font-mono);margin-top:3px}
-.int-status{
-  padding:3px 10px;border-radius:10px;
-  font-size:11px;font-weight:700;font-family:var(--font-mono);
-}
-.int-status.pass{background:rgba(34,197,94,0.1);color:var(--green)}
-.int-status.fail{background:rgba(239,68,68,0.1);color:var(--red)}
-.int-status.pending{background:rgba(245,158,11,0.1);color:var(--orange)}
-.int-status.offer{background:rgba(59,130,246,0.1);color:var(--accent)}
+/* Admin table */
+.atbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.atbl th{text-align:left;padding:9px 10px;font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:1px;border-bottom:1px solid var(--border);background:var(--bg3)}
+.atbl td{padding:11px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.atbl tr:hover td{background:rgba(59,130,246,.02)}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:7px;font-family:var(--font-mono);font-weight:600}
+.b-bl{background:rgba(59,130,246,.1);color:var(--accent);border:1px solid rgba(59,130,246,.2)}
+.b-gr{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.b-or{background:rgba(245,158,11,.1);color:var(--orange);border:1px solid rgba(245,158,11,.2)}
+.b-re{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.b-pu{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
 
-.add-int-btn{
-  display:flex;align-items:center;gap:8px;
-  padding:10px 16px;border-radius:var(--radius);
-  border:1px dashed var(--border2);background:transparent;
-  color:var(--text2);cursor:pointer;font-family:var(--font-body);
-  font-size:13px;transition:all 0.2s;width:100%;justify-content:center;
-}
-.add-int-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* Modal */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.mo.on{display:flex}
+.md{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:26px;max-width:460px;width:90%;max-height:85vh;overflow-y:auto}
+.md-title{font-family:var(--font-head);font-size:19px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.md-close{background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer}
+.md-close:hover{color:var(--red)}
 
-/* ── Admin ── */
-.admin-table{width:100%;border-collapse:collapse;font-size:13px}
-.admin-table th{
-  text-align:left;padding:10px 12px;
-  font-family:var(--font-mono);font-size:11px;
-  color:var(--text3);letter-spacing:1px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg3);
-}
-.admin-table td{
-  padding:12px;border-bottom:1px solid var(--border);
-  vertical-align:middle;
-}
-.admin-table tr:hover td{background:rgba(59,130,246,0.03)}
-.placed-tag{
-  padding:2px 8px;border-radius:8px;
-  font-size:11px;font-weight:600;font-family:var(--font-mono);
-}
-
-/* ── Target companies ── */
-.target-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.target-tag{
-  padding:5px 12px;border-radius:20px;
-  font-size:12px;border:1px solid var(--border2);
-  color:var(--text2);font-family:var(--font-mono);
-  background:var(--bg3);
-}
-
-/* ── Offer section ── */
-.offer-banner{
-  background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(6,182,212,0.05));
-  border:1px solid rgba(34,197,94,0.2);
-  border-radius:var(--radius);padding:20px;
-  display:flex;align-items:center;gap:16px;
-  margin-bottom:20px;
-}
-.offer-emoji{font-size:32px}
-.offer-company{font-family:var(--font-head);font-size:20px;font-weight:800}
-.offer-role{color:var(--text2);font-size:13px}
-.offer-ctc{font-family:var(--font-head);font-size:24px;font-weight:800;color:var(--green);margin-left:auto}
-
-/* ── Modal ── */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,0.7);
-  z-index:500;display:none;align-items:center;justify-content:center;
-  backdrop-filter:blur(4px);
-}
-.modal-overlay.active{display:flex}
-.modal{
-  background:var(--card);border:1px solid var(--border2);
-  border-radius:16px;padding:28px;
-  max-width:480px;width:90%;
-  max-height:85vh;overflow-y:auto;
-}
-.modal-title{
-  font-family:var(--font-head);font-size:20px;font-weight:800;
-  margin-bottom:20px;
-}
-.modal-close{
-  float:right;background:none;border:none;
-  color:var(--text2);font-size:20px;cursor:pointer;
-  margin-top:-4px;
-}
-.modal-close:hover{color:var(--red)}
-
-/* ── Toast ── */
-.toast{
-  position:fixed;bottom:24px;right:24px;
-  background:var(--card);border:1px solid var(--border2);
-  border-radius:10px;padding:14px 20px;
-  font-size:13px;z-index:999;
-  transform:translateY(80px);opacity:0;
-  transition:all 0.3s;pointer-events:none;
-  max-width:320px;
-}
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:12px 18px;font-size:13px;z-index:999;transform:translateY(70px);opacity:0;transition:all .3s;pointer-events:none;max-width:300px}
 .toast.show{transform:translateY(0);opacity:1}
-.toast.success{border-left:3px solid var(--green)}
-.toast.error{border-left:3px solid var(--red)}
+.toast.ok{border-left:3px solid var(--green)}
+.toast.err{border-left:3px solid var(--red)}
 
-/* ── Badges ── */
-.badge{
-  display:inline-block;font-size:10px;padding:2px 8px;
-  border-radius:8px;font-family:var(--font-mono);font-weight:600;
-}
-.badge-blue{background:rgba(59,130,246,0.1);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
-.badge-green{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)}
-.badge-orange{background:rgba(245,158,11,0.1);color:var(--orange);border:1px solid rgba(245,158,11,0.2)}
-.badge-red{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
-.badge-purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
+/* Bar chart */
+.bar-row{margin-bottom:10px}
+.bar-meta{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.bar-track{height:5px;background:var(--border);border-radius:3px}
+.bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
 
-/* ── Responsive ── */
+/* Target tags */
+.ttag{display:inline-block;padding:4px 10px;border-radius:16px;font-size:11px;border:1px solid var(--border2);color:var(--text2);font-family:var(--font-mono);background:var(--bg3);margin:3px}
+
 @media(max-width:768px){
   .sidebar{width:0;overflow:hidden}
-  .main-content{margin-left:0}
-  .form-row{grid-template-columns:1fr}
-}
-
-/* ── Config warning ── */
-.config-warning{
-  background:rgba(245,158,11,0.08);
-  border:1px solid rgba(245,158,11,0.25);
-  border-radius:var(--radius);padding:16px 20px;
-  color:var(--orange);font-size:13px;
-  margin-bottom:24px;display:none;
+  .main{margin-left:0}
+  .frow{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
-<div id="loadingScreen">
-  <div class="loader-logo">GIM BDA</div>
-  <div class="loader-bar"><div class="loader-fill"></div></div>
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">GIM BDA</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
 </div>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
-  <div class="login-card">
-    <div class="login-badge">PGDM BDA · BATCH 2025-27</div>
-    <div class="login-title">GIM BDA<br><span>Placement Hub</span></div>
-    <div class="login-sub">Your batch's complete placement preparation environment — 63 companies, 600+ questions, placement tracker &amp; more.</div>
-    <button class="google-btn" onclick="signInWithGoogle()">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-      </svg>
-      Continue with Google
-    </button>
-    <div class="login-disclaimer">Use your GIM email (@gim.ac.in) for access</div>
-    <div class="login-stats">
-      <div class="ls-item"><div class="ls-num">63</div><div class="ls-label">Companies</div></div>
-      <div class="ls-item"><div class="ls-num">600+</div><div class="ls-label">Questions</div></div>
-      <div class="ls-item"><div class="ls-num">∞</div><div class="ls-label">Free Forever</div></div>
+<!-- ══════════ LOGIN ══════════ -->
+<div id="s-login" class="screen">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="lc-badge">PGDM BDA · BATCH 2025-27</div>
+      <div class="lc-title">GIM BDA<br><span>Placement Hub</span></div>
+      <div class="lc-sub">Your batch's complete placement tracker. Log interviews, track offers, see live batch stats.</div>
+      <input type="email" class="lc-input" id="loginEmail" placeholder="yourname@gim.ac.in" autocomplete="email">
+      <button class="lc-btn" id="loginBtn" onclick="sendMagicLink()">Send Login Link →</button>
+      <div class="magic-sent" id="magicSent">
+        ✅ Magic link sent! Check your GIM email and click the link to sign in.
+      </div>
+      <div class="lc-note">Enter your GIM email → get a one-click login link.<br>No password needed. Free forever.</div>
+      <div class="lc-stats">
+        <div><div class="lcs-n">63</div><div class="lcs-l">Companies</div></div>
+        <div><div class="lcs-n">600+</div><div class="lcs-l">Questions</div></div>
+        <div><div class="lcs-n">∞</div><div class="lcs-l">Free</div></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ONBOARDING -->
-<div id="onboardScreen">
-  <div class="onboard-card">
-    <div class="onboard-step">STEP 01 / 01 — PROFILE SETUP</div>
-    <div class="onboard-title">Let's set up your profile</div>
-    <div class="onboard-sub">This helps personalise your prep and track your batch's placement journey.</div>
+<!-- ══════════ ONBOARD ══════════ -->
+<div id="s-onboard" class="screen">
+  <div class="ob-card">
+    <div class="ob-step">FIRST TIME SETUP</div>
+    <div class="ob-title">Set up your profile</div>
+    <div class="ob-sub">Helps personalise your tracker and contributes to batch placement stats.</div>
 
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">FULL NAME</label>
-        <input type="text" class="form-input" id="ob_name" placeholder="Your name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">ROLL NUMBER</label>
-        <input type="text" class="form-input" id="ob_roll" placeholder="e.g. BDA2025001">
-      </div>
+    <div class="frow">
+      <div class="fg"><label class="fl">FULL NAME</label><input type="text" class="fi" id="ob_name" placeholder="Your name"></div>
+      <div class="fg"><label class="fl">ROLL NUMBER</label><input type="text" class="fi" id="ob_roll" placeholder="BDA2025001"></div>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">CURRENT INTERNSHIP / LAST ROLE</label>
-      <input type="text" class="form-input" id="ob_internship" placeholder="e.g. Data Analyst Intern @ XYZ">
+    <div class="fg"><label class="fl">CURRENT INTERNSHIP / LAST ROLE</label><input type="text" class="fi" id="ob_intern" placeholder="Data Analyst Intern @ ABC Corp"></div>
+    <div class="fg"><label class="fl">RESUME / LINKEDIN LINK</label><input type="url" class="fi" id="ob_resume" placeholder="https://linkedin.com/in/yourname"></div>
+    <div class="fg">
+      <label class="fl">TARGET ROLE(S)</label>
+      <div class="chips" id="ob_roles"></div>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">RESUME / LINKEDIN LINK</label>
-      <input type="url" class="form-input" id="ob_resume" placeholder="https://linkedin.com/in/yourname">
+    <div class="fg">
+      <label class="fl">TARGET COMPANIES (select all that apply)</label>
+      <div class="co-grid" id="ob_companies"></div>
     </div>
-
-    <div class="form-group">
-      <label class="form-label">TARGET ROLE(S)</label>
-      <div class="role-chips" id="roleChips"></div>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">TARGET COMPANIES (select all that apply)</label>
-      <div class="company-select-grid" id="companyChips"></div>
-    </div>
-
-    <button class="submit-btn" id="saveProfileBtn" onclick="saveProfile()">Save Profile &amp; Enter Hub →</button>
+    <button class="sbtn" id="ob_save" onclick="saveProfile()">Save &amp; Enter Hub →</button>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="appScreen">
+<!-- ══════════ APP ══════════ -->
+<div id="s-app" class="screen">
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="sidebar-top">
-      <div class="s-logo">GIM BDA<br>HUB</div>
-      <div class="s-logo-sub">// batch.2025.27</div>
+    <div class="sb-top">
+      <div class="sb-logo">GIM BDA HUB</div>
+      <div class="sb-sub">// batch.2025.27</div>
     </div>
-    <div class="user-chip">
-      <div class="user-av" id="sidebarAvatar">?</div>
+    <div class="sb-user">
+      <div class="sb-av" id="sbAv">?</div>
       <div>
-        <div class="user-name" id="sidebarName">Loading...</div>
-        <div class="user-roll" id="sidebarRoll">—</div>
+        <div class="sb-name" id="sbName">—</div>
+        <div class="sb-roll" id="sbRoll">—</div>
       </div>
     </div>
-
-    <div class="nav-group">
-      <div class="nav-group-label">Main</div>
-      <div class="nav-link active" onclick="showPage('dashboard')"><span class="icon">⚡</span> Dashboard</div>
-      <div class="nav-link" onclick="showPage('tracker')"><span class="icon">🎯</span> My Tracker <span class="nav-badge green" id="trackerCount">0</span></div>
-      <div class="nav-link" onclick="showPage('profile')"><span class="icon">👤</span> My Profile</div>
+    <div class="nav-sec">
+      <div class="nav-lbl">Main</div>
+      <div class="nl on" onclick="go('dashboard')"><span class="ic">⚡</span>Dashboard</div>
+      <div class="nl" onclick="go('tracker')"><span class="ic">🎯</span>My Tracker<span class="nb g" id="tc">0</span></div>
+      <div class="nl" onclick="go('profile')"><span class="ic">👤</span>My Profile</div>
     </div>
-    <div class="nav-group">
-      <div class="nav-group-label">Prep</div>
-      <div class="nav-link" onclick="showPage('companies')"><span class="icon">🏢</span> Companies <span class="nav-badge">63</span></div>
-      <div class="nav-link" onclick="showPage('roles')"><span class="icon">📋</span> Role Q&amp;A</div>
-      <div class="nav-link" onclick="showPage('roadmap')"><span class="icon">🗺️</span> Roadmap</div>
-      <div class="nav-link" onclick="showPage('cheatsheets')"><span class="icon">⚡</span> Cheatsheets</div>
+    <div class="nav-sec">
+      <div class="nav-lbl">Prep</div>
+      <div class="nl" onclick="window.open('https://cute-alpaca-edcfbc.netlify.app','_blank')"><span class="ic">🏢</span>Full Prep Hub ↗</div>
     </div>
-    <div class="nav-group" id="adminNav" style="display:none">
-      <div class="nav-group-label">Admin</div>
-      <div class="nav-link" onclick="showPage('admin')" style="color:var(--orange)"><span class="icon">👑</span> Admin Panel</div>
+    <div class="nav-sec" id="adminNav" style="display:none">
+      <div class="nav-lbl">Admin</div>
+      <div class="nl" onclick="go('admin')" style="color:var(--orange)"><span class="ic">👑</span>Admin Panel</div>
     </div>
-
-    <div class="sidebar-bottom">
-      <div class="signout-btn" onclick="signOut()">⎋ Sign out</div>
+    <div class="sb-bot">
+      <div class="so-btn" onclick="doSignOut()">⎋ Sign out</div>
     </div>
   </aside>
 
   <!-- Main -->
-  <div class="main-content">
+  <div class="main">
     <div class="topbar">
-      <div class="topbar-title">GIM BDA <span>Placement Hub</span></div>
-      <div class="status-pill" onclick="showPage('tracker')">
-        <div class="status-dot"></div>
-        <span id="myStatus">Searching</span>
+      <div class="tb-title">GIM BDA <span>Hub</span></div>
+      <div class="status-pill" onclick="go('tracker')">
+        <div class="sdot"></div>
+        <span id="myStatusLabel">Searching</span>
       </div>
     </div>
 
-    <div class="page-content">
+    <div class="pc">
 
-      <!-- CONFIG WARNING -->
-      <div class="config-warning" id="configWarning">
-        ⚠️ <strong>Firebase not configured.</strong> Add your Firebase config in the script section to enable login, data storage and placement tracking.
-        <a href="https://console.firebase.google.com" target="_blank" style="color:var(--orange);margin-left:8px;">→ Firebase Console</a>
-      </div>
-
-      <!-- ── DASHBOARD PAGE ── -->
-      <div id="page-dashboard" class="page active">
-        <div class="page-header">
-          <div class="page-tag">// HOME</div>
-          <div class="page-title">YOUR <span class="hi">DASHBOARD</span></div>
-          <div class="page-sub" id="dashWelcome">Welcome back!</div>
+      <!-- DASHBOARD -->
+      <div id="p-dashboard" class="page on">
+        <div class="ph-tag">// HOME</div>
+        <div class="ph-title">YOUR <span class="hi">DASHBOARD</span></div>
+        <div class="ph-sub" id="dashWelcome">Welcome back!</div>
+        <div class="sg">
+          <div class="stat"><div class="sn ca" id="st-targets">0</div><div class="sl">Target Companies</div></div>
+          <div class="stat"><div class="sn co" id="st-ints">0</div><div class="sl">Interviews Logged</div></div>
+          <div class="stat"><div class="sn cg" id="st-offers">0</div><div class="sl">Offers Received</div></div>
+          <div class="stat"><div class="sn cp" id="st-batch">—</div><div class="sl">Batch Placed</div></div>
         </div>
-
-        <div class="dash-grid">
-          <div class="dash-stat">
-            <div class="ds-num ds-accent" id="statTargets">0</div>
-            <div class="ds-label">Target Companies</div>
-          </div>
-          <div class="dash-stat">
-            <div class="ds-num ds-orange" id="statInterviews">0</div>
-            <div class="ds-label">Interviews Logged</div>
-          </div>
-          <div class="dash-stat">
-            <div class="ds-num ds-green" id="statOffers">0</div>
-            <div class="ds-label">Offers Received</div>
-          </div>
-          <div class="dash-stat">
-            <div class="ds-num ds-purple" id="statBatchPlaced">—</div>
-            <div class="ds-label">Batch Placed So Far</div>
-          </div>
-        </div>
-
-        <!-- Batch overview (live from Firestore) -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
           <div class="card">
-            <div class="card-title">YOUR TARGET COMPANIES</div>
-            <div class="target-grid" id="dashTargets">
-              <span style="color:var(--text3);font-size:13px">No targets set — edit profile</span>
-            </div>
+            <div class="ct">YOUR TARGET COMPANIES</div>
+            <div id="dash-targets"><span style="color:var(--text3);font-size:13px">None set — edit profile</span></div>
           </div>
           <div class="card">
-            <div class="card-title">BATCH PLACEMENT STATUS</div>
-            <div id="batchStatusChart" style="padding-top:4px"></div>
+            <div class="ct">BATCH STATUS</div>
+            <div id="dash-batch-chart"></div>
           </div>
         </div>
-
-        <!-- Recent activity from batch -->
         <div class="card">
-          <div class="card-title">RECENT BATCH ACTIVITY</div>
-          <div id="recentActivity" style="color:var(--text3);font-size:13px">Loading...</div>
+          <div class="ct">RECENT BATCH ACTIVITY</div>
+          <div id="dash-activity" style="color:var(--text3);font-size:13px">Loading...</div>
         </div>
       </div>
 
-      <!-- ── TRACKER PAGE ── -->
-      <div id="page-tracker" class="page">
-        <div class="page-header">
-          <div class="page-tag">// MY JOURNEY</div>
-          <div class="page-title">PLACEMENT <span class="hi">TRACKER</span></div>
-          <div class="page-sub">Log every interview round, offer, and update your status</div>
+      <!-- TRACKER -->
+      <div id="p-tracker" class="page">
+        <div class="ph-tag">// MY JOURNEY</div>
+        <div class="ph-title">PLACEMENT <span class="hi">TRACKER</span></div>
+        <div class="ph-sub">Log every round, update your status, track your offers</div>
+
+        <div id="offerBanner" class="offer-banner">
+          <div class="ob-em">🎉</div>
+          <div><div class="ob-co" id="ob-co">—</div><div class="ob-ro" id="ob-ro">—</div></div>
+          <div class="ob-ctc" id="ob-ctc">—</div>
         </div>
 
-        <!-- Offer banner (shown if placed) -->
-        <div class="offer-banner" id="offerBanner" style="display:none">
-          <div class="offer-emoji">🎉</div>
-          <div>
-            <div class="offer-company" id="offerCompany">Company Name</div>
-            <div class="offer-role" id="offerRole">Role</div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="ct">CURRENT STATUS</div>
+          <div class="stages">
+            <button class="stg" data-s="searching" onclick="setStatus('searching',this)">🔍 Searching</button>
+            <button class="stg" data-s="interviewing" onclick="setStatus('interviewing',this)">🎤 Interviewing</button>
+            <button class="stg" data-s="offer_received" onclick="setStatus('offer_received',this)">📝 Offer</button>
+            <button class="stg" data-s="placed" onclick="setStatus('placed',this)">✅ Placed</button>
+            <button class="stg" data-s="opted_out" onclick="setStatus('opted_out',this)">⏸ Opted Out</button>
           </div>
-          <div class="offer-ctc" id="offerCTC">₹ — LPA</div>
-        </div>
-
-        <!-- Status -->
-        <div class="card" style="margin-bottom:16px">
-          <div class="card-title">MY CURRENT STATUS</div>
-          <div class="tracker-stages">
-            <button class="stage-btn" data-status="searching" onclick="updateStatus('searching',this)">🔍 Searching</button>
-            <button class="stage-btn" data-status="interviewing" onclick="updateStatus('interviewing',this)">🎤 Interviewing</button>
-            <button class="stage-btn" data-status="offer_received" onclick="updateStatus('offer_received',this)">📝 Offer Received</button>
-            <button class="stage-btn" data-status="placed" onclick="updateStatus('placed',this)">✅ Placed</button>
-            <button class="stage-btn" data-status="opted_out" onclick="updateStatus('opted_out',this)">⏸ Opted Out</button>
-          </div>
-
-          <!-- Show offer form if offer received / placed -->
-          <div id="offerForm" style="display:none;margin-top:16px">
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">COMPANY</label>
-                <input type="text" class="form-input" id="of_company" placeholder="Company name">
-              </div>
-              <div class="form-group">
-                <label class="form-label">ROLE</label>
-                <input type="text" class="form-input" id="of_role" placeholder="Your role">
-              </div>
+          <div id="offerForm" style="display:none;margin-top:14px">
+            <div class="frow">
+              <div class="fg"><label class="fl">COMPANY</label><input type="text" class="fi" id="of_co" placeholder="Company"></div>
+              <div class="fg"><label class="fl">ROLE</label><input type="text" class="fi" id="of_ro" placeholder="Role"></div>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">CTC (LPA) — Optional</label>
-                <input type="number" class="form-input" id="of_ctc" placeholder="e.g. 15.5">
-              </div>
-              <div class="form-group">
-                <label class="form-label">JOINING DATE — Optional</label>
-                <input type="date" class="form-input" id="of_joining">
-              </div>
+            <div class="frow">
+              <div class="fg"><label class="fl">CTC (LPA) — optional</label><input type="number" class="fi" id="of_ctc" placeholder="e.g. 15.5" step="0.1"></div>
+              <div class="fg"><label class="fl">JOINING DATE — optional</label><input type="date" class="fi" id="of_date"></div>
             </div>
-            <button class="submit-btn" onclick="saveOffer()" style="margin-top:4px">Save Offer Details</button>
+            <button class="sbtn" onclick="saveOffer()" style="margin-top:4px">Save Offer Details</button>
           </div>
-        </div>
-
-        <!-- Interview log -->
-        <div class="card">
-          <div class="card-title">INTERVIEW LOG</div>
-          <div class="interview-log" id="interviewLog">
-            <div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No interviews logged yet</div>
-          </div>
-          <button class="add-int-btn" style="margin-top:12px" onclick="openAddInterview()">+ Log Interview Round</button>
-        </div>
-      </div>
-
-      <!-- ── PROFILE PAGE ── -->
-      <div id="page-profile" class="page">
-        <div class="page-header">
-          <div class="page-tag">// PROFILE</div>
-          <div class="page-title">MY <span class="hi">PROFILE</span></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:20px">
-          <div class="card" style="height:fit-content">
-            <div style="text-align:center;margin-bottom:16px">
-              <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:24px;font-weight:800;color:#fff;margin:0 auto 12px" id="profileAvBig">?</div>
-              <div style="font-family:var(--font-head);font-size:18px;font-weight:800" id="profileName">—</div>
-              <div style="font-size:12px;color:var(--text2);font-family:var(--font-mono)" id="profileRoll">—</div>
-              <div style="font-size:12px;color:var(--text3);margin-top:4px" id="profileEmail">—</div>
-            </div>
-            <a id="profileResume" href="#" target="_blank" style="display:block;text-align:center;color:var(--accent);font-size:13px;font-family:var(--font-mono)">→ View Resume / LinkedIn</a>
-          </div>
-          <div>
-            <div class="card" style="margin-bottom:16px">
-              <div class="card-title">EDIT PROFILE</div>
-              <div class="form-group">
-                <label class="form-label">CURRENT INTERNSHIP</label>
-                <input type="text" class="form-input" id="edit_internship" placeholder="Company @ Role">
-              </div>
-              <div class="form-group">
-                <label class="form-label">RESUME / LINKEDIN</label>
-                <input type="url" class="form-input" id="edit_resume">
-              </div>
-              <div class="form-group">
-                <label class="form-label">TARGET ROLES</label>
-                <div class="role-chips" id="editRoleChips"></div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">TARGET COMPANIES</label>
-                <div class="company-select-grid" id="editCompanyChips"></div>
-              </div>
-              <button class="submit-btn" onclick="updateProfile()">Update Profile</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── COMPANIES PAGE ── -->
-      <div id="page-companies" class="page">
-        <div class="page-header">
-          <div class="page-tag">// COMPANY INTEL</div>
-          <div class="page-title">BDA <span class="hi">COMPANIES</span></div>
-          <div class="page-sub">63 companies — all from GIM BDA audited placement reports 2020-24</div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--text2)">
-          <div style="font-size:32px;margin-bottom:12px">🏢</div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:8px">Full Company Q&A Available</div>
-          <div style="font-size:13px;margin-bottom:16px">The complete company-wise interview Q&A (63 companies, 600+ questions) is available at the prep hub. Open it in a new tab to access alongside your tracker.</div>
-          <a href="https://monarchbaweja1.github.io/placements_bda_27" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;">→ Open Full Prep Hub</a>
-        </div>
-      </div>
-
-      <!-- ── ROADMAP PAGE ── -->
-      <div id="page-roadmap" class="page">
-        <div class="page-header">
-          <div class="page-tag">// LEARNING PATH</div>
-          <div class="page-title">AI/ML <span class="hi">ROADMAP</span></div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--text2)">
-          <div style="font-size:32px;margin-bottom:12px">🗺️</div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:8px">Full Roadmap Available</div>
-          <div style="font-size:13px;margin-bottom:16px">4-phase AI/ML roadmap with YouTube links, courses, and resources is in the full prep hub.</div>
-          <a href="https://monarchbaweja1.github.io/placements_bda_27" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;">→ Open Full Prep Hub</a>
-        </div>
-      </div>
-
-      <!-- ── ROLES PAGE ── -->
-      <div id="page-roles" class="page">
-        <div class="page-header">
-          <div class="page-tag">// ROLE Q&A</div>
-          <div class="page-title">ROLE-WISE <span class="hi">Q&A</span></div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--text2)">
-          <div style="font-size:32px;margin-bottom:12px">🎯</div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:8px">Role Q&A in Full Hub</div>
-          <a href="https://monarchbaweja1.github.io/placements_bda_27" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;">→ Open Full Prep Hub</a>
-        </div>
-      </div>
-
-      <!-- ── CHEATSHEETS PAGE ── -->
-      <div id="page-cheatsheets" class="page">
-        <div class="page-header">
-          <div class="page-tag">// QUICK REFERENCE</div>
-          <div class="page-title">CHEAT<span class="hi">SHEETS</span></div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--text2)">
-          <div style="font-size:32px;margin-bottom:12px">📋</div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:8px">All Cheatsheets in Full Hub</div>
-          <div style="font-size:13px;margin-bottom:16px">Python · SQL · ML Algorithms · Statistics · Deep Learning · Power BI — all with PDF download.</div>
-          <a href="https://monarchbaweja1.github.io/placements_bda_27" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;">→ Open Full Prep Hub</a>
-        </div>
-      </div>
-
-      <!-- ── ADMIN PAGE ── -->
-      <div id="page-admin" class="page">
-        <div class="page-header">
-          <div class="page-tag">// ADMIN ONLY</div>
-          <div class="page-title">ADMIN <span class="hi">PANEL</span></div>
-          <div class="page-sub">Batch placement overview — live data</div>
-        </div>
-
-        <div class="dash-grid" style="margin-bottom:24px">
-          <div class="dash-stat"><div class="ds-num ds-accent" id="adm-total">0</div><div class="ds-label">Total Registered</div></div>
-          <div class="dash-stat"><div class="ds-num ds-orange" id="adm-interviewing">0</div><div class="ds-label">Interviewing</div></div>
-          <div class="dash-stat"><div class="ds-num ds-green" id="adm-placed">0</div><div class="ds-label">Placed</div></div>
-          <div class="dash-stat"><div class="ds-num ds-purple" id="adm-avg-ctc">—</div><div class="ds-label">Avg CTC (LPA)</div></div>
         </div>
 
         <div class="card">
-          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+          <div class="ct">INTERVIEW LOG</div>
+          <div class="int-log" id="intLog"><div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No interviews logged yet</div></div>
+          <button class="add-btn" onclick="openIntModal()">+ Log Interview Round</button>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="p-profile" class="page">
+        <div class="ph-tag">// PROFILE</div>
+        <div class="ph-title">MY <span class="hi">PROFILE</span></div>
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:16px">
+          <div class="card" style="height:fit-content;text-align:center">
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--purple));display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:20px;font-weight:800;color:#fff;margin:0 auto 10px" id="pAvBig">?</div>
+            <div style="font-family:var(--font-head);font-size:16px;font-weight:800" id="pName">—</div>
+            <div style="font-size:11px;color:var(--text2);font-family:var(--font-mono)" id="pRoll">—</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:3px" id="pEmail">—</div>
+            <a id="pResume" href="#" target="_blank" style="display:block;margin-top:10px;font-size:12px;color:var(--accent);font-family:var(--font-mono)">→ LinkedIn / Resume</a>
+          </div>
+          <div class="card">
+            <div class="ct">EDIT PROFILE</div>
+            <div class="fg"><label class="fl">INTERNSHIP</label><input type="text" class="fi" id="ed_intern"></div>
+            <div class="fg"><label class="fl">RESUME / LINKEDIN</label><input type="url" class="fi" id="ed_resume"></div>
+            <div class="fg"><label class="fl">TARGET ROLES</label><div class="chips" id="ed_roles"></div></div>
+            <div class="fg"><label class="fl">TARGET COMPANIES</label><div class="co-grid" id="ed_companies"></div></div>
+            <button class="sbtn" onclick="updateProfile()">Update Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div id="p-admin" class="page">
+        <div class="ph-tag">// ADMIN ONLY</div>
+        <div class="ph-title">ADMIN <span class="hi">PANEL</span></div>
+        <div class="ph-sub">Live batch placement data</div>
+        <div class="sg" style="margin-bottom:20px">
+          <div class="stat"><div class="sn ca" id="adm-total">0</div><div class="sl">Registered</div></div>
+          <div class="stat"><div class="sn co" id="adm-int">0</div><div class="sl">Interviewing</div></div>
+          <div class="stat"><div class="sn cg" id="adm-placed">0</div><div class="sl">Placed</div></div>
+          <div class="stat"><div class="sn cp" id="adm-ctc">—</div><div class="sl">Avg CTC (LPA)</div></div>
+        </div>
+        <div class="card">
+          <div class="ct" style="display:flex;align-items:center;justify-content:space-between">
             ALL STUDENTS
-            <button onclick="exportCSV()" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:5px 12px;color:var(--text2);cursor:pointer;font-size:12px;font-family:var(--font-mono)">⬇ Export CSV</button>
+            <button onclick="exportCSV()" style="background:var(--bg3);border:1px solid var(--border2);border-radius:7px;padding:4px 11px;color:var(--text2);cursor:pointer;font-size:11px;font-family:var(--font-mono)">⬇ CSV</button>
           </div>
           <div style="overflow-x:auto">
-            <table class="admin-table" id="adminTable">
-              <thead>
-                <tr>
-                  <th>NAME</th><th>ROLL</th><th>EMAIL</th>
-                  <th>INTERNSHIP</th><th>TARGET ROLE</th>
-                  <th>STATUS</th><th>COMPANY</th><th>CTC</th>
-                </tr>
-              </thead>
-              <tbody id="adminTableBody">
-                <tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">Loading...</td></tr>
-              </tbody>
+            <table class="atbl">
+              <thead><tr><th>NAME</th><th>ROLL</th><th>EMAIL</th><th>INTERNSHIP</th><th>TARGET ROLE</th><th>STATUS</th><th>PLACED AT</th><th>CTC</th></tr></thead>
+              <tbody id="admTbody"><tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px">Loading...</td></tr></tbody>
             </table>
           </div>
         </div>
       </div>
 
-    </div><!-- /page-content -->
-  </div><!-- /main-content -->
-</div><!-- /appScreen -->
+    </div><!-- /pc -->
+  </div><!-- /main -->
+</div><!-- /s-app -->
 
-<!-- ── MODAL: Add Interview ── -->
-<div class="modal-overlay" id="addIntModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('addIntModal')">✕</button>
-    <div class="modal-title">Log Interview Round</div>
-    <div class="form-group">
-      <label class="form-label">COMPANY</label>
-      <input type="text" class="form-input" id="int_company" placeholder="Company name">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">ROUND</label>
-        <select class="form-input" id="int_round">
-          <option>Aptitude Test</option>
-          <option>Group Discussion</option>
-          <option>Technical Round 1</option>
-          <option>Technical Round 2</option>
-          <option>Case Study Round</option>
-          <option>HR Round</option>
-          <option>Final Interview</option>
+<!-- MODAL: Add Interview -->
+<div class="mo" id="intModal">
+  <div class="md">
+    <div class="md-title">Log Interview Round <button class="md-close" onclick="closeModal()">✕</button></div>
+    <div class="fg"><label class="fl">COMPANY</label><input type="text" class="fi" id="int_co" placeholder="Company name"></div>
+    <div class="frow">
+      <div class="fg"><label class="fl">ROUND</label>
+        <select class="fi" id="int_round">
+          <option>Aptitude Test</option><option>Group Discussion</option>
+          <option>Technical Round 1</option><option>Technical Round 2</option>
+          <option>Case Study Round</option><option>HR Round</option><option>Final Interview</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">DATE</label>
-        <input type="date" class="form-input" id="int_date">
-      </div>
+      <div class="fg"><label class="fl">DATE</label><input type="date" class="fi" id="int_date"></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">RESULT</label>
-      <select class="form-input" id="int_result">
+    <div class="fg"><label class="fl">RESULT</label>
+      <select class="fi" id="int_result">
         <option value="pending">Pending / Awaiting</option>
         <option value="pass">Cleared / Passed</option>
         <option value="fail">Not Selected</option>
         <option value="offer">Offer Received</option>
       </select>
     </div>
-    <div class="form-group">
-      <label class="form-label">NOTES (optional)</label>
-      <textarea class="form-input" id="int_notes" rows="3" placeholder="Questions asked, feedback, tips for others..."></textarea>
-    </div>
-    <button class="submit-btn" onclick="saveInterview()">Save Interview Log</button>
+    <div class="fg"><label class="fl">NOTES (optional — visible to batch)</label><textarea class="fi" id="int_notes" rows="3" placeholder="Questions asked, tips for others..."></textarea></div>
+    <button class="sbtn" onclick="saveInterview()">Save Interview Log</button>
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- ════════════════════════════════════
-     FIREBASE + APP LOGIC
-════════════════════════════════════ -->
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbSignOut }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection,
-  getDocs, addDoc, onSnapshot, query, orderBy, serverTimestamp }
-  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+<script>
+// ════════════════════════════════════════
+// SUPABASE CONFIG
+// ════════════════════════════════════════
+const SUPABASE_URL = 'https://dsrwktqgpngrviavceal.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_bLUTa913DWCoVFTt9r_vew_Wa_hjEbV';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ═══════════════════════════════════════
-// 🔥 FIREBASE CONFIG — PASTE YOURS HERE
-// ═══════════════════════════════════════
-const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_AUTH_DOMAIN",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
-  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
-};
+const ADMIN_EMAILS = ['monarch.baweja25b@gim.ac.in'];
 
-// Admin emails (can access admin panel)
-const ADMIN_EMAILS = [
-  'monarch.baweja25b@gim.ac.in',
-  // add more admin emails here
-];
-
-// Target companies list (abridged for UI)
 const COMPANIES = [
   'McKinsey','Bain','Deloitte','KPMG','EY','Accenture','PwC','Thoucentric',
   'Goldman Sachs','JP Morgan','HSBC','NatWest','BNY Mellon','Nomura',
@@ -944,548 +470,367 @@ const COMPANIES = [
   'Fractal','Tiger Analytics','EXL','Latentview','Tredence','dunnhumby',
   'Analytics Quotient','Course5i','WNS','Genpact','Mu Sigma',
   'Flipkart','Dell','Cognizant','TCS','Infosys','Wipro','IBM',
-  'Capgemini','Tech Mahindra','Lowe\'s','Jio','Prodapt','Reliance Retail',
+  'Capgemini','Tech Mahindra',"Lowe's",'Jio','Prodapt','Reliance Retail',
   'FedEx','NetApp','Philips','Optum','MSD','Novartis','ZS Associates',
-  'Mondelez','Kellogg\'s','HUL','J&J','Mahindra','Godrej','Kantar','D.E. Shaw'
+  'Mondelez',"Kellogg's",'HUL','J&J','Mahindra','Godrej','Kantar','D.E. Shaw'
 ];
 
 const ROLES = ['Data Scientist','Business Analyst','Data Engineer',
   'Management Trainee','Product Analyst','Financial Analyst','Analytics Consultant'];
 
-const STATUS_LABELS = {
-  searching:'🔍 Searching',
-  interviewing:'🎤 Interviewing',
-  offer_received:'📝 Offer Received',
-  placed:'✅ Placed',
-  opted_out:'⏸ Opted Out'
+const STATUS_MAP = {
+  searching:'🔍 Searching', interviewing:'🎤 Interviewing',
+  offer_received:'📝 Offer Received', placed:'✅ Placed', opted_out:'⏸ Opted Out'
+};
+const STATUS_BADGE = {
+  searching:'b-bl', interviewing:'b-or', offer_received:'b-pu', placed:'b-gr', opted_out:'b-re'
 };
 
-const STATUS_COLORS = {
-  searching:'badge-blue', interviewing:'badge-orange',
-  offer_received:'badge-purple', placed:'badge-green', opted_out:'badge-red'
-};
+let CU = null, CP = null, CPlac = null;
 
-// ── Init Firebase ──
-let app, auth, db, currentUser = null, currentProfile = null, currentPlacement = null;
-let isConfigured = false;
-
-try {
-  if (!firebaseConfig.apiKey.includes('PASTE')) {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    isConfigured = true;
-  }
-} catch(e) { console.error('Firebase init error:', e); }
-
-// ── DOM Ready ──
-document.addEventListener('DOMContentLoaded', () => {
-  buildOnboardingUI();
-
-  if (!isConfigured) {
-    document.getElementById('configWarning').style.display = 'block';
-    setTimeout(() => {
-      document.getElementById('loadingScreen').style.opacity = '0';
-      setTimeout(() => {
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('loginScreen').classList.add('active');
-      }, 400);
-    }, 1800);
-    return;
-  }
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUser = user;
-      await loadUserData(user);
-    } else {
-      showLogin();
+// ── Init ──
+window.addEventListener('DOMContentLoaded', () => {
+  buildChips();
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session?.user) {
+      CU = session.user;
+      await loadAll();
+    } else if (event === 'SIGNED_OUT') {
+      showScreen('s-login');
     }
   });
-
-  setTimeout(() => {
-    document.getElementById('loadingScreen').style.opacity = '0';
-    setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 400);
-  }, 1800);
+  sb.auth.getSession().then(async ({ data: { session } }) => {
+    if (session?.user) { CU = session.user; await loadAll(); }
+    else showScreen('s-login');
+    setTimeout(() => {
+      const ld = document.getElementById('loader');
+      ld.style.opacity = '0';
+      setTimeout(() => ld.style.display = 'none', 400);
+    }, 1400);
+  });
 });
 
-// ── Build onboarding UI ──
-function buildOnboardingUI() {
-  // Role chips
-  const rc = document.getElementById('roleChips');
-  const erc = document.getElementById('editRoleChips');
-  ROLES.forEach(r => {
-    [rc, erc].forEach(container => {
-      if (!container) return;
-      const chip = document.createElement('div');
-      chip.className = 'role-chip';
-      chip.textContent = r;
-      chip.dataset.value = r;
-      chip.onclick = () => chip.classList.toggle('selected');
-      container.appendChild(chip);
+// ── Build chip UI ──
+function buildChips() {
+  ['ob_roles','ed_roles'].forEach(id => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    ROLES.forEach(r => {
+      const d = document.createElement('div');
+      d.className='chip'; d.textContent=r; d.dataset.v=r;
+      d.onclick=()=>d.classList.toggle('gsel');
+      c.appendChild(d);
     });
   });
-
-  // Company chips
-  const cc = document.getElementById('companyChips');
-  const ecc = document.getElementById('editCompanyChips');
-  COMPANIES.forEach(c => {
-    [cc, ecc].forEach(container => {
-      if (!container) return;
-      const chip = document.createElement('div');
-      chip.className = 'company-chip';
-      chip.textContent = c;
-      chip.dataset.value = c;
-      chip.onclick = () => chip.classList.toggle('selected');
-      container.appendChild(chip);
+  ['ob_companies','ed_companies'].forEach(id => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    COMPANIES.forEach(r => {
+      const d = document.createElement('div');
+      d.className='chip'; d.textContent=r; d.dataset.v=r;
+      d.onclick=()=>d.classList.toggle('sel');
+      c.appendChild(d);
     });
   });
 }
 
-// ── Auth: Google Sign In ──
-window.signInWithGoogle = async () => {
-  if (!isConfigured) { showToast('Firebase not configured yet.','error'); return; }
+// ── Load all data ──
+async function loadAll() {
   try {
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ hd: 'gim.ac.in' });
-    await signInWithPopup(auth, provider);
-  } catch(e) {
-    showToast('Sign in failed: ' + e.message, 'error');
-  }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', CU.id).single();
+    if (!profile) { showScreen('s-onboard'); return; }
+    CP = profile;
+    const { data: plac } = await sb.from('placements').select('*').eq('id', CU.id).single();
+    CPlac = plac || { status:'searching', interviews:[] };
+    if (!plac) await sb.from('placements').insert({ id: CU.id, status:'searching', interviews:[] });
+    showApp();
+  } catch(e) { showScreen('s-onboard'); }
+}
+
+// ── Magic link ──
+window.sendMagicLink = async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email || !email.includes('@')) { toast('Enter a valid email','err'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.href }
+  });
+  if (error) { toast('Error: ' + error.message,'err'); btn.disabled=false; btn.textContent='Send Login Link →'; return; }
+  document.getElementById('magicSent').style.display = 'block';
+  btn.textContent = 'Link Sent! Check your email ✓';
 };
 
-window.signOut = async () => {
-  if (!isConfigured) { showLogin(); return; }
-  await fbSignOut(auth);
-  currentUser = null;
-  showLogin();
+// ── Sign out ──
+window.doSignOut = async () => { await sb.auth.signOut(); CU=null; CP=null; CPlac=null; showScreen('s-login'); };
+
+// ── Save profile (onboard) ──
+window.saveProfile = async () => {
+  const name = document.getElementById('ob_name').value.trim();
+  const roll = document.getElementById('ob_roll').value.trim();
+  if (!name||!roll) { toast('Fill in name and roll number','err'); return; }
+  const btn = document.getElementById('ob_save');
+  btn.disabled=true; btn.textContent='Saving...';
+  const roles = [...document.querySelectorAll('#ob_roles .gsel')].map(c=>c.dataset.v);
+  const companies = [...document.querySelectorAll('#ob_companies .sel')].map(c=>c.dataset.v);
+  const { error } = await sb.from('profiles').upsert({
+    id: CU.id, name, roll_no: roll, email: CU.email,
+    internship: document.getElementById('ob_intern').value.trim(),
+    resume_link: document.getElementById('ob_resume').value.trim(),
+    target_roles: roles, target_companies: companies,
+    updated_at: new Date().toISOString()
+  });
+  if (error) { toast('Error: '+error.message,'err'); btn.disabled=false; btn.textContent='Save & Enter Hub →'; return; }
+  CP = { name, roll_no:roll, email:CU.email, target_roles:roles, target_companies:companies };
+  CPlac = { status:'searching', interviews:[] };
+  await sb.from('placements').upsert({ id:CU.id, status:'searching', interviews:[], updated_at:new Date().toISOString() });
+  showApp();
+  toast('Welcome to the Hub! 🎉','ok');
 };
 
-// ── Load user data ──
-async function loadUserData(user) {
-  try {
-    const profileRef = doc(db, 'users', user.uid);
-    const profileSnap = await getDoc(profileRef);
+// ── Update profile ──
+window.updateProfile = async () => {
+  const roles = [...document.querySelectorAll('#ed_roles .gsel')].map(c=>c.dataset.v);
+  const companies = [...document.querySelectorAll('#ed_companies .sel')].map(c=>c.dataset.v);
+  const { error } = await sb.from('profiles').update({
+    internship: document.getElementById('ed_intern').value.trim(),
+    resume_link: document.getElementById('ed_resume').value.trim(),
+    target_roles: roles, target_companies: companies,
+    updated_at: new Date().toISOString()
+  }).eq('id', CU.id);
+  if (error) { toast('Error: '+error.message,'err'); return; }
+  CP = {...CP, target_roles:roles, target_companies:companies};
+  renderDashboard();
+  toast('Profile updated ✅','ok');
+};
 
-    if (!profileSnap.exists()) {
-      // New user — show onboarding
-      document.getElementById('loginScreen').classList.remove('active');
-      document.getElementById('onboardScreen').classList.add('active');
-    } else {
-      currentProfile = profileSnap.data();
-      await loadPlacementData(user);
-      showApp(user, currentProfile);
-    }
-  } catch(e) {
-    showToast('Error loading profile: ' + e.message, 'error');
-    showLogin();
-  }
-}
-
-async function loadPlacementData(user) {
-  try {
-    const placRef = doc(db, 'placements', user.uid);
-    const placSnap = await getDoc(placRef);
-    if (placSnap.exists()) {
-      currentPlacement = placSnap.data();
-    } else {
-      currentPlacement = { status: 'searching', interviews: [], offers: [] };
-      await setDoc(placRef, currentPlacement);
-    }
-  } catch(e) { console.error('Placement load error:', e); }
-}
-
-// ── Show screens ──
-function showLogin() {
-  document.getElementById('loginScreen').classList.add('active');
-  document.getElementById('appScreen').classList.remove('active');
-  document.getElementById('onboardScreen').classList.remove('active');
-}
-
-function showApp(user, profile) {
-  document.getElementById('loginScreen').classList.remove('active');
-  document.getElementById('onboardScreen').classList.remove('active');
-  document.getElementById('appScreen').classList.add('active');
-
-  // Populate sidebar
-  const name = profile.name || user.displayName || 'BDA Student';
-  const initials = name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('sidebarName').textContent = name;
-  document.getElementById('sidebarRoll').textContent = profile.rollNo || '—';
-
-  const avEl = document.getElementById('sidebarAvatar');
-  if (user.photoURL) {
-    avEl.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
-  } else {
-    avEl.textContent = initials;
-  }
-
-  // Admin nav
-  if (ADMIN_EMAILS.includes(user.email)) {
-    document.getElementById('adminNav').style.display = 'block';
-  }
-
-  // Dashboard
-  populateDashboard(profile);
-  populateTracker();
-  populateProfilePage(user, profile);
+// ── Show app ──
+function showApp() {
+  showScreen('s-app');
+  const initials = (CP.name||'?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('sbAv').textContent = initials;
+  document.getElementById('sbName').textContent = CP.name||'—';
+  document.getElementById('sbRoll').textContent = CP.roll_no||'—';
+  if (ADMIN_EMAILS.includes(CU.email)) document.getElementById('adminNav').style.display='block';
+  renderDashboard();
+  renderTracker();
+  renderProfile();
   loadBatchStats();
 }
 
 // ── Dashboard ──
-function populateDashboard(profile) {
-  const name = profile.name ? profile.name.split(' ')[0] : 'there';
-  document.getElementById('dashWelcome').textContent = `Welcome back, ${name}! Here's your placement snapshot.`;
-  document.getElementById('statTargets').textContent = (profile.targetCompanies||[]).length;
+function renderDashboard() {
+  const first = (CP.name||'there').split(' ')[0];
+  document.getElementById('dashWelcome').textContent = `Welcome back, ${first}! Here's your snapshot.`;
+  document.getElementById('st-targets').textContent = (CP.target_companies||[]).length;
+  document.getElementById('st-ints').textContent = (CPlac?.interviews||[]).length;
+  document.getElementById('st-offers').textContent = (CPlac?.interviews||[]).filter(i=>i.result==='offer').length;
 
-  const interviews = (currentPlacement?.interviews||[]);
-  document.getElementById('statInterviews').textContent = interviews.length;
-  document.getElementById('statOffers').textContent = interviews.filter(i=>i.result==='offer').length;
-
-  // Target companies
-  const tg = document.getElementById('dashTargets');
-  tg.innerHTML = '';
-  (profile.targetCompanies||[]).forEach(c => {
-    const span = document.createElement('span');
-    span.className = 'target-tag';
-    span.textContent = c;
-    tg.appendChild(span);
-  });
-  if ((profile.targetCompanies||[]).length === 0) {
-    tg.innerHTML = '<span style="color:var(--text3);font-size:13px">No targets — edit profile to add</span>';
-  }
+  const tg = document.getElementById('dash-targets');
+  tg.innerHTML = (CP.target_companies||[]).length
+    ? (CP.target_companies||[]).map(c=>`<span class="ttag">${c}</span>`).join('')
+    : '<span style="color:var(--text3);font-size:13px">None — edit profile</span>';
 }
 
 // ── Tracker ──
-function populateTracker() {
-  if (!currentPlacement) return;
-  const status = currentPlacement.status || 'searching';
-
-  // Stage buttons
-  document.querySelectorAll('.stage-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.status === status);
-  });
-
-  // Status pill
-  document.getElementById('myStatus').textContent = STATUS_LABELS[status] || status;
-
-  // Offer form
-  const offerStatuses = ['offer_received','placed'];
-  document.getElementById('offerForm').style.display = offerStatuses.includes(status) ? 'block' : 'none';
-
-  // Offer banner
-  if (currentPlacement.offerCompany) {
-    document.getElementById('offerBanner').style.display = 'flex';
-    document.getElementById('offerCompany').textContent = currentPlacement.offerCompany;
-    document.getElementById('offerRole').textContent = currentPlacement.offerRole || '';
-    document.getElementById('offerCTC').textContent = currentPlacement.ctc ? `₹${currentPlacement.ctc} LPA` : 'Offer ✅';
-    if (currentPlacement.offerCompany) {
-      document.getElementById('of_company').value = currentPlacement.offerCompany;
-      document.getElementById('of_role').value = currentPlacement.offerRole || '';
-      document.getElementById('of_ctc').value = currentPlacement.ctc || '';
-    }
+function renderTracker() {
+  const s = CPlac?.status||'searching';
+  document.querySelectorAll('.stg').forEach(b=>b.classList.toggle('on',b.dataset.s===s));
+  document.getElementById('myStatusLabel').textContent = STATUS_MAP[s]||s;
+  document.getElementById('offerForm').style.display = ['offer_received','placed'].includes(s)?'block':'none';
+  if (CPlac?.offer_company) {
+    const ob = document.getElementById('offerBanner');
+    ob.style.display='flex';
+    document.getElementById('ob-co').textContent = CPlac.offer_company;
+    document.getElementById('ob-ro').textContent = CPlac.offer_role||'';
+    document.getElementById('ob-ctc').textContent = CPlac.ctc?`₹${CPlac.ctc} LPA`:'Offer ✅';
+    document.getElementById('of_co').value = CPlac.offer_company||'';
+    document.getElementById('of_ro').value = CPlac.offer_role||'';
+    document.getElementById('of_ctc').value = CPlac.ctc||'';
   }
-
-  // Interview log
-  renderInterviewLog(currentPlacement.interviews || []);
-  document.getElementById('trackerCount').textContent = (currentPlacement.interviews||[]).length;
+  renderIntLog(CPlac?.interviews||[]);
+  document.getElementById('tc').textContent = (CPlac?.interviews||[]).length;
 }
 
-function renderInterviewLog(interviews) {
-  const log = document.getElementById('interviewLog');
-  if (interviews.length === 0) {
-    log.innerHTML = '<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No interviews logged yet</div>';
-    return;
+function renderIntLog(interviews) {
+  const log = document.getElementById('intLog');
+  if (!interviews.length) {
+    log.innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No interviews logged yet</div>'; return;
   }
-  log.innerHTML = [...interviews].reverse().map(i => `
-    <div class="int-card">
+  log.innerHTML=[...interviews].reverse().map(i=>`
+    <div class="ic">
       <div>
-        <div class="int-company">${i.company}</div>
-        <div class="int-meta">${i.round} · ${i.date||'—'}</div>
-        ${i.notes ? `<div style="font-size:12px;color:var(--text2);margin-top:6px">${i.notes}</div>` : ''}
+        <div class="ic-co">${i.company}</div>
+        <div class="ic-meta">${i.round} · ${i.date||'—'}</div>
+        ${i.notes?`<div class="ic-notes">${i.notes}</div>`:''}
       </div>
-      <span class="int-status ${i.result}">${i.result?.toUpperCase()}</span>
-    </div>
-  `).join('');
+      <span class="ist ${i.result||'pending'}">${(i.result||'pending').toUpperCase()}</span>
+    </div>`).join('');
 }
 
-// ── Profile Page ──
-function populateProfilePage(user, profile) {
-  document.getElementById('profileName').textContent = profile.name || user.displayName;
-  document.getElementById('profileRoll').textContent = profile.rollNo || '—';
-  document.getElementById('profileEmail').textContent = user.email;
-  document.getElementById('profileResume').href = profile.resumeLink || '#';
-  document.getElementById('edit_internship').value = profile.internship || '';
-  document.getElementById('edit_resume').value = profile.resumeLink || '';
-
-  const initials = (profile.name||'?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('profileAvBig').textContent = initials;
-
-  // Pre-select roles
-  document.querySelectorAll('#editRoleChips .role-chip').forEach(chip => {
-    chip.classList.toggle('selected', (profile.targetRoles||[]).includes(chip.dataset.value));
-  });
-  document.querySelectorAll('#editCompanyChips .company-chip').forEach(chip => {
-    chip.classList.toggle('selected', (profile.targetCompanies||[]).includes(chip.dataset.value));
-  });
+// ── Profile page ──
+function renderProfile() {
+  document.getElementById('pName').textContent=CP.name||'—';
+  document.getElementById('pRoll').textContent=CP.roll_no||'—';
+  document.getElementById('pEmail').textContent=CU.email||'—';
+  document.getElementById('pResume').href=CP.resume_link||'#';
+  document.getElementById('pAvBig').textContent=(CP.name||'?').split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('ed_intern').value=CP.internship||'';
+  document.getElementById('ed_resume').value=CP.resume_link||'';
+  document.querySelectorAll('#ed_roles .chip').forEach(c=>c.classList.toggle('gsel',(CP.target_roles||[]).includes(c.dataset.v)));
+  document.querySelectorAll('#ed_companies .chip').forEach(c=>c.classList.toggle('sel',(CP.target_companies||[]).includes(c.dataset.v)));
 }
 
 // ── Batch stats ──
 async function loadBatchStats() {
-  if (!db) return;
   try {
-    const usersSnap = await getDocs(collection(db, 'users'));
-    const placsSnap = await getDocs(collection(db, 'placements'));
-    const placMap = {};
-    placsSnap.forEach(d => placMap[d.id] = d.data());
-
-    let placed = 0, interviewing = 0, ctcSum = 0, ctcCount = 0;
-    usersSnap.forEach(d => {
-      const plac = placMap[d.id];
-      if (plac?.status === 'placed') { placed++; if (plac.ctc) { ctcSum+=parseFloat(plac.ctc); ctcCount++; } }
-      if (plac?.status === 'interviewing') interviewing++;
+    const { data: profiles } = await sb.from('profiles').select('id,name,target_roles');
+    const { data: placs } = await sb.from('placements').select('*');
+    const pm = {};
+    (placs||[]).forEach(p=>pm[p.id]=p);
+    let placed=0,inting=0,ctcSum=0,ctcCnt=0;
+    (profiles||[]).forEach(p=>{
+      const pl=pm[p.id];
+      if(pl?.status==='placed'){placed++;if(pl.ctc){ctcSum+=parseFloat(pl.ctc);ctcCnt++;}}
+      if(pl?.status==='interviewing')inting++;
     });
+    document.getElementById('st-batch').textContent=placed;
 
-    document.getElementById('statBatchPlaced').textContent = placed;
-
-    // Batch status chart
-    const total = usersSnap.size;
-    const chart = document.getElementById('batchStatusChart');
-    chart.innerHTML = `
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${[
-          ['Placed','placed','var(--green)'],
-          ['Interviewing','interviewing','var(--orange)'],
-          ['Searching','searching','var(--accent)'],
-        ].map(([label,st,color]) => {
-          const cnt = [...placsSnap.docs].filter(d=>d.data().status===st).length;
-          const pct = total ? Math.round(cnt/total*100) : 0;
-          return `<div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
-              <span style="color:var(--text2)">${label}</span>
-              <span style="color:${color};font-family:var(--font-mono)">${cnt} (${pct}%)</span>
-            </div>
-            <div style="height:5px;background:var(--border);border-radius:3px">
-              <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width 0.5s"></div>
-            </div>
-          </div>`;
-        }).join('')}
-        <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);text-align:right;margin-top:4px">${total} registered in hub</div>
-      </div>
-    `;
+    // Batch chart
+    const total=profiles?.length||0;
+    const chart=document.getElementById('dash-batch-chart');
+    const rows=[['Placed','placed',`var(--green)`],['Interviewing','interviewing',`var(--orange)`],['Searching','searching',`var(--accent)`]];
+    chart.innerHTML=rows.map(([label,st,color])=>{
+      const cnt=(placs||[]).filter(p=>p.status===st).length;
+      const pct=total?Math.round(cnt/total*100):0;
+      return `<div class="bar-row">
+        <div class="bar-meta"><span style="color:var(--text2)">${label}</span><span style="color:${color};font-family:var(--font-mono)">${cnt} (${pct}%)</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      </div>`;
+    }).join('')+`<div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);margin-top:8px;text-align:right">${total} registered</div>`;
 
     // Recent activity
-    const recentDiv = document.getElementById('recentActivity');
-    const activityItems = [];
-    placsSnap.forEach(d => {
-      const u = usersSnap.docs.find(ud => ud.id === d.id);
-      const name = u?.data()?.name?.split(' ')[0] || 'A student';
-      const plac = d.data();
-      if (plac.status === 'placed' && plac.offerCompany) {
-        activityItems.push(`<div style="padding:10px;border-bottom:1px solid var(--border);font-size:13px">🎉 <strong>${name}</strong> placed at <strong style="color:var(--accent)">${plac.offerCompany}</strong>${plac.ctc?` · ₹${plac.ctc} LPA`:''}</div>`);
-      } else if (plac.status === 'interviewing') {
-        activityItems.push(`<div style="padding:10px;border-bottom:1px solid var(--border);font-size:13px">🎤 <strong>${name}</strong> is actively interviewing</div>`);
-      }
+    const acts=[];
+    (profiles||[]).forEach(p=>{
+      const pl=pm[p.id];
+      if(pl?.status==='placed'&&pl.offer_company) acts.push(`<div style="padding:9px;border-bottom:1px solid var(--border);font-size:13px">🎉 <strong>${p.name?.split(' ')[0]||'Someone'}</strong> placed at <strong style="color:var(--accent)">${pl.offer_company}</strong>${pl.ctc?` · ₹${pl.ctc} LPA`:''}</div>`);
+      else if(pl?.status==='interviewing') acts.push(`<div style="padding:9px;border-bottom:1px solid var(--border);font-size:13px">🎤 <strong>${p.name?.split(' ')[0]||'Someone'}</strong> is actively interviewing</div>`);
     });
-    recentDiv.innerHTML = activityItems.length ? activityItems.slice(0,5).join('') : '<div style="color:var(--text3);font-size:13px;padding:10px">No activity yet — be the first to log your journey!</div>';
+    document.getElementById('dash-activity').innerHTML=acts.length?acts.slice(0,6).join(''):'<div style="color:var(--text3);font-size:13px;padding:10px">No activity yet — log your first interview!</div>';
 
-    // Admin panel stats
-    if (document.getElementById('adm-total')) {
-      document.getElementById('adm-total').textContent = total;
-      document.getElementById('adm-interviewing').textContent = interviewing;
-      document.getElementById('adm-placed').textContent = placed;
-      document.getElementById('adm-avg-ctc').textContent = ctcCount ? (ctcSum/ctcCount).toFixed(1) : '—';
-      populateAdminTable(usersSnap, placMap);
+    // Admin
+    if(ADMIN_EMAILS.includes(CU?.email)){
+      document.getElementById('adm-total').textContent=total;
+      document.getElementById('adm-int').textContent=inting;
+      document.getElementById('adm-placed').textContent=placed;
+      document.getElementById('adm-ctc').textContent=ctcCnt?(ctcSum/ctcCnt).toFixed(1)+'':'—';
+      const pm2={};(placs||[]).forEach(p=>pm2[p.id]=p);
+      const tbody=document.getElementById('admTbody');
+      tbody.innerHTML=(profiles||[]).map(p=>{
+        const pl=pm2[p.id]||{};
+        return`<tr>
+          <td><strong>${p.name||'—'}</strong></td>
+          <td style="font-family:var(--font-mono);font-size:11px">${p.roll_no||'—'}</td>
+          <td style="font-size:11px;color:var(--text2)">${p.email||'—'}</td>
+          <td style="font-size:12px">${p.internship||'—'}</td>
+          <td style="font-size:12px">${(p.target_roles||[]).join(', ')||'—'}</td>
+          <td><span class="badge ${STATUS_BADGE[pl.status]||'b-bl'}">${STATUS_MAP[pl.status]||'—'}</span></td>
+          <td style="font-weight:600;color:var(--accent)">${pl.offer_company||'—'}</td>
+          <td style="font-family:var(--font-mono);color:var(--green)">${pl.ctc?`₹${pl.ctc}`:'—'}</td>
+        </tr>`;
+      }).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px">No students yet</td></tr>';
+      window._admData={profiles,placs};
     }
-  } catch(e) { console.error('Batch stats error:', e); }
+  } catch(e){console.error(e);}
 }
-
-function populateAdminTable(usersSnap, placMap) {
-  const tbody = document.getElementById('adminTableBody');
-  let rows = '';
-  usersSnap.forEach(d => {
-    const u = d.data();
-    const p = placMap[d.id] || {};
-    const statusColor = STATUS_COLORS[p.status] || 'badge-blue';
-    rows += `<tr>
-      <td><strong>${u.name||'—'}</strong></td>
-      <td style="font-family:var(--font-mono);font-size:12px">${u.rollNo||'—'}</td>
-      <td style="font-size:12px;color:var(--text2)">${d.id}</td>
-      <td style="font-size:12px">${u.internship||'—'}</td>
-      <td style="font-size:12px">${(u.targetRoles||[]).join(', ')||'—'}</td>
-      <td><span class="badge ${statusColor}">${STATUS_LABELS[p.status]||'—'}</span></td>
-      <td style="font-weight:600;color:var(--accent)">${p.offerCompany||'—'}</td>
-      <td style="font-family:var(--font-mono);color:var(--green)">${p.ctc?`₹${p.ctc}`:'—'}</td>
-    </tr>`;
-  });
-  tbody.innerHTML = rows || '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:24px">No students registered yet</td></tr>';
-
-  // Store for CSV export
-  window._adminData = { usersSnap, placMap };
-}
-
-// ── Save Profile (Onboarding) ──
-window.saveProfile = async () => {
-  if (!currentUser || !db) return;
-  const name = document.getElementById('ob_name').value.trim();
-  const rollNo = document.getElementById('ob_roll').value.trim();
-  if (!name || !rollNo) { showToast('Please fill in name and roll number', 'error'); return; }
-
-  const btn = document.getElementById('saveProfileBtn');
-  btn.disabled = true; btn.textContent = 'Saving...';
-
-  const targetRoles = [...document.querySelectorAll('#roleChips .role-chip.selected')].map(c=>c.dataset.value);
-  const targetCompanies = [...document.querySelectorAll('#companyChips .company-chip.selected')].map(c=>c.dataset.value);
-
-  try {
-    await setDoc(doc(db, 'users', currentUser.uid), {
-      name,rollNo,
-      email: currentUser.email,
-      internship: document.getElementById('ob_internship').value.trim(),
-      resumeLink: document.getElementById('ob_resume').value.trim(),
-      targetRoles, targetCompanies,
-      createdAt: serverTimestamp(),
-    });
-    await setDoc(doc(db, 'placements', currentUser.uid), {
-      status: 'searching', interviews: [], updatedAt: serverTimestamp()
-    });
-    currentProfile = { name,rollNo,targetRoles,targetCompanies };
-    currentPlacement = { status: 'searching', interviews: [] };
-    showApp(currentUser, currentProfile);
-    showToast('Profile saved! Welcome to the Hub 🎉', 'success');
-  } catch(e) {
-    showToast('Error: ' + e.message, 'error');
-    btn.disabled = false; btn.textContent = 'Save Profile & Enter Hub →';
-  }
-};
-
-// ── Update Profile ──
-window.updateProfile = async () => {
-  if (!currentUser || !db) return;
-  const targetRoles = [...document.querySelectorAll('#editRoleChips .role-chip.selected')].map(c=>c.dataset.value);
-  const targetCompanies = [...document.querySelectorAll('#editCompanyChips .company-chip.selected')].map(c=>c.dataset.value);
-  try {
-    await updateDoc(doc(db, 'users', currentUser.uid), {
-      internship: document.getElementById('edit_internship').value.trim(),
-      resumeLink: document.getElementById('edit_resume').value.trim(),
-      targetRoles, targetCompanies,
-      updatedAt: serverTimestamp(),
-    });
-    currentProfile = {...currentProfile, targetRoles, targetCompanies};
-    populateDashboard(currentProfile);
-    showToast('Profile updated ✅', 'success');
-  } catch(e) { showToast('Error: ' + e.message, 'error'); }
-};
 
 // ── Status update ──
-window.updateStatus = async (status, btn) => {
-  if (!currentUser || !db) return;
-  document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const offerStatuses = ['offer_received','placed'];
-  document.getElementById('offerForm').style.display = offerStatuses.includes(status) ? 'block' : 'none';
-  document.getElementById('myStatus').textContent = STATUS_LABELS[status];
-  try {
-    await updateDoc(doc(db, 'placements', currentUser.uid), { status, updatedAt: serverTimestamp() });
-    currentPlacement.status = status;
-    showToast('Status updated', 'success');
-  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+window.setStatus = async (s, btn) => {
+  document.querySelectorAll('.stg').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('myStatusLabel').textContent=STATUS_MAP[s];
+  document.getElementById('offerForm').style.display=['offer_received','placed'].includes(s)?'block':'none';
+  const {error}=await sb.from('placements').update({status:s,updated_at:new Date().toISOString()}).eq('id',CU.id);
+  if(!error){CPlac={...CPlac,status:s};toast('Status updated','ok');}
+  else toast('Error: '+error.message,'err');
 };
 
-// ── Save Offer ──
+// ── Save offer ──
 window.saveOffer = async () => {
-  if (!currentUser || !db) return;
-  const company = document.getElementById('of_company').value.trim();
-  const role = document.getElementById('of_role').value.trim();
-  const ctc = document.getElementById('of_ctc').value;
-  const joining = document.getElementById('of_joining').value;
-  try {
-    await updateDoc(doc(db, 'placements', currentUser.uid), {
-      offerCompany: company, offerRole: role,
-      ctc: ctc ? parseFloat(ctc) : null,
-      joiningDate: joining,
-      updatedAt: serverTimestamp()
-    });
-    currentPlacement = {...currentPlacement, offerCompany:company, offerRole:role, ctc:parseFloat(ctc)};
-    if (company) {
-      document.getElementById('offerBanner').style.display = 'flex';
-      document.getElementById('offerCompany').textContent = company;
-      document.getElementById('offerRole').textContent = role;
-      document.getElementById('offerCTC').textContent = ctc ? `₹${ctc} LPA` : 'Offer ✅';
-    }
-    showToast('Offer details saved 🎉', 'success');
-  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  const co=document.getElementById('of_co').value.trim();
+  const ro=document.getElementById('of_ro').value.trim();
+  const ctc=parseFloat(document.getElementById('of_ctc').value)||null;
+  const jd=document.getElementById('of_date').value||null;
+  const {error}=await sb.from('placements').update({offer_company:co,offer_role:ro,ctc,joining_date:jd,updated_at:new Date().toISOString()}).eq('id',CU.id);
+  if(error){toast('Error: '+error.message,'err');return;}
+  CPlac={...CPlac,offer_company:co,offer_role:ro,ctc};
+  document.getElementById('offerBanner').style.display='flex';
+  document.getElementById('ob-co').textContent=co;
+  document.getElementById('ob-ro').textContent=ro;
+  document.getElementById('ob-ctc').textContent=ctc?`₹${ctc} LPA`:'Offer ✅';
+  toast('Offer saved 🎉','ok');
 };
 
-// ── Interview Modal ──
-window.openAddInterview = () => {
-  document.getElementById('addIntModal').classList.add('active');
-  document.getElementById('int_date').value = new Date().toISOString().split('T')[0];
+// ── Interview modal ──
+window.openIntModal = () => {
+  document.getElementById('intModal').classList.add('on');
+  document.getElementById('int_date').value=new Date().toISOString().split('T')[0];
 };
-window.closeModal = (id) => document.getElementById(id).classList.remove('active');
+window.closeModal = () => document.getElementById('intModal').classList.remove('on');
 
 window.saveInterview = async () => {
-  if (!currentUser || !db) return;
-  const company = document.getElementById('int_company').value.trim();
-  if (!company) { showToast('Please enter company name', 'error'); return; }
-  const entry = {
-    company,
-    round: document.getElementById('int_round').value,
-    date: document.getElementById('int_date').value,
-    result: document.getElementById('int_result').value,
-    notes: document.getElementById('int_notes').value.trim(),
-    addedAt: new Date().toISOString(),
-  };
-  const interviews = [...(currentPlacement.interviews||[]), entry];
-  try {
-    await updateDoc(doc(db, 'placements', currentUser.uid), { interviews, updatedAt: serverTimestamp() });
-    currentPlacement.interviews = interviews;
-    renderInterviewLog(interviews);
-    document.getElementById('trackerCount').textContent = interviews.length;
-    document.getElementById('statInterviews').textContent = interviews.length;
-    closeModal('addIntModal');
-    document.getElementById('int_company').value = '';
-    document.getElementById('int_notes').value = '';
-    showToast('Interview logged ✅', 'success');
-  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  const co=document.getElementById('int_co').value.trim();
+  if(!co){toast('Enter company name','err');return;}
+  const entry={company:co,round:document.getElementById('int_round').value,date:document.getElementById('int_date').value,result:document.getElementById('int_result').value,notes:document.getElementById('int_notes').value.trim(),added:new Date().toISOString()};
+  const interviews=[...(CPlac?.interviews||[]),entry];
+  const {error}=await sb.from('placements').update({interviews,updated_at:new Date().toISOString()}).eq('id',CU.id);
+  if(error){toast('Error: '+error.message,'err');return;}
+  CPlac={...CPlac,interviews};
+  renderIntLog(interviews);
+  document.getElementById('tc').textContent=interviews.length;
+  document.getElementById('st-ints').textContent=interviews.length;
+  closeModal();
+  document.getElementById('int_co').value='';
+  document.getElementById('int_notes').value='';
+  toast('Interview logged ✅','ok');
 };
 
-// ── Export CSV (Admin) ──
-window.exportCSV = () => {
-  if (!window._adminData) { showToast('No data to export', 'error'); return; }
-  const {usersSnap, placMap} = window._adminData;
-  const rows = [['Name','Roll No','Email','Internship','Target Roles','Target Companies','Status','Placed At','CTC']];
-  usersSnap.forEach(d => {
-    const u = d.data(); const p = placMap[d.id]||{};
-    rows.push([u.name,u.rollNo,d.id,u.internship,(u.targetRoles||[]).join('|'),(u.targetCompanies||[]).join('|'),p.status||'searching',p.offerCompany||'',p.ctc||'']);
-  });
-  const csv = rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = `GIM_BDA_Placements_${new Date().toISOString().split('T')[0]}.csv`;
+// ── Export CSV ──
+window.exportCSV=()=>{
+  if(!window._admData){toast('No data','err');return;}
+  const {profiles,placs}=window._admData;
+  const pm={};(placs||[]).forEach(p=>pm[p.id]=p);
+  const rows=[['Name','Roll','Email','Internship','Target Roles','Target Companies','Status','Company','CTC']];
+  (profiles||[]).forEach(p=>{const pl=pm[p.id]||{};rows.push([p.name,p.roll_no,p.email,p.internship,(p.target_roles||[]).join('|'),(p.target_companies||[]).join('|'),pl.status,pl.offer_company||'',pl.ctc||'']);});
+  const csv=rows.map(r=>r.map(c=>`"${c||''}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=`GIM_BDA_Placements_${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
-  showToast('CSV exported ✅', 'success');
+  toast('CSV exported ✅','ok');
 };
 
 // ── Navigation ──
-window.showPage = (id) => {
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id)?.classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(n => {
-    if (n.getAttribute('onclick')?.includes(`'${id}'`)) n.classList.add('active');
-  });
-  if (id === 'admin') loadBatchStats();
+window.go=(id)=>{
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));
+  const pg=document.getElementById('p-'+id);
+  if(pg)pg.classList.add('on');
+  document.querySelectorAll('.nl').forEach(n=>{if(n.getAttribute('onclick')?.includes(`'${id}'`))n.classList.add('on');});
+  if(id==='admin')loadBatchStats();
 };
 
-// ── Toast ──
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 3000);
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
 }
-window.showToast = showToast;
+
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
 </script>
 </body>
 </html>
