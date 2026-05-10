@@ -183,17 +183,6 @@ body {
 .navbar-cta:hover { background: #e5e5e5; transform: scale(1.02); }
 .navbar-cta.green-cta { background: var(--green); color: #fff; }
 .navbar-cta.green-cta:hover { background: var(--green2); }
-.navbar-cta.repo-cta {
-  background: var(--bg2);
-  color: var(--text2);
-  border: 1px solid var(--border);
-  font-weight: 600;
-}
-.navbar-cta.repo-cta:hover {
-  color: var(--text);
-  border-color: var(--border-green);
-  background: rgba(34,197,94,0.08);
-}
 
 /* ── SECTION LABEL ──────────────────────────── */
 .section-label {
@@ -920,7 +909,6 @@ h2.section-h2 {
     <button class="navbar-link" onclick="showSection('cheatsheets',this)">Cheatsheets</button>
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-left:8px">
-    <button class="navbar-cta repo-cta" onclick="window.open('https://github.com/monarchbaweja1/placements_bda_27.git','_blank','noopener')">Repository</button>
     <button class="navbar-cta" onclick="backToSelector()" id="progPill" style="background:var(--bg2);color:var(--text);border:1px solid var(--border);">
       <span id="progPillEmoji">📊</span>
       <span id="progPillName">BDA</span>
@@ -942,7 +930,6 @@ h2.section-h2 {
     <span class="navbar-link">130+ Companies</span>
   </div>
   <div style="display:flex;align-items:center;gap:10px;margin-left:8px">
-    <button class="navbar-cta repo-cta" onclick="window.open('https://github.com/monarchbaweja1/placements_bda_27.git','_blank','noopener')">Repository</button>
     <button class="navbar-cta green-cta" onclick="document.getElementById('authEmail')?.focus()">Get Access</button>
   </div>
 </nav>
