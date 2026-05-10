@@ -1240,7 +1240,7 @@ code {
 <!-- ── SIDEBAR ── -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <div class="title">GIM BDA<br>PREP HUB</div>
+    <div class="title" id="sidebarTitle">GIM BDA<br>PREP HUB</div>
     <div class="sub">// placement.prep.gim.bda</div>
   </div>
   <div class="sidebar-profile" style="display:none">
@@ -1257,7 +1257,7 @@ code {
       <span class="icon">⚡</span> Overview
     </a>
     <a class="nav-item" onclick="showSection('companies')">
-      <span class="icon">🏢</span> BDA Companies
+      <span class="icon">🏢</span> <span id="navCompanyLabel">BDA Companies</span>
       <span class="nav-badge">67</span>
     </a>
     <a class="nav-item" onclick="showSection('roles')">
@@ -1290,7 +1290,7 @@ code {
 
   <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-title">GIM BDA <span>Prep Hub</span></div>
+    <div class="topbar-title" id="topbarTitle">GIM BDA <span>Prep Hub</span></div>
     <div class="topbar-stats">
       <div class="stat-chip"><b>63</b> Companies Covered</div>
       <div class="stat-chip"><b>22.5</b> LPA Highest</div>
@@ -1408,8 +1408,8 @@ code {
   ═══════════════════════════════════════════ -->
   <div id="companies" class="section">
     <div class="section-header">
-      <div class="section-title">BDA <span class="hi">COMPANY</span><br>INTEL</div>
-      <div class="section-subtitle">67 companies — sourced from GIM BDA Audited Placement Reports 2020-24 + official website. Filter by sector below.</div>
+      <div class="section-title" id="companySecTitle">BDA <span class="hi">COMPANY</span><br>INTEL</div>
+      <div class="section-subtitle" id="companySecSub">67 companies — sourced from GIM BDA Audited Placement Reports 2020-24 + official website. Filter by sector below.</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
       <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--accent3);">
@@ -4432,6 +4432,21 @@ window.selectProg = function(prog) {
   badge.style.border = '1px solid ' + pd.color + '40';
   document.getElementById('progBannerName').textContent = pd.name;
 
+  // ── Update all programme-specific labels ──────────────────
+  const label = pd.badge; // BDA / CORE / HCM / BIFS
+  const progSubtitles = {
+    bda:  '67 companies — sourced from GIM BDA Audited Placement Reports 2020-24 + official website.',
+    core: '60 companies — sourced from GIM CORE Audited Placement Reports 2020-24 + official website.',
+    hcm:  '22 companies — sourced from GIM HCM Audited Placement Reports 2020-24 + official website.',
+    bifs: '23 companies — sourced from GIM BIFS Audited Placement Reports 2020-24 + official website.'
+  };
+  const el = (id) => document.getElementById(id);
+  if (el('sidebarTitle'))    el('sidebarTitle').innerHTML    = `GIM ${label}<br>PREP HUB`;
+  if (el('topbarTitle'))     el('topbarTitle').innerHTML     = `GIM ${label} <span>Prep Hub</span>`;
+  if (el('companySecTitle')) el('companySecTitle').innerHTML = `${label} <span class="hi">COMPANY</span><br>INTEL`;
+  if (el('companySecSub'))   el('companySecSub').textContent = progSubtitles[prog] || progSubtitles.bda;
+  if (el('navCompanyLabel')) el('navCompanyLabel').textContent = `${label} Companies`;
+
   // Update topbar stats
   const statChips = document.querySelectorAll('.stat-chip');
   if (statChips.length && pd.topbarStats) {
@@ -4447,7 +4462,6 @@ window.selectProg = function(prog) {
     // BDA: reset to original companies (or show existing)
     const grid = document.getElementById('companyGrid');
     if (grid && grid.children.length === 0) buildCompanies();
-    // show all BDA companies
     document.querySelectorAll('.company-card').forEach(c => c.style.display = '');
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.filter-btn')?.classList.add('active');
@@ -4553,8 +4567,12 @@ function showScreen(id) {
 }
 
 function enterHub() {
+  // Hide ALL auth layers completely
   document.getElementById('screen-email').classList.add('hidden');
   document.getElementById('screen-otp').classList.add('hidden');
+  const ls = document.getElementById('loginScreen');
+  if (ls) ls.style.display = 'none';
+  document.querySelectorAll('.auth-screen').forEach(s => s.classList.add('hidden'));
   document.getElementById('progSelector').style.display = 'flex';
   document.getElementById('backBtn').style.display = 'none';
 }
