@@ -1025,9 +1025,60 @@ code {
 .auth-logged-out { color: var(--text3); cursor: pointer; font-size: 11px; }
 .auth-logged-out:hover { color: var(--red); }
 
+
+/* ── Disclaimer ── */
+#disclaimerBanner {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(10,10,20,0.97);
+  border-top: 1px solid rgba(251,191,36,0.3);
+  padding: 14px 24px;
+  z-index: 99999;
+  display: flex; align-items: center; gap: 16px;
+  backdrop-filter: blur(12px);
+  animation: slideUp 0.4s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+#disclaimerBanner .disc-icon { font-size: 18px; flex-shrink: 0; }
+#disclaimerBanner .disc-text { font-size: 11.5px; color: #94a3b8; line-height: 1.6; flex: 1; }
+#disclaimerBanner .disc-text strong { color: #fbbf24; }
+#disclaimerBanner .disc-close {
+  background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3);
+  color: #fbbf24; border-radius: 8px; padding: 6px 14px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: var(--font-mono); flex-shrink: 0; white-space: nowrap;
+  transition: all 0.2s;
+}
+#disclaimerBanner .disc-close:hover { background: rgba(251,191,36,0.25); }
+
+.disclaimer-inline {
+  background: rgba(251,191,36,0.05);
+  border: 1px solid rgba(251,191,36,0.15);
+  border-left: 3px solid #fbbf24;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.disclaimer-inline strong { color: #fbbf24; }
 </style>
 </head>
 <body>
+
+<!-- ══ DISCLAIMER BANNER ══ -->
+<div id="disclaimerBanner">
+  <span class="disc-icon">⚠️</span>
+  <span class="disc-text">
+    <strong>Unofficial Student Resource — Not affiliated with or endorsed by Goa Institute of Management (GIM).</strong>
+    All placement data is sourced from publicly available GIM audited placement reports (2020–24) and official GIM website. 
+    Figures are indicative and may differ from official records. This site is built by students, for students — 
+    for preparation purposes only. No guarantee of accuracy, completeness or timeliness.
+  </span>
+  <button class="disc-close" onclick="document.getElementById('disclaimerBanner').style.display='none';localStorage.setItem('discSeen','1')">I Understand</button>
+</div>
+<script>if(localStorage.getItem('discSeen')==='1')document.getElementById('disclaimerBanner').style.display='none';</script>
+
 <div id="oldLoginWrap" style="display:none">
     <!-- Step 1: Enter email -->
     <div id="lcLoading" style="display:none;padding:20px 0;text-align:center">
@@ -1259,8 +1310,17 @@ code {
     </div>
 
   </div>
-  <div style="margin-top:24px;font-size:11px;color:var(--text3);font-family:var(--font-mono);text-align:center;letter-spacing:1px">
-    ALL DATA SOURCED FROM GIM OFFICIAL AUDITED PLACEMENT REPORTS 2020–24
+  <div style="margin-top:20px;max-width:860px;width:100%;">
+    <div class="disclaimer-inline">
+      <strong>⚠️ Disclaimer:</strong> This is an <strong>unofficial, student-made resource</strong> not affiliated with or endorsed by Goa Institute of Management. 
+      All data is sourced from publicly available GIM audited placement reports (2020–24). 
+      Figures are <strong>indicative only</strong> and may differ from official records. 
+      This platform is in active development — data may be incomplete or inaccurate. 
+      Use for preparation purposes only. GIM holds no responsibility for content on this site.
+    </div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);text-align:center;letter-spacing:1px;margin-top:8px">
+      ALL DATA FROM GIM OFFICIAL AUDITED PLACEMENT REPORTS 2020–24 · BUILT BY STUDENTS, FOR STUDENTS
+    </div>
   </div>
 </div>
 
@@ -1316,8 +1376,11 @@ code {
 
   <div class="sidebar-footer">
     Last updated: May 2025<br>
-    GIM BDA Batch 2025-27<br>
-    Open source for all
+    GIM Batch 2025-27<br>
+    Open source for all<br><br>
+    <span style="color:rgba(251,191,36,0.6);font-size:9px;line-height:1.5;display:block">
+      ⚠️ Unofficial resource. Not affiliated with GIM. Data from public placement reports. May be inaccurate.
+    </span>
   </div>
 </aside>
 
@@ -1368,7 +1431,10 @@ code {
       </div>
     </div>
 
-    <div class="alert-box">
+    <div class="disclaimer-inline" style="margin-bottom:24px">
+      <strong>⚠️ Unofficial Resource:</strong> This site is <strong>not affiliated with or endorsed by GIM</strong>. 
+      Data is sourced from publicly available audited placement reports (2020–24) and may differ from official figures. 
+      Platform is in active development — treat all data as indicative only.
     </div>
 
     <!-- Quick profile summary -->
@@ -3924,8 +3990,17 @@ function downloadSectionAsPDF(title, contentId) {
     </div>
 
   </div>
-  <div style="margin-top:24px;font-size:11px;color:var(--text3);font-family:var(--font-mono);text-align:center;letter-spacing:1px">
-    ALL DATA SOURCED FROM GIM OFFICIAL AUDITED PLACEMENT REPORTS 2020–24
+  <div style="margin-top:20px;max-width:860px;width:100%;">
+    <div class="disclaimer-inline">
+      <strong>⚠️ Disclaimer:</strong> This is an <strong>unofficial, student-made resource</strong> not affiliated with or endorsed by Goa Institute of Management. 
+      All data is sourced from publicly available GIM audited placement reports (2020–24). 
+      Figures are <strong>indicative only</strong> and may differ from official records. 
+      This platform is in active development — data may be incomplete or inaccurate. 
+      Use for preparation purposes only. GIM holds no responsibility for content on this site.
+    </div>
+    <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);text-align:center;letter-spacing:1px;margin-top:8px">
+      ALL DATA FROM GIM OFFICIAL AUDITED PLACEMENT REPORTS 2020–24 · BUILT BY STUDENTS, FOR STUDENTS
+    </div>
   </div>
 </div>
 
