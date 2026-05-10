@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GIM BDA Placement Prep Hub — Batch 2025-27</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -785,14 +786,111 @@ code {
 }
 @media(max-width:600px){.prog-grid{grid-template-columns:1fr}}
 
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse 80% 50% at 50% -5%,rgba(59,130,246,.12),transparent),var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;padding:20px;
+}
+.login-card{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:20px;padding:44px;
+  max-width:420px;width:100%;
+  text-align:center;position:relative;overflow:hidden;
+}
+.login-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan),var(--purple));
+}
+.lc-gim{font-family:var(--font-mono);font-size:11px;color:var(--text3);letter-spacing:2px;margin-bottom:16px;text-transform:uppercase}
+.lc-title{font-family:var(--font-head);font-size:30px;font-weight:900;line-height:1.2;margin-bottom:8px}
+.lc-title span{color:var(--accent)}
+.lc-sub{color:var(--text2);font-size:13px;margin-bottom:28px;line-height:1.6}
+.lc-input{
+  width:100%;padding:12px 14px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text);
+  font-family:var(--font-body);font-size:14px;
+  outline:none;transition:border-color .2s;margin-bottom:10px;
+}
+.lc-input:focus{border-color:var(--accent)}
+.lc-input::placeholder{color:var(--text3)}
+.lc-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  border:none;border-radius:var(--r);color:#fff;
+  font-family:var(--font-head);font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:.5px;
+}
+.lc-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.3)}
+.lc-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.lc-note{font-size:12px;color:var(--text3);font-family:var(--font-mono);margin-top:14px;line-height:1.7}
+.lc-sent{
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);
+  border-radius:10px;padding:14px;color:var(--accent3);font-size:13px;
+  text-align:center;display:none;margin-top:10px;line-height:1.6;
+}
+.lc-stats{display:flex;justify-content:center;gap:24px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+.lcs-n{font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--accent)}
+.lcs-l{font-size:10px;color:var(--text3);font-family:var(--font-mono)}
+.lc-user-bar{
+  display:flex;align-items:center;gap:10px;
+  margin-top:16px;padding:10px 14px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;font-size:12px;color:var(--text2);
+  font-family:var(--font-mono);
+}
+.lc-user-bar span{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lc-signout{color:var(--red);cursor:pointer;font-size:11px}
+.lc-signout:hover{text-decoration:underline}
+
 </style>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="lc-gim">Goa Institute of Management</div>
+    <div class="lc-title">GIM <span>Placement</span><br>Prep Hub</div>
+    <div class="lc-sub">The complete placement preparation environment for GIM students — companies, Q&A, roadmap &amp; cheatsheets.</div>
+
+    <div id="loginForm">
+      <input type="email" class="lc-input" id="lcEmail" placeholder="Enter your email address" autocomplete="email">
+      <button class="lc-btn" id="lcBtn" onclick="doLogin()">Get Login Link →</button>
+      <div class="lc-sent" id="lcSent">
+        ✅ Magic link sent!<br>Check your inbox and click the link to sign in.
+      </div>
+      <div class="lc-note">
+        Enter any email → receive a one-click login link.<br>
+        No password needed · Free forever
+      </div>
+    </div>
+
+    <div id="loggedInBar" style="display:none">
+      <div class="lc-user-bar">
+        <span>✅ Signed in as: <strong id="lcUserEmail">—</strong></span>
+        <span class="lc-signout" onclick="doSignOutIndex()">Sign out</span>
+      </div>
+      <button class="lc-btn" style="margin-top:10px" onclick="enterHub()">Enter Prep Hub →</button>
+    </div>
+
+    <div class="lc-stats">
+      <div><div class="lcs-n">4</div><div class="lcs-l">Programmes</div></div>
+      <div><div class="lcs-n">130+</div><div class="lcs-l">Companies</div></div>
+      <div><div class="lcs-n">800+</div><div class="lcs-l">Questions</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
      PROGRAMME SELECTOR
 ══════════════════════════════════════════ -->
-<div id="progSelector">
+<div id="progSelector" style="display:none">
   <div class="prog-logo">Goa Institute of Management</div>
   <div class="prog-title">GIM <span>Placement</span><br>Prep Hub</div>
   <div class="prog-sub">Select your programme to access company intel, Q&A banks, roadmap &amp; cheatsheets</div>
@@ -3101,12 +3199,109 @@ function downloadSectionAsPDF(title, contentId) {
 }
 @media(max-width:600px){.prog-grid{grid-template-columns:1fr}}
 
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse 80% 50% at 50% -5%,rgba(59,130,246,.12),transparent),var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;padding:20px;
+}
+.login-card{
+  background:var(--card);border:1px solid var(--border2);
+  border-radius:20px;padding:44px;
+  max-width:420px;width:100%;
+  text-align:center;position:relative;overflow:hidden;
+}
+.login-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--cyan),var(--purple));
+}
+.lc-gim{font-family:var(--font-mono);font-size:11px;color:var(--text3);letter-spacing:2px;margin-bottom:16px;text-transform:uppercase}
+.lc-title{font-family:var(--font-head);font-size:30px;font-weight:900;line-height:1.2;margin-bottom:8px}
+.lc-title span{color:var(--accent)}
+.lc-sub{color:var(--text2);font-size:13px;margin-bottom:28px;line-height:1.6}
+.lc-input{
+  width:100%;padding:12px 14px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text);
+  font-family:var(--font-body);font-size:14px;
+  outline:none;transition:border-color .2s;margin-bottom:10px;
+}
+.lc-input:focus{border-color:var(--accent)}
+.lc-input::placeholder{color:var(--text3)}
+.lc-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--accent),var(--cyan));
+  border:none;border-radius:var(--r);color:#fff;
+  font-family:var(--font-head);font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:.5px;
+}
+.lc-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.3)}
+.lc-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.lc-note{font-size:12px;color:var(--text3);font-family:var(--font-mono);margin-top:14px;line-height:1.7}
+.lc-sent{
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);
+  border-radius:10px;padding:14px;color:var(--accent3);font-size:13px;
+  text-align:center;display:none;margin-top:10px;line-height:1.6;
+}
+.lc-stats{display:flex;justify-content:center;gap:24px;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+.lcs-n{font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--accent)}
+.lcs-l{font-size:10px;color:var(--text3);font-family:var(--font-mono)}
+.lc-user-bar{
+  display:flex;align-items:center;gap:10px;
+  margin-top:16px;padding:10px 14px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;font-size:12px;color:var(--text2);
+  font-family:var(--font-mono);
+}
+.lc-user-bar span{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lc-signout{color:var(--red);cursor:pointer;font-size:11px}
+.lc-signout:hover{text-decoration:underline}
+
 </style></head><body>
+
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="lc-gim">Goa Institute of Management</div>
+    <div class="lc-title">GIM <span>Placement</span><br>Prep Hub</div>
+    <div class="lc-sub">The complete placement preparation environment for GIM students — companies, Q&A, roadmap &amp; cheatsheets.</div>
+
+    <div id="loginForm">
+      <input type="email" class="lc-input" id="lcEmail" placeholder="Enter your email address" autocomplete="email">
+      <button class="lc-btn" id="lcBtn" onclick="doLogin()">Get Login Link →</button>
+      <div class="lc-sent" id="lcSent">
+        ✅ Magic link sent!<br>Check your inbox and click the link to sign in.
+      </div>
+      <div class="lc-note">
+        Enter any email → receive a one-click login link.<br>
+        No password needed · Free forever
+      </div>
+    </div>
+
+    <div id="loggedInBar" style="display:none">
+      <div class="lc-user-bar">
+        <span>✅ Signed in as: <strong id="lcUserEmail">—</strong></span>
+        <span class="lc-signout" onclick="doSignOutIndex()">Sign out</span>
+      </div>
+      <button class="lc-btn" style="margin-top:10px" onclick="enterHub()">Enter Prep Hub →</button>
+    </div>
+
+    <div class="lc-stats">
+      <div><div class="lcs-n">4</div><div class="lcs-l">Programmes</div></div>
+      <div><div class="lcs-n">130+</div><div class="lcs-l">Companies</div></div>
+      <div><div class="lcs-n">800+</div><div class="lcs-l">Questions</div></div>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════
      PROGRAMME SELECTOR
 ══════════════════════════════════════════ -->
-<div id="progSelector">
+<div id="progSelector" style="display:none">
   <div class="prog-logo">Goa Institute of Management</div>
   <div class="prog-title">GIM <span>Placement</span><br>Prep Hub</div>
   <div class="prog-sub">Select your programme to access company intel, Q&A banks, roadmap &amp; cheatsheets</div>
@@ -3754,6 +3949,88 @@ window.addEventListener('DOMContentLoaded', function() {
   // Programme selector is shown by default (via HTML)
   // Don't auto-select BDA anymore
 });
+
+
+
+// ═══════════════════════════════════════════
+// SUPABASE AUTH FOR INDEX (PREP HUB)
+// ═══════════════════════════════════════════
+const SB_URL = 'https://dsrwktqgpngrviavceal.supabase.co';
+const SB_KEY = 'sb_publishable_bLUTa913DWCoVFTt9r_vew_Wa_hjEbV';
+const { createClient: createSbClient } = supabase;
+const sbIndex = createSbClient(SB_URL, SB_KEY);
+
+// ── Check session on load
+sbIndex.auth.onAuthStateChange((event, session) => {
+  if (session?.user) {
+    showLoggedIn(session.user.email);
+  } else {
+    showLoginForm();
+  }
+});
+
+sbIndex.auth.getSession().then(({ data: { session } }) => {
+  if (session?.user) {
+    showLoggedIn(session.user.email);
+  }
+});
+
+function showLoginForm() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('progSelector').style.display = 'none';
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('loggedInBar').style.display = 'none';
+}
+
+function showLoggedIn(email) {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('loggedInBar').style.display = 'block';
+  document.getElementById('lcUserEmail').textContent = email;
+}
+
+window.enterHub = function() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('progSelector').style.display = 'flex';
+  document.getElementById('loader').style.opacity = '0';
+  setTimeout(() => document.getElementById('loader').style.display = 'none', 400);
+};
+
+window.doLogin = async function() {
+  const email = document.getElementById('lcEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    showToastIndex('Enter a valid email address', 'err');
+    return;
+  }
+  const btn = document.getElementById('lcBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  const { error } = await sbIndex.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: window.location.origin + window.location.pathname }
+  });
+  if (error) {
+    showToastIndex('Error: ' + error.message, 'err');
+    btn.disabled = false;
+    btn.textContent = 'Get Login Link →';
+    return;
+  }
+  document.getElementById('lcSent').style.display = 'block';
+  btn.textContent = 'Link sent! Check inbox ✓';
+};
+
+window.doSignOutIndex = async function() {
+  await sbIndex.auth.signOut();
+  showLoginForm();
+};
+
+function showToastIndex(msg, type) {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'toast ' + (type === 'err' ? 'err' : 'ok') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
 
 </script>
 </body>
