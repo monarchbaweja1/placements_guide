@@ -3995,6 +3995,13 @@ if (_hasAuthParams()) {
   document.getElementById('lcLoading').style.display = 'block';
   document.getElementById('loginForm').style.display = 'none';
   document.getElementById('loggedInBar').style.display = 'none';
+  // Fallback: if no auth event in 6 seconds, show login form
+  setTimeout(() => {
+    if (document.getElementById('lcLoading').style.display !== 'none') {
+      window.history.replaceState(null, '', window.location.pathname);
+      showLoginForm();
+    }
+  }, 6000);
 } else {
   // No auth params — check existing session
   sbIndex.auth.getSession().then(({ data: { session } }) => {
