@@ -7,39 +7,36 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════════════
-   HELIUM THEME — GIM PLACEMENT PREP HUB
-════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════
+   HELIUM EXACT THEME — GIM PLACEMENT PREP HUB
+   Colors, animations, layout from helium-template.framer.website
+════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #07070f;
-  --bg2:      #0d0d1a;
-  --bg3:      #12121f;
-  --card:     rgba(255,255,255,0.03);
-  --card2:    rgba(255,255,255,0.05);
-  --border:   rgba(255,255,255,0.08);
-  --border2:  rgba(255,255,255,0.12);
-  --text:     #ffffff;
-  --text2:    #94a3b8;
-  --text3:    #64748b;
-  --text4:    #475569;
-  --accent:   #6366f1;
-  --accent2:  #8b5cf6;
-  --accent3:  #06b6d4;
-  --green:    #22c55e;
-  --orange:   #f59e0b;
-  --red:      #ef4444;
-  --pink:     #ec4899;
-  --gold:     #fbbf24;
-  --radius:   14px;
-  --radius2:  20px;
-  --font:     'Inter', system-ui, sans-serif;
-  --mono:     'JetBrains Mono', monospace;
-  --glow-blue: 0 0 80px rgba(99,102,241,0.15);
-  --glow-purple: 0 0 80px rgba(139,92,246,0.15);
+  --bg:      #0a0a0a;
+  --bg2:     #111111;
+  --bg3:     #161616;
+  --bg4:     #1a1a1a;
+  --card:    #111111;
+  --card2:   #161616;
+  --green:   #22c55e;
+  --green2:  #16a34a;
+  --green-dim: rgba(34,197,94,0.12);
+  --green-glow: rgba(34,197,94,0.15);
+  --border:  rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.12);
+  --border-green: rgba(34,197,94,0.25);
+  --text:    #ffffff;
+  --text2:   #9ca3af;
+  --text3:   #6b7280;
+  --text4:   #4b5563;
+  --radius:  12px;
+  --radius2: 16px;
+  --font:    'Inter', system-ui, -apple-system, sans-serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
 }
 
 html { scroll-behavior: smooth; }
@@ -49,878 +46,848 @@ body {
   font-family: var(--font);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 
-/* ── Background glow ── */
-.bg-glow {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,102,241,0.12), transparent),
-    radial-gradient(ellipse 40% 40% at 90% 80%, rgba(139,92,246,0.08), transparent),
-    radial-gradient(ellipse 40% 30% at 10% 60%, rgba(6,182,212,0.06), transparent);
+/* ── KEYFRAMES ──────────────────────────────── */
+@keyframes float {
+  0%,100% { transform: translateY(0px) rotate(0deg); }
+  33%      { transform: translateY(-20px) rotate(1deg); }
+  66%      { transform: translateY(-10px) rotate(-1deg); }
+}
+@keyframes float2 {
+  0%,100% { transform: translateY(0px) scale(1); }
+  50%      { transform: translateY(-15px) scale(1.02); }
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes pulse-green {
+  0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+  50%     { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0; }
 }
 
-/* ══════════════════════════════════════════════
-   TYPOGRAPHY
-══════════════════════════════════════════════ */
+/* ── SCROLL ANIMATIONS ──────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ── THE GREEN 3D SPHERE (Helium signature) ── */
+.green-sphere {
+  position: fixed;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%,
+    #4ade80 0%,
+    #22c55e 25%,
+    #16a34a 50%,
+    #166534 70%,
+    #052e16 85%,
+    #000000 100%
+  );
+  box-shadow:
+    inset -30px -30px 60px rgba(0,0,0,0.8),
+    inset 20px 20px 40px rgba(74,222,128,0.3),
+    0 0 120px rgba(34,197,94,0.15);
+  animation: float 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.sphere-top-right {
+  top: -120px;
+  right: -120px;
+}
+.sphere-bottom-left {
+  bottom: -150px;
+  left: -150px;
+  width: 400px; height: 400px;
+  opacity: 0.7;
+  animation: float2 15s ease-in-out infinite;
+}
+
+/* ── PILL NAVBAR ─────────────────────────────── */
+.navbar {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 1000;
+  display: flex; align-items: center; gap: 0;
+  background: rgba(17,17,17,0.85);
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  padding: 8px 8px 8px 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  white-space: nowrap;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+}
+.navbar-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 15px; font-weight: 800; letter-spacing: -0.3px;
+  margin-right: 8px;
+  text-decoration: none; color: var(--text);
+}
+.navbar-logo-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.navbar-links {
+  display: flex; align-items: center; gap: 2px;
+  margin: 0 8px;
+}
+.navbar-link {
+  padding: 8px 14px; border-radius: 100px;
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  cursor: pointer; transition: all .2s; border: none; background: none;
+  font-family: var(--font); text-decoration: none; display: block;
+}
+.navbar-link:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.navbar-link.active { color: var(--text); background: rgba(255,255,255,0.08); }
+.navbar-cta {
+  background: var(--text); color: var(--bg);
+  border: none; border-radius: 100px;
+  padding: 9px 20px; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .2s; font-family: var(--font);
+  display: flex; align-items: center; gap: 6px;
+}
+.navbar-cta:hover { background: #e5e5e5; transform: scale(1.02); }
+.navbar-cta.green-cta { background: var(--green); color: #fff; }
+.navbar-cta.green-cta:hover { background: var(--green2); }
+
+/* ── SECTION LABEL ──────────────────────────── */
 .section-label {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
-  color: var(--text3); font-family: var(--mono);
-  margin-bottom: 16px;
-}
-.section-label::before {
-  content: ''; display: block; width: 16px; height: 1px; background: var(--border2);
-}
-.section-label::after {
-  content: ''; display: block; width: 16px; height: 1px; background: var(--border2);
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--green);
+  font-family: var(--font); margin-bottom: 16px; display: block;
 }
 
-h1.hero-title {
-  font-size: clamp(40px, 6vw, 72px);
-  font-weight: 900; line-height: 1.05; letter-spacing: -1.5px;
+/* ── LARGE HEADINGS ──────────────────────────── */
+h1.hero-h1 {
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 900; line-height: 1.0; letter-spacing: -2px;
+  color: var(--text);
 }
-h1.hero-title .grad {
-  background: linear-gradient(135deg, #fff 0%, var(--accent2) 60%, var(--accent3) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+h2.section-h2 {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800; line-height: 1.08; letter-spacing: -1px;
+  color: var(--text);
 }
-h2.section-heading {
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 800; line-height: 1.1; letter-spacing: -0.5px;
-}
-h2.section-heading .hi { color: var(--accent); }
-.sub-text { color: var(--text2); font-size: 15px; line-height: 1.7; max-width: 520px; }
+.sub-p { font-size: 16px; color: var(--text2); line-height: 1.7; }
 
-/* ══════════════════════════════════════════════
-   DISCLAIMER BANNER
-══════════════════════════════════════════════ */
+/* ── BUTTONS ────────────────────────────────── */
+.btn-green {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: #fff;
+  border: none; border-radius: 100px;
+  padding: 14px 28px; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all .25s; font-family: var(--font);
+  text-decoration: none;
+}
+.btn-green:hover { background: var(--green2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(34,197,94,0.3); }
+.btn-green:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border2); border-radius: 100px;
+  padding: 13px 28px; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all .25s; font-family: var(--font);
+  text-decoration: none;
+}
+.btn-outline:hover { border-color: var(--border); background: rgba(255,255,255,0.05); }
+
+/* ── DISCLAIMER ──────────────────────────────── */
 #disclaimerBanner {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999;
-  background: rgba(7,7,15,0.95); border-top: 1px solid rgba(251,191,36,0.2);
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+  background: rgba(10,10,10,0.96); border-top: 1px solid var(--border-green);
   padding: 12px 24px; display: flex; align-items: center; gap: 16px;
-  backdrop-filter: blur(20px); animation: slideUp .4s ease;
+  backdrop-filter: blur(20px);
 }
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-#disclaimerBanner .disc-text { font-size: 11px; color: var(--text2); flex: 1; line-height: 1.5; }
-#disclaimerBanner .disc-text strong { color: var(--gold); }
+#disclaimerBanner .disc-text { font-size: 12px; color: var(--text2); flex: 1; line-height: 1.5; }
+#disclaimerBanner .disc-text strong { color: var(--green); }
 #disclaimerBanner .disc-close {
-  background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2);
-  color: var(--gold); border-radius: 8px; padding: 6px 16px;
-  font-size: 11px; font-weight: 700; cursor: pointer; font-family: var(--mono);
-  white-space: nowrap; transition: all .2s; flex-shrink: 0;
+  background: var(--green-dim); border: 1px solid var(--border-green);
+  color: var(--green); border-radius: 100px; padding: 7px 18px;
+  font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
+  transition: all .2s; font-family: var(--font); flex-shrink: 0;
 }
-#disclaimerBanner .disc-close:hover { background: rgba(251,191,36,0.2); }
+#disclaimerBanner .disc-close:hover { background: rgba(34,197,94,0.2); }
 
-/* ══════════════════════════════════════════════
-   AUTH SCREENS — HELIUM FULL SPLIT LAYOUT
-══════════════════════════════════════════════ */
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-@keyframes spin-slow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-
+/* ═══════════════════════════════════════════
+   AUTH SCREENS — HELIUM FULL BLACK + GREEN
+═══════════════════════════════════════════ */
 .auth-screen {
   position: fixed; inset: 0; z-index: 500;
-  display: grid; grid-template-columns: 1fr 1fr;
-  background: var(--bg);
+  background: var(--bg); overflow: hidden;
 }
 .auth-screen.hidden { display: none; }
 
-/* LEFT PANEL — hero content */
-.auth-left {
-  position: relative; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding: 40px 48px; border-right: 1px solid var(--border);
-  background: radial-gradient(ellipse 80% 60% at 20% 30%, rgba(99,102,241,0.14), transparent),
-              radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139,92,246,0.1), transparent);
+.auth-inner {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120px 24px 60px;
 }
 
-/* Floating orbs */
-.auth-orb {
-  position: absolute; border-radius: 50%;
-  filter: blur(60px); pointer-events: none; opacity: 0.5;
-}
-.auth-orb-1 { width:300px;height:300px; background:rgba(99,102,241,0.25); top:-80px; left:-80px; animation:float 8s ease-in-out infinite; }
-.auth-orb-2 { width:200px;height:200px; background:rgba(139,92,246,0.2); bottom:100px; right:-60px; animation:float 10s ease-in-out infinite reverse; }
-.auth-orb-3 { width:150px;height:150px; background:rgba(6,182,212,0.15); bottom:-40px; left:40%; animation:float 7s ease-in-out infinite 2s; }
-
-/* Grid noise overlay */
-.auth-grid-overlay {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.03;
-  background-image: linear-gradient(rgba(255,255,255,0.5) 1px,transparent 1px),
-                    linear-gradient(90deg,rgba(255,255,255,0.5) 1px,transparent 1px);
-  background-size: 40px 40px;
-}
-
-.auth-left-top { position: relative; z-index: 1; }
-.auth-logo-row {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 48px;
-}
-.auth-logo-icon {
-  width: 36px; height: 36px; border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  display: flex; align-items: center; justify-content: center; font-size: 16px;
-}
-.auth-logo-text { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
-.auth-logo-text span { color: var(--accent); }
-
-.auth-hero-label {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
-  border-radius: 100px; padding: 6px 16px; font-size: 11px; font-weight: 700;
-  letter-spacing: 2px; color: var(--accent); text-transform: uppercase;
-  font-family: var(--mono); margin-bottom: 24px;
-}
-.auth-hero-label::before { content:'●'; font-size:8px; animation:pulse 2s infinite; }
-
-.auth-hero-title {
-  font-size: clamp(36px, 4vw, 56px); font-weight: 900; line-height: 1.05;
-  letter-spacing: -1.5px; margin-bottom: 20px;
-}
-.auth-hero-title .grad {
-  background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #06b6d4 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.auth-hero-sub {
-  font-size: 15px; color: var(--text2); line-height: 1.7; max-width: 380px; margin-bottom: 40px;
-}
-
-/* Stats row */
-.auth-stats {
-  display: flex; gap: 0; background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; overflow: hidden; max-width: 380px;
-}
-.auth-stat {
-  flex: 1; padding: 16px 12px; text-align: center; border-right: 1px solid var(--border);
-}
-.auth-stat:last-child { border-right: none; }
-.auth-stat-n { font-size: 22px; font-weight: 900; font-family: var(--mono); background: linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.auth-stat-l { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: 1px; }
-
-/* Testimonial card */
-.auth-left-bottom { position: relative; z-index: 1; }
-.auth-testimonial {
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 16px; padding: 20px 24px;
-}
-.auth-testimonial-text { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 14px; font-style: italic; }
-.auth-testimonial-text::before { content: '"'; color: var(--accent); font-size: 20px; }
-.auth-testimonial-text::after { content: '"'; color: var(--accent); font-size: 20px; }
-.auth-testimonial-author { display: flex; align-items: center; gap: 10px; }
-.auth-testimonial-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg,var(--accent),var(--accent2));
-  display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #fff;
-  flex-shrink: 0;
-}
-.auth-testimonial-name { font-size: 13px; font-weight: 700; }
-.auth-testimonial-role { font-size: 11px; color: var(--text3); }
-
-/* Scrolling badge strip */
-.auth-badge-strip { overflow: hidden; margin-bottom: 32px; }
-.auth-badge-track { display: flex; gap: 10px; animation: marquee 18s linear infinite; width: max-content; }
-.auth-badge-item {
-  display: flex; align-items: center; gap: 6px; white-space: nowrap;
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 100px; padding: 5px 14px; font-size: 11px; color: var(--text2);
-}
-.auth-badge-item span { font-size: 14px; }
-
-/* RIGHT PANEL — form */
-.auth-right {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 40px 48px; background: rgba(0,0,0,0.2);
-}
-.auth-form-wrap { width: 100%; max-width: 380px; }
-
-.auth-form-title { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
-.auth-form-sub { font-size: 14px; color: var(--text2); margin-bottom: 32px; line-height: 1.6; }
-
-.auth-input {
-  width: 100%; background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border2); border-radius: var(--radius);
-  color: var(--text); font-size: 15px; padding: 15px 18px;
-  outline: none; transition: all .2s; font-family: var(--font);
-  margin-bottom: 12px;
-}
-.auth-input:focus { border-color: var(--accent); background: rgba(99,102,241,0.05); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
-.auth-input::placeholder { color: var(--text3); }
-
-.auth-btn {
-  width: 100%; padding: 16px; border: none; border-radius: var(--radius);
-  font-size: 15px; font-weight: 700; cursor: pointer; transition: all .25s;
-  font-family: var(--font);
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #fff; margin-top: 4px;
-  box-shadow: 0 8px 32px rgba(99,102,241,0.35);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.auth-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99,102,241,0.45); }
-.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.auth-ghost { background: none; border: 1px solid var(--border2); color: var(--text2); box-shadow: none; margin-top: 8px; }
-.auth-ghost:hover { border-color: var(--border); color: var(--text); box-shadow: none; }
-
-.auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
-.auth-divider::before,.auth-divider::after { content:''; flex:1; height:1px; background:var(--border); }
-.auth-divider span { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-
-.auth-trust-row { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 24px; }
-.auth-trust-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
-.auth-trust-item svg { width: 12px; height: 12px; }
-
-/* OTP boxes */
-.otp-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
-.otp-box {
-  width: 40px; height: 50px;
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border2);
-  border-radius: 10px; color: var(--text);
-  font-size: 20px; font-weight: 800; text-align: center;
-  outline: none; transition: all .2s; caret-color: var(--accent);
-  font-family: var(--mono);
-}
-.otp-box:focus { border-color: var(--accent); background: rgba(99,102,241,0.08); box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
-.otp-box.filled { border-color: var(--accent); color: var(--accent); }
-
-.email-chip {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);
-  border-radius: 8px; padding: 8px 14px; font-size: 12px;
-  color: var(--accent2); margin-bottom: 20px; font-family: var(--mono);
-  width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-
-.auth-timer { font-size: 11px; color: var(--text3); font-family: var(--mono); }
-.auth-timer span { color: var(--accent2); font-weight: 600; }
-.auth-link { background: none; border: none; color: var(--text3); font-size: 12px; cursor: pointer; font-family: var(--font); text-decoration: underline; padding: 0; }
-.auth-link:hover { color: var(--text2); }
-.auth-status { font-size: 12px; padding: 10px 14px; border-radius: 8px; margin-top: 8px; display: none; }
-.auth-status.show { display: block; }
-.auth-status.err { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-.auth-status.ok  { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-
-/* Mobile: stack vertically */
-@media(max-width:768px) {
-  .auth-screen { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  .auth-left {
-    padding: 24px; border-right: none; border-bottom: 1px solid var(--border);
-    min-height: auto;
-  }
-  .auth-left-bottom { display: none; }
-  .auth-hero-title { font-size: 32px; }
-  .auth-hero-sub { display: none; }
-  .auth-stats { max-width: 100%; }
-  .auth-right { padding: 32px 24px; }
-  .auth-badge-strip { display: none; }
-}
-
-/* ══════════════════════════════════════════════
-   PROGRAMME SELECTOR
-══════════════════════════════════════════════ */
-#progSelector {
-  position: fixed; inset: 0; z-index: 9998;
-  display: none; flex-direction: column; align-items: center;
-  padding: 32px 24px 60px;
-  background: var(--bg);
-  overflow-y: auto;
-}
-
-.prog-hero { text-align: center; margin-bottom: 48px; }
-.prog-hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 100px; padding: 6px 18px 6px 8px;
-  font-size: 12px; color: var(--text2); margin-bottom: 24px; gap: 10px;
-}
-.prog-hero-badge .dot {
-  width: 28px; height: 28px; background: linear-gradient(135deg,var(--accent),var(--accent2));
-  border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px;
-}
-.prog-hero-title {
-  font-size: clamp(36px,6vw,64px); font-weight: 900; letter-spacing: -1px;
-  line-height: 1.05; margin-bottom: 16px;
-}
-.prog-hero-title .grad {
-  background: linear-gradient(135deg, #fff 0%, #a78bfa 60%, #06b6d4 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.prog-hero-sub { color: var(--text2); font-size: 15px; max-width: 480px; margin: 0 auto 16px; line-height: 1.7; }
-
-/* Stats row */
-.prog-stats-row {
-  display: flex; gap: 0; background: var(--card2); border: 1px solid var(--border);
-  border-radius: 14px; overflow: hidden; margin-bottom: 48px;
-}
-.prog-stat-item {
-  flex: 1; padding: 16px 24px; text-align: center; border-right: 1px solid var(--border);
-}
-.prog-stat-item:last-child { border-right: none; }
-.prog-stat-num { font-size: 26px; font-weight: 900; font-family: var(--mono); }
-.prog-stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; letter-spacing: 1px; }
-
-/* Programme grid */
-.prog-grid {
-  display: grid; grid-template-columns: repeat(2,1fr);
-  gap: 16px; max-width: 900px; width: 100%;
-}
-.prog-card {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius2); cursor: pointer; transition: all .3s cubic-bezier(.4,0,.2,1);
-  position: relative; overflow: hidden; display: flex; flex-direction: column;
-}
-.prog-card:hover { transform: translateY(-6px); border-color: var(--border2); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
-
-.prog-card-glow {
-  position: absolute; top: -40px; right: -40px;
-  width: 120px; height: 120px; border-radius: 50%;
-  opacity: 0; transition: opacity .3s; filter: blur(40px);
-}
-.prog-card:hover .prog-card-glow { opacity: 0.6; }
-.prog-card.bda  .prog-card-glow { background: #3b82f6; }
-.prog-card.core .prog-card-glow { background: #f59e0b; }
-.prog-card.hcm  .prog-card-glow { background: #22c55e; }
-.prog-card.bifs .prog-card-glow { background: #a78bfa; }
-
-.prog-card-top-bar {
-  height: 3px; width: 100%;
-  transition: height .3s;
-}
-.prog-card:hover .prog-card-top-bar { height: 4px; }
-.prog-card.bda  .prog-card-top-bar { background: linear-gradient(90deg,#3b82f6,#06b6d4); }
-.prog-card.core .prog-card-top-bar { background: linear-gradient(90deg,#f59e0b,#ef4444); }
-.prog-card.hcm  .prog-card-top-bar { background: linear-gradient(90deg,#22c55e,#06b6d4); }
-.prog-card.bifs .prog-card-top-bar { background: linear-gradient(90deg,#a78bfa,#3b82f6); }
-
-.prog-card-inner { padding: 24px; flex: 1; }
-.prog-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-.prog-card-icon-wrap {
-  width: 46px; height: 46px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
-}
-.prog-card-name { font-size: 22px; font-weight: 900; letter-spacing: .5px; }
-.prog-card-full { font-size: 11px; color: var(--text3); font-family: var(--mono); margin-top: 2px; }
-.prog-card-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
-.prog-card-footer {
-  display: flex; border-top: 1px solid var(--border);
-}
-.prog-card-stat { flex: 1; text-align: center; padding: 14px 8px; border-right: 1px solid var(--border); }
-.prog-card-stat:last-child { border-right: none; }
-.prog-card-stat-n { font-size: 20px; font-weight: 900; font-family: var(--mono); }
-.prog-card-stat-l { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: .5px; }
-
-.prog-disclaimer {
-  max-width: 860px; width: 100%; margin-top: 24px;
-  background: rgba(251,191,36,0.04); border: 1px solid rgba(251,191,36,0.12);
-  border-left: 3px solid var(--gold); border-radius: 10px;
-  padding: 14px 18px; font-size: 12px; color: var(--text2); line-height: 1.7;
-}
-.prog-disclaimer strong { color: var(--gold); }
-
-/* ══════════════════════════════════════════════
-   MAIN APP — TOP NAV LAYOUT
-══════════════════════════════════════════════ */
-#mainApp { display: none; min-height: 100vh; }
-#mainApp.show { display: block; }
-
-/* Top navbar */
-.topnav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(7,7,15,0.85); backdrop-filter: blur(20px);
+/* Scrolling ticker on auth */
+.auth-ticker {
+  position: fixed; top: 80px; left: 0; right: 0;
+  overflow: hidden; z-index: 2;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 0;
-  padding: 0 32px; height: 60px;
+  background: rgba(10,10,10,0.5);
+  backdrop-filter: blur(8px);
 }
-.topnav-logo {
-  font-size: 15px; font-weight: 800; letter-spacing: -0.3px;
-  margin-right: 40px; flex-shrink: 0; white-space: nowrap;
+.auth-ticker-track {
+  display: flex; gap: 32px;
+  animation: marquee 20s linear infinite;
+  width: max-content;
 }
-.topnav-logo span { color: var(--accent); }
-.topnav-tabs {
-  display: flex; gap: 2px; flex: 1; overflow-x: auto;
-}
-.topnav-tabs::-webkit-scrollbar { display: none; }
-.topnav-tab {
-  padding: 8px 16px; border-radius: 8px; cursor: pointer;
-  font-size: 13px; font-weight: 500; color: var(--text3);
-  transition: all .2s; white-space: nowrap; border: none;
-  background: none; font-family: var(--font);
-  display: flex; align-items: center; gap: 6px;
-}
-.topnav-tab:hover { color: var(--text2); background: var(--card2); }
-.topnav-tab.active { color: var(--text); background: var(--card2); border: 1px solid var(--border); }
-.topnav-tab .tab-badge {
-  background: var(--accent); color: #fff;
-  font-size: 10px; font-weight: 700; padding: 1px 6px;
-  border-radius: 100px; font-family: var(--mono);
-}
-.topnav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.prog-pill {
+.auth-ticker-item {
   display: flex; align-items: center; gap: 8px;
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 100px; padding: 5px 14px 5px 8px;
-  font-size: 12px; cursor: pointer; transition: all .2s;
+  font-size: 12px; color: var(--text2); white-space: nowrap;
+  font-weight: 500;
 }
-.prog-pill:hover { border-color: var(--border2); }
-.prog-pill-dot {
-  width: 22px; height: 22px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center; font-size: 11px;
+.auth-ticker-item .dot { color: var(--green); font-size: 8px; }
+
+/* Quote above hero */
+.auth-quote {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 100px; padding: 6px 16px 6px 6px;
+  margin-bottom: 32px; max-width: 400px;
 }
-.prog-pill-name { font-weight: 700; font-size: 13px; }
-.prog-pill-change { color: var(--text3); font-size: 11px; }
-.signout-btn {
-  background: none; border: 1px solid var(--border); border-radius: 8px;
-  color: var(--text3); font-size: 12px; padding: 6px 12px; cursor: pointer;
-  transition: all .2s; font-family: var(--font);
+.auth-quote-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), #166534);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0;
 }
-.signout-btn:hover { border-color: var(--red); color: var(--red); }
+.auth-quote-text { font-size: 12px; color: var(--text2); font-style: italic; }
+.auth-quote-name { font-size: 11px; color: var(--text3); margin-left: 4px; }
 
-/* ══════════════════════════════════════════════
-   CONTENT SECTIONS
-══════════════════════════════════════════════ */
-.section { display: none; max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
-.section.active { display: block; animation: fadeUp .3s ease; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
-
-.section-top { margin-bottom: 36px; }
-.section-top h2 { margin-bottom: 8px; }
-.section-top p { color: var(--text2); font-size: 14px; }
-
-/* ══════════════════════════════════════════════
-   OVERVIEW — BENTO GRID
-══════════════════════════════════════════════ */
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 16px;
+/* Hero headline */
+.auth-headline { text-align: left; max-width: 700px; width: 100%; margin-bottom: 20px; }
+.auth-headline h1 {
+  font-size: clamp(48px, 7vw, 80px); font-weight: 900;
+  line-height: 1.0; letter-spacing: -2px; color: var(--text);
   margin-bottom: 16px;
 }
+.auth-headline .sub { font-size: 16px; color: var(--text2); line-height: 1.7; max-width: 480px; }
+
+/* Stats row */
+.auth-stat-row {
+  display: flex; gap: 0; max-width: 700px; width: 100%;
+  margin-bottom: 40px;
+}
+.auth-stat-item {
+  flex: 1; padding: 14px 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  text-align: center;
+}
+.auth-stat-item:first-child { border-radius: 12px 0 0 12px; }
+.auth-stat-item:last-child  { border-radius: 0 12px 12px 0; border-left: none; }
+.auth-stat-item:not(:first-child):not(:last-child) { border-left: none; }
+.auth-stat-n { font-size: 24px; font-weight: 900; color: var(--green); font-family: var(--mono); }
+.auth-stat-l { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: 1px; text-transform: uppercase; }
+
+/* Form card */
+.auth-form-card {
+  max-width: 700px; width: 100%;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 32px;
+}
+.auth-form-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.auth-form-sub   { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
+.auth-input-row  { display: flex; gap: 12px; }
+.auth-input {
+  flex: 1; background: var(--bg2);
+  border: 1px solid var(--border2); border-radius: 100px;
+  color: var(--text); font-size: 14px; padding: 13px 20px;
+  outline: none; transition: all .2s; font-family: var(--font);
+}
+.auth-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,0.12); }
+.auth-input::placeholder { color: var(--text3); }
+.auth-send-btn {
+  background: var(--green); color: #fff; border: none;
+  border-radius: 100px; padding: 13px 24px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all .25s; font-family: var(--font); white-space: nowrap;
+  flex-shrink: 0;
+}
+.auth-send-btn:hover { background: var(--green2); transform: translateY(-1px); }
+.auth-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.auth-status {
+  font-size: 13px; padding: 10px 16px; border-radius: 8px;
+  margin-top: 10px; display: none;
+}
+.auth-status.show { display: block; }
+.auth-status.err { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+.auth-status.ok  { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+.auth-trust-row { display: flex; gap: 20px; margin-top: 14px; }
+.auth-trust-item { font-size: 12px; color: var(--text3); display: flex; align-items: center; gap: 5px; }
+.auth-trust-item::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+/* OTP Screen */
+.otp-email-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green-dim); border: 1px solid var(--border-green);
+  border-radius: 100px; padding: 6px 16px; font-size: 13px;
+  color: var(--green); margin-bottom: 20px; font-family: var(--mono);
+}
+.otp-boxes { display: flex; gap: 10px; margin-bottom: 20px; }
+.otp-box {
+  width: 52px; height: 60px;
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 12px; color: var(--text);
+  font-size: 24px; font-weight: 800; text-align: center;
+  outline: none; transition: all .2s; font-family: var(--mono);
+  caret-color: var(--green);
+}
+.otp-box:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,0.15); }
+.otp-box.filled { border-color: var(--green); color: var(--green); }
+.otp-actions { display: flex; gap: 12px; margin-bottom: 12px; }
+.otp-verify-btn {
+  flex: 1; background: var(--green); color: #fff; border: none;
+  border-radius: 100px; padding: 14px 24px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all .25s; font-family: var(--font);
+}
+.otp-verify-btn:hover { background: var(--green2); }
+.otp-verify-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.otp-resend-btn {
+  background: var(--card2); color: var(--text2); border: 1px solid var(--border);
+  border-radius: 100px; padding: 14px 20px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all .2s; font-family: var(--font);
+}
+.otp-resend-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.otp-resend-btn:not(:disabled):hover { border-color: var(--green); color: var(--green); }
+.otp-footer { display: flex; justify-content: space-between; align-items: center; }
+.otp-timer { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+.otp-timer span { color: var(--green); font-weight: 600; }
+.otp-back { background: none; border: none; color: var(--text3); font-size: 12px; cursor: pointer; font-family: var(--font); text-decoration: underline; padding: 0; }
+.otp-back:hover { color: var(--text2); }
+
+/* ═══════════════════════════════════════════
+   PROGRAMME SELECTOR — HELIUM STYLE
+═══════════════════════════════════════════ */
+#progSelector {
+  position: fixed; inset: 0; z-index: 9998;
+  background: var(--bg); overflow-y: auto; display: none;
+}
+.prog-sel-inner {
+  position: relative; z-index: 1;
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; padding: 100px 24px 80px;
+}
+.prog-sel-hero { text-align: center; max-width: 700px; margin-bottom: 60px; }
+.prog-sel-hero h1 {
+  font-size: clamp(40px, 6vw, 72px); font-weight: 900;
+  letter-spacing: -2px; line-height: 1.05; margin-bottom: 16px;
+}
+.prog-sel-hero .sub { font-size: 16px; color: var(--text2); line-height: 1.7; }
+
+/* Stats strip */
+.prog-stats-strip {
+  display: flex; gap: 0; margin-bottom: 48px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 100px; overflow: hidden;
+}
+.prog-stats-strip-item {
+  padding: 14px 32px; border-right: 1px solid var(--border); text-align: center;
+}
+.prog-stats-strip-item:last-child { border-right: none; }
+.prog-stats-strip-n { font-size: 22px; font-weight: 900; color: var(--green); font-family: var(--mono); }
+.prog-stats-strip-l { font-size: 10px; color: var(--text3); margin-top: 2px; letter-spacing: 1px; }
+
+/* Programme cards — Helium service card style */
+.prog-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; max-width: 900px; width: 100%; }
+.prog-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; cursor: pointer; transition: all .3s ease;
+  overflow: hidden; position: relative;
+}
+.prog-card:hover {
+  border-color: var(--border-green);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(34,197,94,0.08);
+}
+/* Green tint top on hover */
+.prog-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.prog-card:hover::before { opacity: 1; }
+
+/* Mini visual area (dark green card top) */
+.prog-card-visual {
+  background: linear-gradient(135deg, #0d1a0f 0%, #111d13 50%, #0a1509 100%);
+  height: 120px; padding: 20px 24px; position: relative; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.prog-card-visual-icon { font-size: 48px; opacity: 0.6; }
+.prog-card-visual-accent {
+  position: absolute; top: -20px; right: -20px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,197,94,0.3), transparent 70%);
+}
+.prog-card-body { padding: 20px 24px 24px; }
+.prog-card-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 8px; display: block;
+}
+.prog-card-name { font-size: 22px; font-weight: 900; margin-bottom: 6px; letter-spacing: -0.3px; }
+.prog-card-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
+.prog-card-footer {
+  display: flex; gap: 0; border-top: 1px solid var(--border); padding-top: 16px;
+}
+.prog-card-stat { flex: 1; }
+.prog-card-stat-n { font-size: 20px; font-weight: 900; color: var(--text); font-family: var(--mono); }
+.prog-card-stat-l { font-size: 10px; color: var(--text3); letter-spacing: 1px; margin-top: 2px; }
+
+.prog-disclaimer {
+  max-width: 900px; width: 100%; margin-top: 24px;
+  background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.12);
+  border-left: 3px solid var(--green); border-radius: 10px;
+  padding: 14px 18px; font-size: 12px; color: var(--text2); line-height: 1.7;
+}
+.prog-disclaimer strong { color: var(--green); }
+
+/* ═══════════════════════════════════════════
+   MAIN APP
+═══════════════════════════════════════════ */
+#mainApp { display: none; min-height: 100vh; padding-top: 80px; }
+#mainApp.show { display: block; }
+
+/* ── SECTION WRAPPER ── */
+.app-section { display: none; }
+.app-section.active { display: block; animation: fadeUp .4s ease; }
+
+.section-wrap { max-width: 1100px; margin: 0 auto; padding: 60px 32px 100px; position: relative; z-index: 1; }
+.section-header { margin-bottom: 48px; }
+.section-header h2 { margin-bottom: 10px; }
+.section-header .sub-p { max-width: 520px; }
+
+/* ── OVERVIEW — HELIUM BENTO ── */
+.bento { display: grid; grid-template-columns: repeat(12,1fr); gap: 16px; margin-bottom: 16px; }
 .bento-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius2); padding: 24px; position: relative; overflow: hidden;
-  transition: border-color .2s;
+  border-radius: 20px; padding: 28px; position: relative; overflow: hidden;
+  transition: border-color .2s, transform .2s;
 }
 .bento-card:hover { border-color: var(--border2); }
 
-/* Bento card spanning */
-.b-full { grid-column: span 12; }
-.b-8    { grid-column: span 8; }
-.b-4    { grid-column: span 4; }
-.b-6    { grid-column: span 6; }
-.b-3    { grid-column: span 3; }
+.b-3  { grid-column: span 3; }
+.b-4  { grid-column: span 4; }
+.b-6  { grid-column: span 6; }
+.b-8  { grid-column: span 8; }
+.b-12 { grid-column: span 12; }
 
 .bento-label {
   font-size: 10px; font-weight: 700; letter-spacing: 2px;
-  color: var(--text3); font-family: var(--mono); text-transform: uppercase;
-  margin-bottom: 12px;
-}
-.bento-big-num {
-  font-size: 52px; font-weight: 900; line-height: 1;
-  font-family: var(--mono); letter-spacing: -2px;
-}
-.bento-num-sub { font-size: 13px; color: var(--text2); margin-top: 6px; }
-
-/* Stat pill cards */
-.stat-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-.stat-pill {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--card2); border: 1px solid var(--border);
-  border-radius: 100px; padding: 6px 14px;
-  font-size: 12px; color: var(--text2);
-}
-.stat-pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
-/* Tag chips */
-.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.tag {
-  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
+  color: var(--text3); text-transform: uppercase; margin-bottom: 14px;
   font-family: var(--mono);
 }
-.tag-blue   { background:rgba(59,130,246,.12);  color:#60a5fa; border:1px solid rgba(59,130,246,.2);  }
-.tag-green  { background:rgba(34,197,94,.12);   color:#4ade80; border:1px solid rgba(34,197,94,.2);  }
-.tag-purple { background:rgba(139,92,246,.12);  color:#a78bfa; border:1px solid rgba(139,92,246,.2); }
-.tag-orange { background:rgba(245,158,11,.12);  color:#fbbf24; border:1px solid rgba(245,158,11,.2); }
-.tag-cyan   { background:rgba(6,182,212,.12);   color:#22d3ee; border:1px solid rgba(6,182,212,.2);  }
-.tag-gold   { background:rgba(251,191,36,.12);  color:#fcd34d; border:1px solid rgba(251,191,36,.2); }
-.tag-red    { background:rgba(239,68,68,.12);   color:#f87171; border:1px solid rgba(239,68,68,.2);  }
+.bento-big {
+  font-size: 56px; font-weight: 900; line-height: 1; letter-spacing: -2px;
+  color: var(--green); font-family: var(--mono);
+}
+.bento-sub { font-size: 13px; color: var(--text2); margin-top: 6px; }
 
-/* ══════════════════════════════════════════════
-   COMPANIES
-══════════════════════════════════════════════ */
-.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+/* Green glow card */
+.bento-card.glow-card {
+  background: linear-gradient(135deg, #0d1a0f 0%, #111d13 100%);
+  border-color: rgba(34,197,94,0.15);
+}
+.bento-card.glow-card::after {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,197,94,0.3), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── COMPANY CARDS ── */
+.filter-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
 .filter-btn {
-  padding: 7px 18px; border-radius: 100px;
+  padding: 8px 20px; border-radius: 100px;
   border: 1px solid var(--border); background: var(--card);
   color: var(--text2); font-size: 12px; font-weight: 600;
   cursor: pointer; transition: all .2s; font-family: var(--font);
 }
-.filter-btn.active, .filter-btn:hover {
-  background: var(--card2); border-color: var(--accent);
-  color: var(--text);
-}
-.filter-btn.active { color: var(--accent); }
+.filter-btn:hover { border-color: var(--border-green); color: var(--green); }
+.filter-btn.active { border-color: var(--green); color: var(--green); background: var(--green-dim); }
 
-.company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 12px; }
+.company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px,1fr)); gap: 12px; }
 .company-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius2); overflow: hidden; transition: all .25s;
+  border-radius: 20px; overflow: hidden; transition: all .25s;
 }
-.company-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
-
+.company-card:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 .company-card-head {
   display: flex; align-items: center; gap: 14px;
-  padding: 18px 20px; cursor: pointer;
+  padding: 18px 22px; cursor: pointer;
 }
 .company-logo {
-  width: 42px; height: 42px; border-radius: 10px;
+  width: 44px; height: 44px; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 800; font-family: var(--mono); flex-shrink: 0;
 }
-.company-name { font-size: 15px; font-weight: 700; line-height: 1.2; }
+.company-name { font-size: 15px; font-weight: 700; }
 .company-meta { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: var(--mono); }
 .company-arrow { margin-left: auto; color: var(--text3); font-size: 12px; transition: transform .2s; }
 .company-card.open .company-arrow { transform: rotate(180deg); }
-
-.verified-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 700; letter-spacing: 1px;
-  padding: 3px 8px; border-radius: 4px; font-family: var(--mono);
-}
-.badge-verified { background:rgba(34,197,94,.1); color:var(--green); border:1px solid rgba(34,197,94,.2); }
-.badge-likely   { background:rgba(245,158,11,.1); color:var(--orange); border:1px solid rgba(245,158,11,.2); }
-
 .company-body { display: none; border-top: 1px solid var(--border); }
 .company-card.open .company-body { display: block; }
-
-.q-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); }
+.q-tabs { display: flex; border-bottom: 1px solid var(--border); }
 .q-tab {
-  padding: 10px 18px; font-size: 12px; font-weight: 600;
-  color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all .2s; white-space: nowrap;
+  padding: 10px 20px; font-size: 12px; font-weight: 600; color: var(--text3);
+  cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; white-space: nowrap;
 }
-.q-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-.q-content { padding: 16px 20px; display: none; }
+.q-tab.active { color: var(--green); border-bottom-color: var(--green); }
+.q-content { padding: 16px 22px; display: none; }
 .q-content.active { display: block; }
-
 .q-item {
   display: flex; gap: 12px; padding: 12px; border-radius: 10px;
   border-left: 2px solid var(--border); margin-bottom: 8px;
-  background: rgba(255,255,255,0.01); font-size: 13px; line-height: 1.6;
+  font-size: 13px; line-height: 1.6; background: rgba(255,255,255,0.01);
 }
+.q-item:hover { border-left-color: var(--green); }
 .q-num {
   font-family: var(--mono); font-size: 11px; font-weight: 700;
-  color: var(--accent); flex-shrink: 0; margin-top: 2px; min-width: 24px;
+  color: var(--green); flex-shrink: 0; margin-top: 2px; min-width: 24px;
 }
 .q-hint {
   margin-top: 8px; font-size: 12px; color: var(--text2);
-  background: rgba(99,102,241,0.05); border: 1px solid rgba(99,102,241,0.1);
+  background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.12);
   border-radius: 8px; padding: 8px 12px; line-height: 1.6;
 }
 
+.badge-verified { background:rgba(34,197,94,.1); color:#4ade80; border:1px solid rgba(34,197,94,.2); border-radius:4px; font-size:10px; font-weight:700; padding:2px 7px; font-family:var(--mono); }
+.badge-likely { background:rgba(245,158,11,.1); color:#fbbf24; border:1px solid rgba(245,158,11,.2); border-radius:4px; font-size:10px; font-weight:700; padding:2px 7px; font-family:var(--mono); }
+
 .legend-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text2); }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-.role-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .role-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px; font-family: var(--mono); }
 
-/* ══════════════════════════════════════════════
-   ROLES Q&A
-══════════════════════════════════════════════ */
-.roles-grid { display: flex; flex-direction: column; gap: 10px; }
-.role-card {
+/* ── ROLES — HELIUM "HOW IT WORKS" STYLE ── */
+.roles-process { display: flex; flex-direction: column; gap: 0; }
+.role-process-card {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--radius2); overflow: hidden; transition: all .2s;
+  border-radius: 20px; overflow: hidden; margin-bottom: 12px;
+  transition: all .25s;
 }
-.role-card:hover { border-color: var(--border2); }
-.role-card-head {
-  display: flex; align-items: center; gap: 14px; padding: 18px 22px; cursor: pointer;
+.role-process-card:hover { border-color: var(--border-green); }
+.role-process-head {
+  display: flex; align-items: center; gap: 20px;
+  padding: 22px 28px; cursor: pointer;
 }
-.role-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
-}
-.role-card-title { font-size: 15px; font-weight: 700; }
-.role-card-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
-.role-body { display: none; border-top: 1px solid var(--border); padding: 16px 20px; }
-.role-card.open .role-body { display: block; }
-
-/* ══════════════════════════════════════════════
-   ROADMAP
-══════════════════════════════════════════════ */
-.rm-phase { margin-bottom: 32px; }
-.rm-phase-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
-.rm-phase-num {
-  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+.role-num {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--bg2); border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; font-weight: 900; font-family: var(--mono);
+  font-size: 15px; font-weight: 900; color: var(--text); flex-shrink: 0;
+  transition: all .2s;
 }
-.rm-phase-title { font-size: 18px; font-weight: 800; letter-spacing: .5px; }
-.rm-phase-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
-.rm-cards-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 12px; }
+.role-process-card:hover .role-num { background: var(--green-dim); border-color: var(--border-green); color: var(--green); }
+.role-icon-badge {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+  background: var(--bg2);
+}
+.role-title { font-size: 18px; font-weight: 800; }
+.role-sub { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.role-arrow { margin-left: auto; color: var(--text3); font-size: 12px; transition: transform .2s; }
+.role-process-card.open .role-arrow { transform: rotate(180deg); color: var(--green); }
+.role-body { display: none; border-top: 1px solid var(--border); padding: 20px 28px; }
+.role-process-card.open .role-body { display: block; }
 
-.rm-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius2); padding: 20px;
+/* ── ROADMAP — HELIUM PROCESS STEPS ── */
+.roadmap-phases { display: flex; flex-direction: column; gap: 40px; }
+.rm-phase { }
+.rm-phase-head { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 24px; }
+.rm-phase-num {
+  width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 900; color: #fff;
+  background: var(--green);
+  box-shadow: 0 0 0 6px rgba(34,197,94,0.15);
 }
+.rm-phase-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.rm-phase-sub { font-size: 14px; color: var(--text2); }
+.rm-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 12px; margin-left: 72px; }
+.rm-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; transition: all .25s;
+}
+.rm-card:hover { border-color: var(--border-green); transform: translateY(-2px); }
 .rm-card-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
 .rm-card-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
 .rm-links { display: flex; flex-direction: column; gap: 6px; }
 .rm-link {
   display: flex; align-items: center; justify-content: space-between;
   font-size: 12px; color: var(--text2); text-decoration: none;
-  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  background: var(--bg2); border: 1px solid var(--border);
   border-radius: 8px; padding: 7px 12px; transition: all .2s;
 }
-.rm-link:hover { border-color: var(--accent); color: var(--text); }
-.rm-link-type {
-  font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
-  font-family: var(--mono); letter-spacing: 1px; flex-shrink: 0;
-}
-.rm-link-type.yt     { background:rgba(239,68,68,.15);  color:#f87171; }
-.rm-link-type.course { background:rgba(99,102,241,.15); color:#818cf8; }
-.rm-link-type.web    { background:rgba(34,197,94,.15);  color:#4ade80; }
+.rm-link:hover { border-color: var(--border-green); color: var(--text); }
+.rm-link-type { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; font-family: var(--mono); letter-spacing: 1px; flex-shrink: 0; }
+.rm-link-type.yt     { background:rgba(239,68,68,.12); color:#f87171; }
+.rm-link-type.course { background:rgba(34,197,94,.12); color:#4ade80; }
+.rm-link-type.web    { background:rgba(156,163,175,.12); color:#9ca3af; }
 
-/* ══════════════════════════════════════════════
-   CHEATSHEETS
-══════════════════════════════════════════════ */
+/* ── CHEATSHEETS ── */
 .cheat-tabs-wrap {
-  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px;
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 6px;
+  border-radius: 100px; padding: 6px; width: fit-content;
 }
 .cheat-tab {
-  padding: 8px 16px; border-radius: 8px; cursor: pointer;
-  font-size: 12px; font-weight: 600; color: var(--text3);
-  transition: all .2s; white-space: nowrap; font-family: var(--font);
+  padding: 8px 18px; border-radius: 100px; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text3); transition: all .2s; white-space: nowrap;
 }
-.cheat-tab.active { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+.cheat-tab.active { background: var(--green); color: #fff; }
 .cheat-tab:not(.active):hover { color: var(--text2); }
-
 .cheat-pane { display: none; }
-.cheat-pane.active { display: block; }
-.cheat-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 12px; }
-.cheat-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius2); overflow: hidden;
-}
-.cheat-card-head {
-  padding: 14px 18px; font-size: 12px; font-weight: 700;
-  border-bottom: 1px solid var(--border); color: var(--text2);
-  background: rgba(255,255,255,0.02); letter-spacing: .3px;
-}
+.cheat-pane.active { display: block; animation: fadeUp .3s ease; }
+.cheat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 12px; }
+.cheat-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all .2s; }
+.cheat-card:hover { border-color: var(--border-green); }
+.cheat-card-head { padding: 14px 18px; font-size: 12px; font-weight: 700; border-bottom: 1px solid var(--border); color: var(--text2); background: rgba(255,255,255,0.02); }
 .cheat-body { padding: 16px 18px; }
 .cheat-table { width: 100%; border-collapse: collapse; }
 .cheat-table tr:not(:last-child) td { padding-bottom: 8px; }
 .cheat-table td { font-size: 12px; vertical-align: top; }
-.cheat-table td:first-child {
-  font-family: var(--mono); font-size: 11px; color: var(--accent3);
-  width: 45%; padding-right: 10px; word-break: break-word;
-}
+.cheat-table td:first-child { font-family: var(--mono); font-size: 11px; color: var(--green); width: 44%; padding-right: 10px; word-break: break-word; }
 .cheat-table td:last-child { color: var(--text2); line-height: 1.5; }
 
-/* ══════════════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════════════ */
+/* ── TAGS ── */
+.tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px; font-family: var(--mono); }
+.tag-blue   { background:rgba(59,130,246,.12);  color:#60a5fa; border:1px solid rgba(59,130,246,.2);  }
+.tag-green  { background:rgba(34,197,94,.12);   color:#4ade80; border:1px solid rgba(34,197,94,.2);  }
+.tag-purple { background:rgba(139,92,246,.12);  color:#a78bfa; border:1px solid rgba(139,92,246,.2); }
+.tag-orange { background:rgba(245,158,11,.12);  color:#fbbf24; border:1px solid rgba(245,158,11,.2); }
+.tag-cyan   { background:rgba(6,182,212,.12);   color:#22d3ee; border:1px solid rgba(6,182,212,.2);  }
+.tag-gold   { background:rgba(251,191,36,.12);  color:#fcd34d; border:1px solid rgba(251,191,36,.2); }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ── RESPONSIVE ── */
 @media(max-width:900px) {
-  .section { padding: 24px 20px 80px; }
-  .bento-grid { grid-template-columns: repeat(2,1fr); }
-  .b-full,.b-8,.b-6,.b-4,.b-3 { grid-column: span 2; }
-  .b-3 { grid-column: span 1; }
   .prog-grid { grid-template-columns: 1fr; max-width: 480px; }
-  .prog-stats-row { flex-wrap: wrap; }
-  .company-grid { grid-template-columns: 1fr; }
-  .rm-cards-grid { grid-template-columns: 1fr; }
+  .bento { grid-template-columns: repeat(2,1fr); }
+  .b-3,.b-4,.b-6,.b-8,.b-12 { grid-column: span 2; }
+  .rm-cards-grid { margin-left: 0; grid-template-columns: 1fr; }
   .cheat-grid { grid-template-columns: 1fr; }
-  .topnav { padding: 0 16px; }
-  .topnav-logo { font-size: 13px; margin-right: 16px; }
+  .company-grid { grid-template-columns: 1fr; }
+  .auth-input-row { flex-direction: column; }
+  .auth-send-btn { width: 100%; }
+  .otp-boxes { gap: 6px; }
+  .otp-box { width: 40px; height: 50px; font-size: 20px; }
+  .prog-stats-strip { flex-wrap: wrap; border-radius: 16px; }
+  .prog-stats-strip-item { border-right: none; border-bottom: 1px solid var(--border); flex: 1 1 40%; }
+  .section-wrap { padding: 40px 20px 80px; }
+  .navbar-links { display: none; }
+  h1.hero-h1, .auth-headline h1, .prog-sel-hero h1 { font-size: 40px; }
 }
 @media(max-width:600px) {
-  .bento-grid { grid-template-columns: 1fr; gap: 10px; }
-  .b-full,.b-8,.b-6,.b-4,.b-3 { grid-column: span 1; }
-  .auth-card { padding: 32px 24px; }
-  .otp-box { width: 36px; height: 46px; font-size: 18px; }
-  .otp-row { gap: 5px; }
-  .prog-hero-title { font-size: 32px; }
-  .section { padding: 20px 16px 80px; }
-  .topnav { height: 52px; gap: 0; }
-  .topnav-tab { padding: 6px 10px; font-size: 12px; }
-  .prog-stats-row { display: none; }
-  .topnav-right .prog-pill-change { display: none; }
+  .bento { grid-template-columns: 1fr; }
+  .b-3,.b-4,.b-6,.b-8,.b-12 { grid-column: span 1; }
+  .navbar { padding: 6px 6px 6px 14px; }
+  .navbar-cta { padding: 8px 14px; font-size: 12px; }
+  .otp-boxes { gap: 4px; }
+  .otp-box { width: 34px; height: 44px; font-size: 18px; border-radius: 8px; }
+  .auth-form-card { padding: 20px; }
+  .prog-sel-inner { padding: 90px 16px 60px; }
 }
 </style>
 </head>
 <body>
-<div class="bg-glow"></div>
+
+<!-- Green spheres -->
+<div class="green-sphere sphere-top-right"></div>
+<div class="green-sphere sphere-bottom-left"></div>
 
 <!-- Disclaimer -->
 <div id="disclaimerBanner">
   <span class="disc-text">
-    <strong>⚠️ Unofficial Student Resource — Not affiliated with or endorsed by Goa Institute of Management (GIM).</strong>
-    Data from publicly available GIM placement reports (2020–24). Figures are indicative and may differ from official records. Built by students, for students.
+    <strong>⚠️ Unofficial Student Resource.</strong>
+    Not affiliated with or endorsed by GIM. Data from public placement reports (2020–24). Figures are indicative only. Built by students, for students.
   </span>
   <button class="disc-close" onclick="document.getElementById('disclaimerBanner').style.display='none';localStorage.setItem('discSeen','1')">Got it</button>
 </div>
 
-<!-- Hidden old login wrapper -->
-<div id="oldLoginWrap" style="display:none">
-<div id="lcLoading" style="display:none"></div>
-<div id="loginForm">
-  <input type="email" class="auth-input" id="lcEmail" style="display:none" placeholder="Enter your email address" autocomplete="email">
-  <input type="text" class="auth-input" id="lcOTP" placeholder="Enter 8-digit code" maxlength="8" inputmode="numeric">
-  <button id="sendOtpBtn" onclick="sendOTP()">Send OTP Code →</button>
-  <button id="verifyOtpBtn" onclick="verifyOTP()">Verify &amp; Continue →</button>
-</div>
+<!-- Hidden compatibility inputs -->
+<div style="display:none">
+  <input id="lcEmail" type="email">
+  <input id="lcOTP" type="text">
+  <button id="sendOtpBtn" onclick="sendOTP()"></button>
+  <button id="verifyOtpBtn" onclick="verifyOTP()"></button>
+  <div id="loginForm"></div>
+  <div id="lcLoading"></div>
 </div>
 
-<!-- SCREEN 1: Email — Full Helium Split Layout -->
+<!-- ═══════════════════════════════════════
+     NAVBAR (shown once logged in)
+═══════════════════════════════════════ -->
+<nav class="navbar" id="mainNav" style="display:none">
+  <div class="navbar-logo">
+    <div class="navbar-logo-icon">🎓</div>
+    <span id="topbarTitle">GIM Prep Hub</span>
+  </div>
+  <div class="navbar-links">
+    <button class="navbar-link active" onclick="showSection('overview',this)">Overview</button>
+    <button class="navbar-link" onclick="showSection('companies',this)"><span id="navCompanyLabel">Companies</span></button>
+    <button class="navbar-link" onclick="showSection('roles',this)">Roles Q&A</button>
+    <button class="navbar-link" onclick="showSection('roadmap',this)">Roadmap</button>
+    <button class="navbar-link" onclick="showSection('cheatsheets',this)">Cheatsheets</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;margin-left:8px">
+    <button class="navbar-cta" onclick="backToSelector()" id="progPill" style="background:var(--bg2);color:var(--text);border:1px solid var(--border);">
+      <span id="progPillEmoji">📊</span>
+      <span id="progPillName">BDA</span>
+      <span style="color:var(--text3);font-size:11px">↩ Switch</span>
+    </button>
+    <button class="navbar-cta" onclick="signOut()" style="background:var(--bg2);color:var(--text3);border:1px solid var(--border);font-weight:500">Sign out</button>
+  </div>
+</nav>
+
+<!-- AUTH NAV (shown on auth pages) -->
+<nav class="navbar" id="authNav">
+  <div class="navbar-logo">
+    <div class="navbar-logo-icon">🎓</div>
+    <span>GIM Prep Hub</span>
+  </div>
+  <div class="navbar-links">
+    <span class="navbar-link">Batch 2025-27</span>
+    <span class="navbar-link">4 Programmes</span>
+    <span class="navbar-link">130+ Companies</span>
+  </div>
+  <button class="navbar-cta green-cta" onclick="document.getElementById('authEmail')?.focus()">Get Access</button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     SCREEN 1 — EMAIL AUTH
+═══════════════════════════════════════ -->
 <div id="screen-email" class="auth-screen">
-
-  <!-- LEFT: Hero -->
-  <div class="auth-left">
-    <div class="auth-orb auth-orb-1"></div>
-    <div class="auth-orb auth-orb-2"></div>
-    <div class="auth-orb auth-orb-3"></div>
-    <div class="auth-grid-overlay"></div>
-
-    <div class="auth-left-top">
-      <div class="auth-logo-row">
-        <div class="auth-logo-icon">🎓</div>
-        <div class="auth-logo-text">GIM <span>Prep Hub</span></div>
-      </div>
-
-      <div class="auth-hero-label">Batch 2025–27</div>
-      <h1 class="auth-hero-title">
-        The Complete<br>
-        <span class="grad">Placement Prep</span><br>
-        Environment
-      </h1>
-      <p class="auth-hero-sub">
-        Company intel, role-wise Q&A banks, learning roadmap &amp; cheatsheets — for every GIM programme, built by students for students.
-      </p>
-
-      <div class="auth-badge-strip">
-        <div class="auth-badge-track">
-          <div class="auth-badge-item"><span>📊</span> BDA — Big Data Analytics</div>
-          <div class="auth-badge-item"><span>🎯</span> CORE — Flagship Programme</div>
-          <div class="auth-badge-item"><span>🏥</span> HCM — Healthcare Management</div>
-          <div class="auth-badge-item"><span>🏦</span> BIFS — Banking &amp; Finance</div>
-          <div class="auth-badge-item"><span>🏢</span> 130+ Companies</div>
-          <div class="auth-badge-item"><span>💬</span> 800+ Questions</div>
-          <div class="auth-badge-item"><span>📊</span> BDA — Big Data Analytics</div>
-          <div class="auth-badge-item"><span>🎯</span> CORE — Flagship Programme</div>
-          <div class="auth-badge-item"><span>🏥</span> HCM — Healthcare Management</div>
-          <div class="auth-badge-item"><span>🏦</span> BIFS — Banking &amp; Finance</div>
-          <div class="auth-badge-item"><span>🏢</span> 130+ Companies</div>
-          <div class="auth-badge-item"><span>💬</span> 800+ Questions</div>
-        </div>
-      </div>
-
-      <div class="auth-stats">
-        <div class="auth-stat"><div class="auth-stat-n">4</div><div class="auth-stat-l">Programmes</div></div>
-        <div class="auth-stat"><div class="auth-stat-n">130+</div><div class="auth-stat-l">Companies</div></div>
-        <div class="auth-stat"><div class="auth-stat-n">800+</div><div class="auth-stat-l">Questions</div></div>
-        <div class="auth-stat"><div class="auth-stat-n">Free</div><div class="auth-stat-l">Forever</div></div>
-      </div>
-    </div>
-
-    <div class="auth-left-bottom">
-      <div class="auth-testimonial">
-        <p class="auth-testimonial-text">Went through 12 company Q&As the night before my McKinsey interview. Got placed. This site is a cheat code.</p>
-        <div class="auth-testimonial-author">
-          <div class="auth-testimonial-avatar">A</div>
-          <div>
-            <div class="auth-testimonial-name">Arjun S.</div>
-            <div class="auth-testimonial-role">GIM BDA 2025 · Placed at McKinsey</div>
-          </div>
-        </div>
-      </div>
+  <!-- Ticker -->
+  <div class="auth-ticker">
+    <div class="auth-ticker-track">
+      <div class="auth-ticker-item"><span class="dot">●</span> McKinsey &amp; Company</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Goldman Sachs</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Deloitte</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> HDFC Bank</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Flipkart</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> J&amp;J MedTech</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Stryker</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Bain &amp; Company</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> JP Morgan</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> KPMG</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> EY</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Kotak Mahindra</div>
+      <!-- Duplicate for seamless loop -->
+      <div class="auth-ticker-item"><span class="dot">●</span> McKinsey &amp; Company</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Goldman Sachs</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Deloitte</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> HDFC Bank</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Flipkart</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> J&amp;J MedTech</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Stryker</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Bain &amp; Company</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> JP Morgan</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> KPMG</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> EY</div>
+      <div class="auth-ticker-item"><span class="dot">●</span> Kotak Mahindra</div>
     </div>
   </div>
 
-  <!-- RIGHT: Form -->
-  <div class="auth-right">
-    <div class="auth-form-wrap">
-      <div class="auth-form-title">Get Access</div>
-      <p class="auth-form-sub">Enter your email — we'll send you an 8-digit code. No password, no account creation.</p>
-      <input type="email" id="authEmail" class="auth-input" placeholder="you@example.com" autocomplete="email" spellcheck="false">
-      <button class="auth-btn" id="authSendBtn" onclick="sendOTP()">
-        Continue with Email
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
+  <div class="auth-inner">
+    <!-- Quote -->
+    <div class="auth-quote">
+      <div class="auth-quote-avatar">A</div>
+      <span class="auth-quote-text">Went through 12 company Q&As before my interview. Got placed.</span>
+      <span class="auth-quote-name">— GIM BDA 2025</span>
+    </div>
+
+    <!-- Big headline -->
+    <div class="auth-headline reveal">
+      <h1>Prep Smarter,<br>Place Better.</h1>
+      <p class="sub">The complete GIM placement prep environment — 130+ companies, 800+ questions, roadmap &amp; cheatsheets for all 4 programmes.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="auth-stat-row reveal reveal-delay-1">
+      <div class="auth-stat-item"><div class="auth-stat-n">4</div><div class="auth-stat-l">Programmes</div></div>
+      <div class="auth-stat-item"><div class="auth-stat-n">130+</div><div class="auth-stat-l">Companies</div></div>
+      <div class="auth-stat-item"><div class="auth-stat-n">800+</div><div class="auth-stat-l">Questions</div></div>
+      <div class="auth-stat-item"><div class="auth-stat-n">Free</div><div class="auth-stat-l">Forever</div></div>
+    </div>
+
+    <!-- Form -->
+    <div class="auth-form-card reveal reveal-delay-2">
+      <div class="auth-form-title">Get instant access</div>
+      <div class="auth-form-sub">Enter your email — we'll send an 8-digit code. No password needed.</div>
+      <div class="auth-input-row">
+        <input type="email" id="authEmail" class="auth-input" placeholder="you@example.com" autocomplete="email" spellcheck="false" onkeydown="if(event.key==='Enter')sendOTP()">
+        <button class="auth-send-btn" id="authSendBtn" onclick="sendOTP()">Continue →</button>
+      </div>
       <div class="auth-status" id="authEmailStatus"></div>
-      <div class="auth-divider"><span>SECURE ACCESS</span></div>
       <div class="auth-trust-row">
-        <div class="auth-trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          No password
-        </div>
-        <div class="auth-trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
-          Any email
-        </div>
-        <div class="auth-trust-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          Free forever
-        </div>
+        <div class="auth-trust-item">No password</div>
+        <div class="auth-trust-item">Any email</div>
+        <div class="auth-trust-item">Free forever</div>
       </div>
     </div>
   </div>
-
 </div>
 
-<!-- SCREEN 2: OTP — Full Helium Split Layout -->
+<!-- ═══════════════════════════════════════
+     SCREEN 2 — OTP VERIFY
+═══════════════════════════════════════ -->
 <div id="screen-otp" class="auth-screen hidden">
-
-  <!-- LEFT: Hero (same as email screen) -->
-  <div class="auth-left">
-    <div class="auth-orb auth-orb-1"></div>
-    <div class="auth-orb auth-orb-2"></div>
-    <div class="auth-orb auth-orb-3"></div>
-    <div class="auth-grid-overlay"></div>
-
-    <div class="auth-left-top">
-      <div class="auth-logo-row">
-        <div class="auth-logo-icon">🎓</div>
-        <div class="auth-logo-text">GIM <span>Prep Hub</span></div>
-      </div>
-      <div class="auth-hero-label">Almost there</div>
-      <h1 class="auth-hero-title">
-        One step<br>away from<br>
-        <span class="grad">your prep hub</span>
-      </h1>
-      <p class="auth-hero-sub">Check your inbox for the 8-digit verification code. It expires in 10 minutes.</p>
-      <div class="auth-stats">
-        <div class="auth-stat"><div class="auth-stat-n">4</div><div class="auth-stat-l">Programmes</div></div>
-        <div class="auth-stat"><div class="auth-stat-n">130+</div><div class="auth-stat-l">Companies</div></div>
-        <div class="auth-stat"><div class="auth-stat-n">800+</div><div class="auth-stat-l">Questions</div></div>
-        <div class="auth-stat"><div class="auth-stat-n">Free</div><div class="auth-stat-l">Forever</div></div>
-      </div>
+  <div class="auth-inner">
+    <div class="auth-headline reveal" style="text-align:center;align-items:center;display:flex;flex-direction:column">
+      <h1 style="font-size:clamp(36px,5vw,60px);text-align:center">Check your inbox</h1>
+      <p class="sub" style="text-align:center">We sent an 8-digit code to</p>
     </div>
 
-    <div class="auth-left-bottom">
-      <div class="auth-testimonial">
-        <p class="auth-testimonial-text">The cheatsheets alone are worth it. 6 tabs of quick-reference for every interview round I went through.</p>
-        <div class="auth-testimonial-author">
-          <div class="auth-testimonial-avatar">P</div>
-          <div>
-            <div class="auth-testimonial-name">Priya M.</div>
-            <div class="auth-testimonial-role">GIM BIFS 2025 · Placed at HDFC Bank</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RIGHT: OTP Form -->
-  <div class="auth-right">
-    <div class="auth-form-wrap">
-      <div class="auth-form-title">Check your inbox</div>
-      <p class="auth-form-sub">We sent an 8-digit code to</p>
-      <div class="email-chip" id="otpEmailBadge">✉️ —</div>
-      <div class="otp-row">
+    <div class="auth-form-card reveal reveal-delay-1" style="max-width:520px">
+      <div class="otp-email-chip" id="otpEmailBadge">✉️ —</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Enter the code below</div>
+      <div class="otp-boxes">
         <input class="otp-box" id="otp0" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
         <input class="otp-box" id="otp1" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
         <input class="otp-box" id="otp2" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
@@ -930,410 +897,509 @@ h2.section-heading .hi { color: var(--accent); }
         <input class="otp-box" id="otp6" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
         <input class="otp-box" id="otp7" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
       </div>
-      <button class="auth-btn" id="authVerifyBtn" onclick="verifyOTP()">
-        Verify &amp; Enter Hub
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <button class="auth-btn auth-ghost" id="otpResendBtn" onclick="resendOTP()" disabled>Resend code</button>
+      <div class="otp-actions">
+        <button class="otp-verify-btn" id="authVerifyBtn" onclick="verifyOTP()">Verify &amp; Enter Hub →</button>
+        <button class="otp-resend-btn" id="otpResendBtn" onclick="resendOTP()" disabled>Resend</button>
+      </div>
       <div class="auth-status" id="authOtpStatus"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;">
-        <div class="auth-timer">Code expires in <span id="otpTimerDisplay">10:00</span></div>
-        <button class="auth-link" onclick="backToEmail()">← Different email</button>
+      <div class="otp-footer">
+        <div class="otp-timer">Expires in <span id="otpTimerDisplay">10:00</span></div>
+        <button class="otp-back" onclick="backToEmail()">← Different email</button>
       </div>
     </div>
   </div>
-
 </div>
 
-<!-- PROGRAMME SELECTOR -->
+<!-- ═══════════════════════════════════════
+     PROGRAMME SELECTOR
+═══════════════════════════════════════ -->
 <div id="progSelector">
-  <div class="prog-hero">
-    <div class="prog-hero-badge">
-      <div class="dot">🎓</div>
-      <span>Goa Institute of Management — Batch 2025-27</span>
+  <div class="green-sphere sphere-top-right" style="position:absolute"></div>
+  <div class="prog-sel-inner">
+    <div class="prog-sel-hero reveal">
+      <span class="section-label">Goa Institute of Management · Batch 2025-27</span>
+      <h1>Select Your<br>Programme</h1>
+      <p class="sub" style="margin-top:12px">Company intel, role-wise Q&A banks, roadmap &amp; cheatsheets — built by students, for students.</p>
     </div>
-    <h1 class="prog-hero-title">Select Your<br><span class="grad">Programme</span></h1>
-    <p class="prog-hero-sub">Company intel, role-wise Q&A banks, learning roadmap &amp; cheatsheets — all in one place.</p>
-  </div>
 
-  <div class="prog-stats-row">
-    <div class="prog-stat-item"><div class="prog-stat-num" style="background:linear-gradient(135deg,#6366f1,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">4</div><div class="prog-stat-lbl">Programmes</div></div>
-    <div class="prog-stat-item"><div class="prog-stat-num" style="background:linear-gradient(135deg,#22c55e,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">130+</div><div class="prog-stat-lbl">Companies</div></div>
-    <div class="prog-stat-item"><div class="prog-stat-num" style="background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent">800+</div><div class="prog-stat-lbl">Questions</div></div>
-    <div class="prog-stat-item"><div class="prog-stat-num" style="background:linear-gradient(135deg,#a78bfa,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent">∞</div><div class="prog-stat-lbl">Free Forever</div></div>
-  </div>
+    <div class="prog-stats-strip reveal reveal-delay-1">
+      <div class="prog-stats-strip-item"><div class="prog-stats-strip-n">4</div><div class="prog-stats-strip-l">Programmes</div></div>
+      <div class="prog-stats-strip-item"><div class="prog-stats-strip-n">130+</div><div class="prog-stats-strip-l">Companies</div></div>
+      <div class="prog-stats-strip-item"><div class="prog-stats-strip-n">800+</div><div class="prog-stats-strip-l">Questions</div></div>
+      <div class="prog-stats-strip-item"><div class="prog-stats-strip-n">Free</div><div class="prog-stats-strip-l">Forever</div></div>
+    </div>
 
-  <div class="prog-grid">
-    <div class="prog-card bda" onclick="selectProg('bda')">
-      <div class="prog-card-glow"></div>
-      <div class="prog-card-top-bar"></div>
-      <div class="prog-card-inner">
-        <div class="prog-card-header">
-          <div class="prog-card-icon-wrap" style="background:rgba(59,130,246,0.12)">📊</div>
-          <div>
-            <div class="prog-card-name" style="color:#60a5fa">BDA</div>
-            <div class="prog-card-full">PGDM — Big Data Analytics</div>
-          </div>
-        </div>
-        <div class="prog-card-desc">Data science, ML &amp; analytics roles. Python, SQL, Power BI. BFSI, tech &amp; consulting focused.</div>
-      </div>
-      <div class="prog-card-footer">
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#60a5fa">63</div><div class="prog-card-stat-l">Companies</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#22d3ee">22.5</div><div class="prog-card-stat-l">Highest LPA</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#60a5fa">15.6</div><div class="prog-card-stat-l">Avg LPA</div></div>
-      </div>
-    </div>
-    <div class="prog-card core" onclick="selectProg('core')">
-      <div class="prog-card-glow"></div>
-      <div class="prog-card-top-bar"></div>
-      <div class="prog-card-inner">
-        <div class="prog-card-header">
-          <div class="prog-card-icon-wrap" style="background:rgba(245,158,11,0.12)">🎯</div>
-          <div>
-            <div class="prog-card-name" style="color:#fbbf24">CORE</div>
-            <div class="prog-card-full">PGDM — Core (Flagship)</div>
-          </div>
-        </div>
-        <div class="prog-card-desc">General management, sales, marketing &amp; strategy. MT roles across FMCG, IT &amp; consulting.</div>
-      </div>
-      <div class="prog-card-footer">
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#fbbf24">60</div><div class="prog-card-stat-l">Companies</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#f87171">26.3</div><div class="prog-card-stat-l">Highest LPA</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#fbbf24">14.8</div><div class="prog-card-stat-l">Avg LPA</div></div>
-      </div>
-    </div>
-    <div class="prog-card hcm" onclick="selectProg('hcm')">
-      <div class="prog-card-glow"></div>
-      <div class="prog-card-top-bar"></div>
-      <div class="prog-card-inner">
-        <div class="prog-card-header">
-          <div class="prog-card-icon-wrap" style="background:rgba(34,197,94,0.12)">🏥</div>
-          <div>
-            <div class="prog-card-name" style="color:#4ade80">HCM</div>
-            <div class="prog-card-full">PGDM — Healthcare Management</div>
-          </div>
-        </div>
-        <div class="prog-card-desc">Pharma, medical devices, hospital ops &amp; health consulting. India's top healthcare MBA.</div>
-      </div>
-      <div class="prog-card-footer">
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#4ade80">22</div><div class="prog-card-stat-l">Companies</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#22d3ee">29.1</div><div class="prog-card-stat-l">Highest LPA</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#4ade80">14.0</div><div class="prog-card-stat-l">Avg LPA</div></div>
-      </div>
-    </div>
-    <div class="prog-card bifs" onclick="selectProg('bifs')">
-      <div class="prog-card-glow"></div>
-      <div class="prog-card-top-bar"></div>
-      <div class="prog-card-inner">
-        <div class="prog-card-header">
-          <div class="prog-card-icon-wrap" style="background:rgba(167,139,250,0.12)">🏦</div>
-          <div>
-            <div class="prog-card-name" style="color:#a78bfa">BIFS</div>
-            <div class="prog-card-full">PGDM — Banking, Insurance &amp; Financial Services</div>
-          </div>
-        </div>
-        <div class="prog-card-desc">Banking, IB, insurance &amp; credit. RM, analyst &amp; associate roles in top BFSI firms.</div>
-      </div>
-      <div class="prog-card-footer">
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#a78bfa">23</div><div class="prog-card-stat-l">Companies</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#818cf8">19.7</div><div class="prog-card-stat-l">Highest LPA</div></div>
-        <div class="prog-card-stat"><div class="prog-card-stat-n" style="color:#a78bfa">14.8</div><div class="prog-card-stat-l">Avg LPA</div></div>
-      </div>
-    </div>
-  </div>
+    <div class="prog-grid reveal reveal-delay-2">
 
-  <div class="prog-disclaimer">
-    <strong>⚠️ Unofficial Resource:</strong> Not affiliated with or endorsed by GIM. Data from publicly available audited placement reports (2020–24). Figures are indicative only. Platform in active development.
+      <div class="prog-card" onclick="selectProg('bda')">
+        <div class="prog-card-visual">
+          <div class="prog-card-visual-accent"></div>
+          <div class="prog-card-visual-icon">📊</div>
+        </div>
+        <div class="prog-card-body">
+          <span class="prog-card-tag">PGDM — Big Data Analytics</span>
+          <div class="prog-card-name">BDA</div>
+          <div class="prog-card-desc">Data science, ML &amp; analytics — BFSI, tech &amp; consulting. Python, SQL, Power BI focused.</div>
+          <div class="prog-card-footer">
+            <div class="prog-card-stat"><div class="prog-card-stat-n">63</div><div class="prog-card-stat-l">Companies</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">22.5</div><div class="prog-card-stat-l">Highest LPA</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">15.6</div><div class="prog-card-stat-l">Avg LPA</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prog-card" onclick="selectProg('core')">
+        <div class="prog-card-visual">
+          <div class="prog-card-visual-accent"></div>
+          <div class="prog-card-visual-icon">🎯</div>
+        </div>
+        <div class="prog-card-body">
+          <span class="prog-card-tag">PGDM — Core (Flagship)</span>
+          <div class="prog-card-name">CORE</div>
+          <div class="prog-card-desc">General management, sales, marketing &amp; strategy. MT roles across FMCG, IT &amp; consulting.</div>
+          <div class="prog-card-footer">
+            <div class="prog-card-stat"><div class="prog-card-stat-n">60</div><div class="prog-card-stat-l">Companies</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">26.3</div><div class="prog-card-stat-l">Highest LPA</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">14.8</div><div class="prog-card-stat-l">Avg LPA</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prog-card" onclick="selectProg('hcm')">
+        <div class="prog-card-visual">
+          <div class="prog-card-visual-accent"></div>
+          <div class="prog-card-visual-icon">🏥</div>
+        </div>
+        <div class="prog-card-body">
+          <span class="prog-card-tag">PGDM — Healthcare Management</span>
+          <div class="prog-card-name">HCM</div>
+          <div class="prog-card-desc">Pharma, medical devices, hospital ops &amp; health consulting. India's top healthcare MBA.</div>
+          <div class="prog-card-footer">
+            <div class="prog-card-stat"><div class="prog-card-stat-n">22</div><div class="prog-card-stat-l">Companies</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">29.1</div><div class="prog-card-stat-l">Highest LPA</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">14.0</div><div class="prog-card-stat-l">Avg LPA</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prog-card" onclick="selectProg('bifs')">
+        <div class="prog-card-visual">
+          <div class="prog-card-visual-accent"></div>
+          <div class="prog-card-visual-icon">🏦</div>
+        </div>
+        <div class="prog-card-body">
+          <span class="prog-card-tag">PGDM — Banking, Insurance &amp; Financial Services</span>
+          <div class="prog-card-name">BIFS</div>
+          <div class="prog-card-desc">Banking, IB, insurance &amp; credit. RM, analyst &amp; associate roles at top BFSI firms.</div>
+          <div class="prog-card-footer">
+            <div class="prog-card-stat"><div class="prog-card-stat-n">23</div><div class="prog-card-stat-l">Companies</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">19.7</div><div class="prog-card-stat-l">Highest LPA</div></div>
+            <div class="prog-card-stat"><div class="prog-card-stat-n">14.8</div><div class="prog-card-stat-l">Avg LPA</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="prog-disclaimer reveal reveal-delay-3">
+      <strong>⚠️ Unofficial Resource:</strong> Not affiliated with or endorsed by GIM. Data from publicly available audited placement reports (2020–24). Figures are indicative only.
+    </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ═══════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════ -->
 <div id="mainApp">
 
-  <!-- Top Nav -->
-  <nav class="topnav">
-    <div class="topnav-logo" id="topbarTitle">GIM <span>Prep Hub</span></div>
-    <div class="topnav-tabs" id="topnavTabs">
-      <button class="topnav-tab active" onclick="showSection('overview',this)">⚡ Overview</button>
-      <button class="topnav-tab" onclick="showSection('companies',this)">🏢 <span id="navCompanyLabel">Companies</span> <span class="tab-badge" id="companiesCount">67</span></button>
-      <button class="topnav-tab" onclick="showSection('roles',this)">🎯 Roles <span class="tab-badge" id="rolesCount">7</span></button>
-      <button class="topnav-tab" onclick="showSection('roadmap',this)">🗺️ Roadmap</button>
-      <button class="topnav-tab" onclick="showSection('cheatsheets',this)">📋 Cheatsheets</button>
-    </div>
-    <div class="topnav-right">
-      <div class="prog-pill" onclick="backToSelector()" id="progPill">
-        <div class="prog-pill-dot" id="progPillDot">📊</div>
-        <span class="prog-pill-name" id="progPillName">BDA</span>
-        <span class="prog-pill-change">↩ Switch</span>
-      </div>
-      <button class="signout-btn" onclick="signOut()">Sign out</button>
-    </div>
-  </nav>
-
-  <!-- OVERVIEW -->
-  <div id="overview" class="section active">
-    <div class="section-top">
-      <div class="section-label" id="overviewLabel">OVERVIEW</div>
-      <h2 class="section-heading" id="overviewTitle">GIM BDA <span class="hi">Placement</span> Prep Hub</h2>
-      <p id="overviewSub">The complete GIM PGDM-BDA placement preparation environment for the batch.</p>
-    </div>
-
-    <!-- BENTO GRID -->
-    <div class="bento-grid">
-
-      <!-- Big stats — 3 col cards -->
-      <div class="bento-card b-3" style="background:linear-gradient(135deg,rgba(99,102,241,0.12),rgba(139,92,246,0.06));border-color:rgba(99,102,241,0.2)">
-        <div class="bento-label">COMPANIES</div>
-        <div class="bento-big-num" id="statCompanies" style="color:#818cf8">63</div>
-        <div class="bento-num-sub">Recruiter organisations</div>
-      </div>
-      <div class="bento-card b-3" style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(6,182,212,0.05));border-color:rgba(34,197,94,0.2)">
-        <div class="bento-label">ROLES Q&A</div>
-        <div class="bento-big-num" id="statRoles" style="color:#4ade80">7</div>
-        <div class="bento-num-sub">Job function banks</div>
-      </div>
-      <div class="bento-card b-3" style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(239,68,68,0.05));border-color:rgba(245,158,11,0.2)">
-        <div class="bento-label">HIGHEST LPA</div>
-        <div class="bento-big-num" id="statHighLPA" style="color:#fbbf24">22.5</div>
-        <div class="bento-num-sub">Top package (LPA)</div>
-      </div>
-      <div class="bento-card b-3" style="background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(167,139,250,0.05));border-color:rgba(236,72,153,0.2)">
-        <div class="bento-label">AVG LPA</div>
-        <div class="bento-big-num" id="statAvgLPA" style="color:#f472b6">15.6</div>
-        <div class="bento-num-sub">Average package (LPA)</div>
+  <!-- ── OVERVIEW ── -->
+  <div id="overview" class="app-section active">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-label">OVERVIEW</span>
+        <h2 class="section-h2" id="overviewTitle">GIM BDA <span style="color:var(--green)">Placement</span> Prep Hub</h2>
+        <p class="sub-p" id="overviewSub">The complete placement preparation environment for GIM PGDM-BDA batch 2025-27.</p>
       </div>
 
-      <!-- LPA Comparison Chart -->
-      <div class="bento-card b-8">
-        <div class="bento-label">PLACEMENT STATS — LPA COMPARISON ACROSS PROGRAMMES</div>
-        <canvas id="lpaChart" height="160"></canvas>
-      </div>
-
-      <!-- Sector Donut -->
-      <div class="bento-card b-4">
-        <div class="bento-label" id="sectorChartLabel">SECTOR DISTRIBUTION — BDA</div>
-        <canvas id="sectorChart" height="200"></canvas>
-        <div id="sectorLegend" style="margin-top:10px;display:flex;flex-direction:column;gap:5px"></div>
-      </div>
-
-      <!-- Glance card -->
-      <div class="bento-card b-full" id="overviewGlance">
-        <div class="bento-label">BATCH AT A GLANCE</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;margin-top:8px">
-          <div>
-            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">TECH STACK</div>
-            <div class="tag-row">
-              <span class="tag tag-blue">Python</span><span class="tag tag-green">SQL</span><span class="tag tag-orange">Power BI</span>
-              <span class="tag tag-purple">LightGBM</span><span class="tag tag-cyan">XGBoost</span><span class="tag tag-green">TensorFlow</span>
-              <span class="tag tag-gold">Tableau</span><span class="tag tag-orange">R</span>
+      <!-- BENTO GRID -->
+      <div class="bento reveal reveal-delay-1">
+        <!-- 4 stat cards -->
+        <div class="bento-card glow-card b-3">
+          <div class="bento-label">Companies</div>
+          <div class="bento-big" id="statCompanies">63</div>
+          <div class="bento-sub">Recruiter organisations</div>
+        </div>
+        <div class="bento-card glow-card b-3">
+          <div class="bento-label">Roles Q&A</div>
+          <div class="bento-big" id="statRoles">7</div>
+          <div class="bento-sub">Job function banks</div>
+        </div>
+        <div class="bento-card glow-card b-3">
+          <div class="bento-label">Highest LPA</div>
+          <div class="bento-big" id="statHighLPA">22.5</div>
+          <div class="bento-sub">Top package</div>
+        </div>
+        <div class="bento-card glow-card b-3">
+          <div class="bento-label">Average LPA</div>
+          <div class="bento-big" id="statAvgLPA">15.6</div>
+          <div class="bento-sub">Batch average</div>
+        </div>
+        <!-- LPA Chart -->
+        <div class="bento-card b-8">
+          <div class="bento-label">LPA Comparison — All Programmes</div>
+          <canvas id="lpaChart" height="160"></canvas>
+        </div>
+        <!-- Sector chart -->
+        <div class="bento-card b-4">
+          <div class="bento-label" id="sectorChartLabel">Sector Distribution — BDA</div>
+          <canvas id="sectorChart" height="180"></canvas>
+          <div id="sectorLegend" style="margin-top:8px;display:flex;flex-direction:column;gap:4px"></div>
+        </div>
+        <!-- Glance -->
+        <div class="bento-card b-12" id="overviewGlance">
+          <div class="bento-label">Batch at a Glance</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin-top:8px">
+            <div>
+              <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">TECH STACK</div>
+              <div class="tag-row">
+                <span class="tag tag-blue">Python</span><span class="tag tag-green">SQL</span><span class="tag tag-orange">Power BI</span>
+                <span class="tag tag-purple">LightGBM</span><span class="tag tag-cyan">XGBoost</span><span class="tag tag-green">TensorFlow</span>
+              </div>
             </div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">DOMAINS</div>
-            <div class="tag-row">
-              <span class="tag tag-orange">BFSI</span><span class="tag tag-blue">Telecom</span>
-              <span class="tag tag-green">Risk Modeling</span><span class="tag tag-purple">Churn Prediction</span>
-              <span class="tag tag-gold">Segmentation</span>
+            <div>
+              <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">DOMAINS</div>
+              <div class="tag-row">
+                <span class="tag tag-orange">BFSI</span><span class="tag tag-blue">Telecom</span>
+                <span class="tag tag-green">Risk Modeling</span><span class="tag tag-purple">Churn Prediction</span>
+              </div>
             </div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">CERTIFICATIONS</div>
-            <div style="font-size:13px;color:var(--text2);line-height:1.7">
-              KPMG Data Analytics · HSBC Banking Sim · Quant Modeling (UPenn) · Financial Statement Analysis
+            <div>
+              <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">Certifications</div>
+              <div style="font-size:13px;color:var(--text2);line-height:1.7">KPMG Data Analytics · HSBC Banking Sim · Quant Modeling (UPenn)</div>
             </div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">DISCLAIMER</div>
-            <div style="font-size:12px;color:var(--text3);line-height:1.6">
-              Unofficial resource. Data from GIM public placement reports 2020–24. Indicative only.
+            <div>
+              <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">Disclaimer</div>
+              <div style="font-size:12px;color:var(--text3);line-height:1.6">Unofficial resource. Data from GIM public placement reports 2020–24. Indicative only.</div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- COMPANIES -->
-  <div id="companies" class="section">
-    <div class="section-top">
-      <div class="section-label">COMPANY INTEL</div>
-      <h2 class="section-heading" id="companySecTitle">BDA <span class="hi">Companies</span></h2>
-      <p id="companySecSub">67 companies — sourced from GIM BDA Audited Placement Reports 2020-24. Click to expand Q&A.</p>
+  <!-- ── COMPANIES ── -->
+  <div id="companies" class="app-section">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-label">COMPANY INTEL</span>
+        <h2 class="section-h2" id="companySecTitle">BDA <span style="color:var(--green)">Companies</span></h2>
+        <p class="sub-p" id="companySecSub">67 companies — from GIM BDA Audited Placement Reports 2020-24. Click to expand Q&A.</p>
+      </div>
+      <div class="legend-row">
+        <div class="legend-item"><span class="badge-verified">✅ VERIFIED</span> Confirmed in GIM audited reports</div>
+        <div class="legend-item"><span class="badge-likely">⚠️ LIKELY</span> GIM press/web sources</div>
+      </div>
+      <div class="filter-strip">
+        <button class="filter-btn active" onclick="filterCompanies('all',this)">All</button>
+        <button class="filter-btn" onclick="filterCompanies('consulting',this)">Consulting</button>
+        <button class="filter-btn" onclick="filterCompanies('bfsi',this)">BFSI</button>
+        <button class="filter-btn" onclick="filterCompanies('tech',this)">Tech/IT</button>
+        <button class="filter-btn" onclick="filterCompanies('fmcg',this)">FMCG</button>
+      </div>
+      <div class="company-grid" id="companyGrid"></div>
     </div>
-    <div class="legend-row">
-      <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div><span class="tag tag-green" style="font-size:10px">✅ Verified</span> Confirmed in GIM audited reports</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div><span class="tag tag-orange" style="font-size:10px">⚠️ Likely</span> GIM press/web sources</div>
-    </div>
-    <div class="filter-bar" id="companyFilter">
-      <button class="filter-btn active" onclick="filterCompanies('all',this)">All</button>
-      <button class="filter-btn" onclick="filterCompanies('consulting',this)">Consulting</button>
-      <button class="filter-btn" onclick="filterCompanies('bfsi',this)">BFSI</button>
-      <button class="filter-btn" onclick="filterCompanies('tech',this)">Tech/IT</button>
-      <button class="filter-btn" onclick="filterCompanies('fmcg',this)">FMCG</button>
-    </div>
-    <div class="company-grid" id="companyGrid"></div>
   </div>
 
-  <!-- ROLES -->
-  <div id="roles" class="section">
-    <div class="section-top">
-      <div class="section-label">ROLE-WISE Q&A</div>
-      <h2 class="section-heading">Role-Wise <span class="hi">Question Banks</span></h2>
-      <p>Curated interview questions by job function — click to expand each role.</p>
+  <!-- ── ROLES ── -->
+  <div id="roles" class="app-section">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-label">PROCESS</span>
+        <h2 class="section-h2">Role-Wise <span style="color:var(--green)">Question Banks</span></h2>
+        <p class="sub-p">Curated interview questions by job function — click any role to expand the full Q&A bank.</p>
+      </div>
+      <div class="roles-process" id="rolesGrid"></div>
     </div>
-    <div class="roles-grid" id="rolesGrid"></div>
   </div>
 
-  <!-- ROADMAP -->
-  <div id="roadmap" class="section">
-    <div class="section-top">
-      <div class="section-label">LEARNING PATH</div>
-      <h2 class="section-heading" id="roadmapTitle">Mastery <span class="hi">Roadmap</span></h2>
-      <p id="roadmapSub">Your complete learning path — curated resources, courses and guides.</p>
+  <!-- ── ROADMAP ── -->
+  <div id="roadmap" class="app-section">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-label">LEARNING PATH</span>
+        <h2 class="section-h2" id="roadmapTitle">Mastery <span style="color:var(--green)">Roadmap</span></h2>
+        <p class="sub-p" id="roadmapSub">Your complete learning path with curated resources, courses and guides.</p>
+      </div>
+      <div class="roadmap-phases" id="roadmapContent"></div>
     </div>
-    <div id="roadmapContent"></div>
   </div>
 
-  <!-- CHEATSHEETS -->
-  <div id="cheatsheets" class="section">
-    <div class="section-top">
-      <div class="section-label">QUICK REFERENCE</div>
-      <h2 class="section-heading">Quick Reference <span class="hi">Cheatsheets</span></h2>
-      <p id="cheatSub">Key concepts, frameworks and quick references for your programme.</p>
+  <!-- ── CHEATSHEETS ── -->
+  <div id="cheatsheets" class="app-section">
+    <div class="section-wrap">
+      <div class="section-header reveal">
+        <span class="section-label">QUICK REFERENCE</span>
+        <h2 class="section-h2">Quick Reference <span style="color:var(--green)">Cheatsheets</span></h2>
+        <p class="sub-p" id="cheatSub">Key concepts, frameworks and formulas for your programme.</p>
+      </div>
+      <div class="cheat-tabs-wrap" id="cheatTabs"></div>
+      <div id="cheatContent"></div>
     </div>
-    <div class="cheat-tabs-wrap" id="cheatTabs"></div>
-    <div id="cheatContent"></div>
   </div>
 
 </div><!-- /mainApp -->
 
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════ -->
 <script>
 if(localStorage.getItem('discSeen')==='1')document.getElementById('disclaimerBanner').style.display='none';
-</script>
 
-<script>
-// ── Compatibility shims for old JS references ──────────────────
-function backToEmail() {
-  clearOtpTimer();
-  document.getElementById('screen-otp').classList.add('hidden');
-  document.getElementById('screen-email').classList.remove('hidden');
-  document.querySelectorAll('.otp-box').forEach(b=>{b.value='';b.classList.remove('filled');});
+// ── Scroll reveal ────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+function observeReveal() {
+  document.querySelectorAll('.reveal').forEach(el => {
+    el.classList.add('reveal');
+    revealObserver.observe(el);
+  });
 }
-function showSectionMob(id) { showSection(id); }
+// Auth page reveals trigger immediately
+document.querySelectorAll('.auth-screen .reveal').forEach(el => {
+  setTimeout(() => el.classList.add('visible'), 100);
+});
+observeReveal();
 
-// ── showSection — now drives topnav tabs ──────────────────────
+// ── Screen helpers ───────────────────────
+let _authEmail = '';
+
+function showScreen(id) {
+  ['screen-email','screen-otp'].forEach(s => {
+    const el = document.getElementById(s);
+    if(el) el.classList.toggle('hidden', s !== id);
+  });
+}
+
+function enterHub() {
+  document.querySelectorAll('.auth-screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('authNav').style.display = 'none';
+  document.getElementById('progSelector').style.display = 'flex';
+}
+
+function showAuthStatus(msg, type) {
+  ['authEmailStatus','authOtpStatus'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.className = 'auth-status ' + type + ' show'; el.textContent = msg; }
+  });
+}
+
+// ── Send OTP ─────────────────────────────
+window.sendOTP = async function() {
+  const email = (document.getElementById('authEmail')?.value || '').trim();
+  if(!email || !email.includes('@')) { showAuthStatus('Enter a valid email address.', 'err'); return; }
+  const btn = document.getElementById('authSendBtn');
+  if(btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+  const { error } = await sbIndex.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+
+  if(error) {
+    showAuthStatus('Error: ' + error.message, 'err');
+    if(btn) { btn.disabled = false; btn.textContent = 'Continue →'; }
+    return;
+  }
+
+  _authEmail = email;
+  const badge = document.getElementById('otpEmailBadge');
+  if(badge) badge.textContent = '✉️ ' + email;
+  showScreen('screen-otp');
+  startOtpTimer();
+  document.getElementById('otp0')?.focus();
+  if(btn) { btn.disabled = false; btn.textContent = 'Continue →'; }
+  // Trigger reveals on otp screen
+  document.querySelectorAll('#screen-otp .reveal').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+};
+
+// ── Verify OTP ───────────────────────────
+window.verifyOTP = async function() {
+  const token = ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7']
+    .map(id => document.getElementById(id)?.value || '').join('');
+  if(token.length !== 8) { showAuthStatus('Enter all 8 digits.', 'err'); return; }
+  const btn = document.getElementById('authVerifyBtn');
+  if(btn) { btn.disabled = true; btn.textContent = 'Verifying…'; }
+
+  const { data, error } = await sbIndex.auth.verifyOtp({ email: _authEmail, token, type: 'email' });
+
+  if(error) {
+    showAuthStatus('Incorrect code. Try again.', 'err');
+    if(btn) { btn.disabled = false; btn.textContent = 'Verify & Enter Hub →'; }
+    ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) { el.value = ''; el.classList.remove('filled'); }
+    });
+    document.getElementById('otp0')?.focus();
+    return;
+  }
+
+  if(data?.user) {
+    showAuthStatus('✅ Verified! Loading hub…', 'ok');
+    setTimeout(() => enterHub(), 500);
+  }
+};
+
+// ── Resend ───────────────────────────────
+window.resendOTP = async function() {
+  if(!_authEmail) return;
+  await sbIndex.auth.signInWithOtp({ email: _authEmail, options: { shouldCreateUser: true } });
+  showAuthStatus('New code sent!', 'ok');
+  ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.value = ''; el.classList.remove('filled'); }
+  });
+  document.getElementById('otp0')?.focus();
+  startOtpTimer();
+};
+
+// ── Back to email ─────────────────────────
+window.backToEmail = function() {
+  clearOtpTimer();
+  showScreen('screen-email');
+  ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) { el.value = ''; el.classList.remove('filled'); }
+  });
+};
+
+// ── OTP timer ────────────────────────────
+let _timerInterval;
+function startOtpTimer() {
+  clearInterval(_timerInterval);
+  const resendBtn = document.getElementById('otpResendBtn');
+  if(resendBtn) resendBtn.disabled = true;
+  let secs = 600;
+  const display = document.getElementById('otpTimerDisplay');
+  _timerInterval = setInterval(() => {
+    secs--;
+    const m = Math.floor(secs/60), s = secs%60;
+    if(display) display.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    if(secs <= 0) {
+      clearInterval(_timerInterval);
+      if(resendBtn) resendBtn.disabled = false;
+    }
+  }, 1000);
+}
+function clearOtpTimer() { clearInterval(_timerInterval); }
+
+// ── OTP box keyboard nav ──────────────────
+document.querySelectorAll('.otp-box').forEach((box, i, all) => {
+  box.addEventListener('input', () => {
+    box.value = box.value.replace(/\D/g,'').slice(-1);
+    box.classList.toggle('filled', !!box.value);
+    if(box.value && all[i+1]) all[i+1].focus();
+    if(['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].every(id => document.getElementById(id)?.value)) verifyOTP();
+  });
+  box.addEventListener('keydown', e => {
+    if(e.key==='Backspace' && !box.value && all[i-1]) { all[i-1].focus(); all[i-1].classList.remove('filled'); }
+    if(e.key==='Enter') verifyOTP();
+  });
+  box.addEventListener('paste', e => {
+    const pasted = e.clipboardData.getData('text').replace(/\D/g,'').slice(0,8);
+    all.forEach((b,j) => { b.value = pasted[j]||''; b.classList.toggle('filled', !!pasted[j]); });
+    all[Math.min(7,pasted.length)]?.focus();
+    e.preventDefault();
+    if(pasted.length===8) setTimeout(verifyOTP, 100);
+  });
+});
+
+// ── Session check on load ─────────────────
+window.showToastIdx = function(msg, type) {
+  showAuthStatus(msg, type==='err'?'err':'ok');
+};
+
+// ── showSection ───────────────────────────
 function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
-  if(el) el.classList.add('active');
-  if(btn) {
-    document.querySelectorAll('.topnav-tab').forEach(t=>t.classList.remove('active'));
-    btn.classList.add('active');
-  } else {
-    // find matching tab
-    document.querySelectorAll('.topnav-tab').forEach(t=>{
-      if(t.getAttribute('onclick')?.includes("'"+id+"'")) t.classList.add('active');
+  if(el) { el.classList.add('active'); observeReveal(); }
+  document.querySelectorAll('.navbar-link').forEach(l => l.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(id==='overview') { chartsDrawn=false; setTimeout(drawCharts,100); }
+}
+
+// ── Charts ────────────────────────────────
+let lpaChartInst=null, sectorChartInst=null, chartsDrawn=false;
+function drawCharts() {
+  if(chartsDrawn) return; chartsDrawn=true;
+  // LPA Bar chart
+  const lpaCtx = document.getElementById('lpaChart');
+  if(lpaCtx && !lpaChartInst) {
+    lpaChartInst = new Chart(lpaCtx, {
+      type:'bar',
+      data:{
+        labels:['BDA','CORE','HCM','BIFS'],
+        datasets:[
+          { label:'Highest LPA', data:[22.5,26.3,29.1,19.7],
+            backgroundColor:'rgba(34,197,94,0.7)', borderRadius:8, borderSkipped:false },
+          { label:'Average LPA', data:[15.6,14.8,14.0,14.8],
+            backgroundColor:'rgba(34,197,94,0.2)', borderRadius:8, borderSkipped:false }
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:true,
+        plugins:{
+          legend:{ labels:{ color:'#6b7280', font:{family:'Inter',size:11}, boxWidth:12, boxHeight:12 } },
+          tooltip:{ backgroundColor:'rgba(17,17,17,0.95)', borderColor:'rgba(255,255,255,0.1)', borderWidth:1,
+            titleColor:'#fff', bodyColor:'#9ca3af', callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${ctx.raw} LPA` } }
+        },
+        scales:{
+          x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6b7280',font:{family:'Inter',size:12}} },
+          y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#6b7280',font:{size:11},callback:v=>v+'L'}, beginAtZero:true }
+        }
+      }
     });
   }
-  if(id==='overview') drawCharts();
-}
-
-// ── CHARTS ────────────────────────────────────────────────────
-let sectorChartInst = null;
-let lpaChartInst = null;
-let chartsDrawn = false;
-
-function drawCharts() {
-  if(chartsDrawn) return;
-  chartsDrawn = true;
-  drawLPAChart();
-  drawSectorChart(selectedProg || 'bda');
-}
-
-function drawLPAChart() {
-  const ctx = document.getElementById('lpaChart');
-  if(!ctx || lpaChartInst) return;
-  lpaChartInst = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['BDA','CORE','HCM','BIFS'],
-      datasets: [
-        { label: 'Highest LPA', data:[22.5,26.3,29.1,19.7],
-          backgroundColor:['rgba(99,102,241,0.7)','rgba(245,158,11,0.7)','rgba(34,197,94,0.7)','rgba(167,139,250,0.7)'],
-          borderRadius:8, borderSkipped:false },
-        { label: 'Average LPA', data:[15.6,14.8,14.0,14.8],
-          backgroundColor:['rgba(99,102,241,0.25)','rgba(245,158,11,0.25)','rgba(34,197,94,0.25)','rgba(167,139,250,0.25)'],
-          borderRadius:8, borderSkipped:false }
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:true,
-      plugins:{
-        legend:{ labels:{ color:'#94a3b8', font:{family:'JetBrains Mono',size:11}, boxWidth:12, boxHeight:12 } },
-        tooltip:{ backgroundColor:'rgba(7,7,15,0.95)', borderColor:'rgba(255,255,255,0.1)', borderWidth:1,
-          titleColor:'#fff', bodyColor:'#94a3b8', titleFont:{weight:700}, callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${ctx.raw} LPA` } }
-      },
-      scales:{
-        x:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:12}} },
-        y:{ grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#64748b',font:{family:'JetBrains Mono',size:11},callback:v=>v+' L'}, beginAtZero:true }
-      }
-    }
-  });
+  drawSectorChart(selectedProg||'bda');
 }
 
 const sectorDataMap = {
-  bda:  { labels:['IT/ITES','Operations','Engg/Design','Consulting','Finance','Others'], data:[57,19,10,5,5,4],
-          colors:['#6366f1','#22c55e','#f59e0b','#06b6d4','#ec4899','#475569'] },
-  core: { labels:['FMCG & Consumer','Consulting','BFSI','Operations','IT/Tech','Others'], data:[38,22,18,12,6,4],
-          colors:['#f59e0b','#6366f1','#22c55e','#06b6d4','#a78bfa','#475569'] },
-  hcm:  { labels:['Pharma & Biotech','Medical Devices','Hospital Chains','Health Consulting','CROs','Others'], data:[42,28,16,8,4,2],
-          colors:['#22c55e','#06b6d4','#6366f1','#f59e0b','#ec4899','#475569'] },
-  bifs: { labels:['Banking (Pvt/MNC)','NBFCs & Fintech','Insurance','Investment Banking','Rating & Research','Others'], data:[36,24,18,14,5,3],
-          colors:['#6366f1','#22c55e','#f59e0b','#a78bfa','#06b6d4','#475569'] }
+  bda:  { labels:['IT/ITES','Operations','Engg/Design','Consulting','Finance','Others'], data:[57,19,10,5,5,4] },
+  core: { labels:['FMCG','Consulting','BFSI','Operations','IT/Tech','Others'], data:[38,22,18,12,6,4] },
+  hcm:  { labels:['Pharma','Medical Devices','Hospital Chains','Health Consulting','CROs','Others'], data:[42,28,16,8,4,2] },
+  bifs: { labels:['Banking','NBFCs','Insurance','Inv. Banking','Rating','Others'], data:[36,24,18,14,5,3] }
 };
 
 function drawSectorChart(prog) {
-  const ctx = document.getElementById('sectorChart');
-  if(!ctx) return;
-  const d = sectorDataMap[prog] || sectorDataMap.bda;
-
-  if(sectorChartInst) { sectorChartInst.destroy(); sectorChartInst = null; }
-
+  const ctx = document.getElementById('sectorChart'); if(!ctx) return;
+  const d = sectorDataMap[prog]||sectorDataMap.bda;
+  const colors = ['#22c55e','#4ade80','#86efac','#16a34a','#15803d','#166534'];
+  if(sectorChartInst) { sectorChartInst.destroy(); sectorChartInst=null; }
   sectorChartInst = new Chart(ctx, {
-    type: 'doughnut',
-    data: { labels: d.labels, datasets:[{ data:d.data, backgroundColor:d.colors, borderWidth:0, hoverOffset:6 }] },
-    options: {
-      responsive:true, maintainAspectRatio:true, cutout:'68%',
-      plugins:{
-        legend:{ display:false },
-        tooltip:{ backgroundColor:'rgba(7,7,15,0.95)', borderColor:'rgba(255,255,255,0.1)', borderWidth:1,
-          titleColor:'#fff', bodyColor:'#94a3b8', callbacks:{ label: ctx => ` ${ctx.label}: ${ctx.raw}%` } }
-      }
-    }
+    type:'doughnut',
+    data:{ labels:d.labels, datasets:[{ data:d.data, backgroundColor:colors, borderWidth:0, hoverOffset:5 }] },
+    options:{ responsive:true, maintainAspectRatio:true, cutout:'65%',
+      plugins:{ legend:{display:false},
+        tooltip:{ backgroundColor:'rgba(17,17,17,0.95)', borderColor:'rgba(255,255,255,0.1)', borderWidth:1, titleColor:'#fff', bodyColor:'#9ca3af',
+          callbacks:{ label: ctx => ` ${ctx.label}: ${ctx.raw}%` } } } }
   });
-
-  // Update legend
   const leg = document.getElementById('sectorLegend');
-  if(leg) {
-    leg.innerHTML = d.labels.map((l,i) => `
-      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2)">
-        <div style="width:8px;height:8px;border-radius:50%;background:${d.colors[i]};flex-shrink:0"></div>
-        <span>${l}</span>
-        <span style="margin-left:auto;font-weight:700;font-family:var(--mono);color:${d.colors[i]}">${d.data[i]}%</span>
-      </div>`).join('');
-  }
+  if(leg) leg.innerHTML = d.labels.map((l,i)=>`
+    <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2)">
+      <div style="width:7px;height:7px;border-radius:50%;background:${colors[i]};flex-shrink:0"></div>
+      <span>${l}</span>
+      <span style="margin-left:auto;font-weight:700;color:${colors[i]};font-family:var(--mono)">${d.data[i]}%</span>
+    </div>`).join('');
   const lbl = document.getElementById('sectorChartLabel');
-  if(lbl) lbl.textContent = 'SECTOR DISTRIBUTION — ' + prog.toUpperCase();
-}
-
-// ── Redraw sector chart when switching programme ──────────────
-function updateChartsForProg(prog) {
-  if(chartsDrawn) { drawSectorChart(prog); }
+  if(lbl) lbl.textContent = 'Sector Distribution — ' + prog.toUpperCase();
 }
 </script>
 
 <script>
+// ═══════════════════════════════════════════════════════
+// MAIN DATA + LOGIC (preserved from original)
+// ═══════════════════════════════════════════════════════
 // ─────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────
@@ -5433,6 +5499,397 @@ window.signOut = async function() {
   sessionStorage.clear();
   location.reload();
 };
+
+// ═══════════════════════════════════════════════════════
+// APP CONTROLLER — wires data to new Helium UI
+// ═══════════════════════════════════════════════════════
+
+// Session management
+sbIndex.auth.getSession().then(({ data: { session } }) => {
+  if(session?.user) {
+    enterHub();
+  } else {
+    showScreen('screen-email');
+  }
+});
+
+sbIndex.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_IN' && session?.user) enterHub();
+  else if(event === 'SIGNED_OUT') { showScreen('screen-email'); }
+});
+
+// Override enterHub
+window.enterHub = function() {
+  document.querySelectorAll('.auth-screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById('authNav').style.display = 'none';
+  document.getElementById('progSelector').style.display = 'flex';
+};
+
+// Override showProgrammeSelector
+window.showProgrammeSelector = function() {
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('mainApp').classList.remove('show');
+  document.getElementById('mainNav').style.display = 'none';
+  document.getElementById('progSelector').style.display = 'flex';
+};
+
+// Override backToSelector
+window.backToSelector = function() {
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('mainApp').classList.remove('show');
+  document.getElementById('mainNav').style.display = 'none';
+  document.getElementById('progSelector').style.display = 'flex';
+  chartsDrawn = false;
+};
+
+// Sign out
+window.signOut = async function() {
+  await sbIndex.auth.signOut();
+  sessionStorage.clear();
+  location.reload();
+};
+
+// Override selectProg
+const _progIcons = {bda:'📊',core:'🎯',hcm:'🏥',bifs:'🏦'};
+const _progNames  = {bda:'BDA',core:'CORE',hcm:'HCM',bifs:'BIFS'};
+const _statMap    = {
+  bda: {comp:63,roles:7,high:'22.5',avg:'15.6'},
+  core:{comp:60,roles:6,high:'26.3',avg:'14.8'},
+  hcm: {comp:22,roles:5,high:'29.1',avg:'14.0'},
+  bifs:{comp:23,roles:5,high:'19.7',avg:'14.8'}
+};
+
+window.selectProg = function(prog) {
+  selectedProg = prog;
+  document.getElementById('progSelector').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('mainApp').classList.add('show');
+  document.getElementById('mainNav').style.display = 'flex';
+
+  // Update pill
+  const el = id => document.getElementById(id);
+  if(el('progPillEmoji')) el('progPillEmoji').textContent = _progIcons[prog];
+  if(el('progPillName'))  el('progPillName').textContent  = _progNames[prog];
+  if(el('topbarTitle'))   el('topbarTitle').textContent   = 'GIM ' + _progNames[prog] + ' Prep Hub';
+
+  // Update stats
+  const s = _statMap[prog];
+  if(el('statCompanies')) el('statCompanies').textContent = s.comp;
+  if(el('statRoles'))     el('statRoles').textContent     = s.roles;
+  if(el('statHighLPA'))   el('statHighLPA').textContent   = s.high;
+  if(el('statAvgLPA'))    el('statAvgLPA').textContent    = s.avg;
+
+  // Update labels
+  const overviewTitles = {
+    bda:  'GIM BDA <span style="color:var(--green)">Placement</span> Prep Hub',
+    core: 'GIM CORE <span style="color:var(--green)">Placement</span> Prep Hub',
+    hcm:  'GIM HCM <span style="color:var(--green)">Placement</span> Prep Hub',
+    bifs: 'GIM BIFS <span style="color:var(--green)">Placement</span> Prep Hub'
+  };
+  const subtitles = {
+    bda:'67 companies — GIM BDA Audited Placement Reports 2020-24.',
+    core:'60 companies — GIM CORE Audited Placement Reports 2020-24.',
+    hcm:'22 companies — GIM HCM Audited Placement Reports 2020-24.',
+    bifs:'23 companies — GIM BIFS Audited Placement Reports 2020-24.'
+  };
+  const roadmapTitles = {
+    bda:'AI/ML <span style="color:var(--green)">Mastery</span> Roadmap',
+    core:'Management <span style="color:var(--green)">Mastery</span> Roadmap',
+    hcm:'Healthcare <span style="color:var(--green)">Mastery</span> Roadmap',
+    bifs:'Finance <span style="color:var(--green)">Mastery</span> Roadmap'
+  };
+  if(el('overviewTitle'))    el('overviewTitle').innerHTML    = overviewTitles[prog];
+  if(el('overviewSub'))      el('overviewSub').textContent    = 'The complete placement preparation environment for GIM PGDM-' + _progNames[prog] + ' batch 2025-27.';
+  if(el('navCompanyLabel'))  el('navCompanyLabel').textContent = _progNames[prog] + ' Companies';
+  if(el('companySecTitle'))  el('companySecTitle').innerHTML  = _progNames[prog] + ' <span style="color:var(--green)">Companies</span>';
+  if(el('companySecSub'))    el('companySecSub').textContent  = subtitles[prog];
+  if(el('roadmapTitle'))     el('roadmapTitle').innerHTML     = roadmapTitles[prog];
+
+  // Show overview
+  showSection('overview');
+  chartsDrawn = false;
+  setTimeout(() => { drawCharts(); drawSectorChart(prog); }, 150);
+
+  // Build content
+  if(prog === 'bda') {
+    const grid = document.getElementById('companyGrid');
+    if(grid && grid.children.length === 0) buildCompanies();
+    else document.querySelectorAll('.company-card').forEach(c => c.style.display='');
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.filter-btn')?.classList.add('active');
+    buildRoles();
+    buildRoadmap();
+    buildCheatsheets();
+    initBDACheatTabs();
+  } else {
+    injectProgrammeCompanies(progData[prog]?.companies || []);
+    rebuildForProg(prog);
+  }
+
+  observeReveal();
+};
+
+// Filter companies
+window.filterCompanies = function(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.company-card').forEach(card => {
+    card.style.display = (type==='all' || card.dataset.type===type) ? '' : 'none';
+  });
+};
+
+// Toggle company
+window.toggleCompany = function(id) {
+  const card = document.getElementById('co-'+id);
+  if(!card) return;
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.company-card.open').forEach(c => c.classList.remove('open'));
+  if(!isOpen) card.classList.add('open');
+};
+
+// Toggle role
+window.toggleRole = function(id) {
+  const card = document.getElementById('role-'+id);
+  if(!card) return;
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.role-process-card.open').forEach(c => c.classList.remove('open'));
+  if(!isOpen) card.classList.add('open');
+};
+
+// showQTab
+window.showQTab = function(companyId, tabName, btn) {
+  const card = document.getElementById('co-'+companyId);
+  if(!card) return;
+  card.querySelectorAll('.q-content').forEach(c => c.classList.remove('active'));
+  card.querySelectorAll('.q-tab').forEach(t => t.classList.remove('active'));
+  const pane = card.querySelector('#qt-'+companyId+'-'+tabName);
+  if(pane) pane.classList.add('active');
+  if(btn) btn.classList.add('active');
+};
+
+// showCheat
+window.showCheat = function(key, btn) {
+  document.querySelectorAll('.cheat-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.cheat-tab').forEach(t => t.classList.remove('active'));
+  const pane = document.getElementById('cheat-'+key);
+  if(pane) pane.classList.add('active');
+  if(btn) btn.classList.add('active');
+};
+
+// BDA cheat tabs init
+function initBDACheatTabs() {
+  const tabs = [{key:'python',label:'🐍 Python'},{key:'sql',label:'🗄️ SQL'},{key:'ml',label:'🤖 ML Algos'},{key:'stats',label:'📊 Statistics'},{key:'dl',label:'🧠 Deep Learning'},{key:'powerbi',label:'📈 Power BI'}];
+  const cheatTabs = document.getElementById('cheatTabs');
+  if(cheatTabs) {
+    cheatTabs.innerHTML = '';
+    tabs.forEach((tab,idx) => {
+      const el = document.createElement('div');
+      el.className = 'cheat-tab' + (idx===0?' active':'');
+      el.textContent = tab.label;
+      el.onclick = function(){ showCheat(tab.key,this); };
+      cheatTabs.appendChild(el);
+    });
+  }
+}
+
+// Override rebuildForProg to use Helium role cards
+const _origRebuildForProg = typeof rebuildForProg !== 'undefined' ? rebuildForProg : null;
+window.rebuildForProg = function(prog) {
+  const rolesArr = progRolesData[prog];
+  const rolesGrid = document.getElementById('rolesGrid');
+  if(rolesArr && rolesGrid) {
+    rolesGrid.innerHTML = '';
+    rolesArr.forEach((r, idx) => {
+      const card = document.createElement('div');
+      card.className = 'role-process-card';
+      card.id = 'role-' + r.id;
+      const qHTML = r.questions.map((q,i) => `
+        <div class="q-item">
+          <div class="q-num">${i+1}</div>
+          <div class="q-text">
+            <span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--green);padding:2px 8px;border-radius:6px;font-family:var(--mono);margin-right:6px;font-weight:700">${q.cat}</span>
+            ${q.q}
+            ${q.hint ? `<div class="q-hint">💡 ${q.hint}</div>` : ''}
+          </div>
+        </div>`).join('');
+      card.innerHTML = `
+        <div class="role-process-head" onclick="toggleRole('${r.id}')">
+          <div class="role-num">${idx+1}</div>
+          <div class="role-icon-badge">${r.icon}</div>
+          <div>
+            <div class="role-title">${r.name}</div>
+            <div class="role-sub">${r.companies} · ${r.salary}</div>
+          </div>
+          <div class="role-arrow">▼</div>
+        </div>
+        <div class="role-body">${qHTML}</div>`;
+      rolesGrid.appendChild(card);
+    });
+  }
+
+  // Roadmap
+  const phases = progRoadmapData[prog];
+  const roadmapContainer = document.getElementById('roadmapContent');
+  if(phases && roadmapContainer) {
+    roadmapContainer.innerHTML = '';
+    phases.forEach((phase,pi) => {
+      const div = document.createElement('div');
+      div.className = 'rm-phase reveal';
+      const cardsHTML = phase.cards.map(card => `
+        <div class="rm-card">
+          <div class="rm-card-title">${card.emoji} ${card.title}</div>
+          <div class="rm-card-desc">${card.desc}</div>
+          <div class="rm-links">
+            ${card.links.map(link => `
+              <a href="${link.url}" target="_blank" class="rm-link">
+                ${link.text}
+                <span class="rm-link-type ${link.type}">${link.type.toUpperCase()}</span>
+              </a>`).join('')}
+          </div>
+        </div>`).join('');
+      div.innerHTML = `
+        <div class="rm-phase-head">
+          <div class="rm-phase-num">${phase.phase}</div>
+          <div>
+            <div class="rm-phase-title">${phase.title}</div>
+            <div class="rm-phase-sub">${phase.sub}</div>
+          </div>
+        </div>
+        <div class="rm-cards-grid">${cardsHTML}</div>`;
+      roadmapContainer.appendChild(div);
+    });
+    observeReveal();
+  }
+
+  // Cheatsheets
+  const cheatData = progCheatData[prog];
+  const cheatTabs = document.getElementById('cheatTabs');
+  const cheatContent = document.getElementById('cheatContent');
+  if(cheatData && cheatTabs && cheatContent) {
+    cheatTabs.innerHTML = ''; cheatContent.innerHTML = '';
+    cheatData.tabs.forEach((tab, idx) => {
+      const tabEl = document.createElement('div');
+      tabEl.className = 'cheat-tab' + (idx===0?' active':'');
+      tabEl.textContent = tab.label;
+      tabEl.onclick = function(){ showCheat(tab.key,this); };
+      cheatTabs.appendChild(tabEl);
+      const pane = document.createElement('div');
+      pane.className = 'cheat-pane' + (idx===0?' active':'');
+      pane.id = 'cheat-' + tab.key;
+      const grid = document.createElement('div');
+      grid.className = 'cheat-grid';
+      (cheatData.sheets[tab.key]||[]).forEach(card => {
+        const c = document.createElement('div');
+        c.className = 'cheat-card';
+        const rows = card.items.map(([code,desc]) => `<tr><td>${code}</td><td>${desc}</td></tr>`).join('');
+        c.innerHTML = `<div class="cheat-card-head">${card.title}</div><div class="cheat-body"><table class="cheat-table">${rows}</table></div>`;
+        grid.appendChild(c);
+      });
+      pane.appendChild(grid);
+      cheatContent.appendChild(pane);
+    });
+  }
+
+  // Overview glance
+  const overviewGlance = {
+    core: {tech:['Excel','PowerPoint','Salesforce CRM','SAP','Tableau'], domains:['FMCG','Consulting','Ops','Sales & BD','Strategy'], certs:'Google Digital Marketing · HubSpot Sales · Case Interview Prep'},
+    hcm:  {tech:['Clinical Knowledge','Pharma Sales','Hospital Ops','GCP','Healthcare Analytics'], domains:['Medical Devices','Pharma','Hospital Chains','CROs','HTA'], certs:'GCP (NIH) · NISM Healthcare · Pharma Marketing'},
+    bifs: {tech:['Financial Modelling','Credit Analysis','Excel/VBA','Bloomberg','Valuation'], domains:['Banking','Inv. Banking','Insurance','Credit & Risk','Capital Markets'], certs:'CFA Level 1 · NISM V-A · Bloomberg Market Concepts'}
+  };
+  const gd = overviewGlance[prog];
+  const glanceEl = document.getElementById('overviewGlance');
+  if(gd && glanceEl) {
+    glanceEl.innerHTML = `<div class="bento-label">Batch at a Glance</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin-top:8px">
+        <div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">KEY SKILLS</div>
+          <div class="tag-row">${gd.tech.map(t=>`<span class="tag tag-green">${t}</span>`).join('')}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">DOMAINS</div>
+          <div class="tag-row">${gd.domains.map(d=>`<span class="tag tag-blue">${d}</span>`).join('')}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">CERTIFICATIONS</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.7">${gd.certs}</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:8px;letter-spacing:1px">DISCLAIMER</div>
+          <div style="font-size:12px;color:var(--text3);line-height:1.6">Unofficial resource. Data from GIM public placement reports 2020–24. Indicative only.</div>
+        </div>
+      </div>`;
+  }
+};
+
+// Override buildRoles to use Helium process card style
+const _origBuildRoles = window.buildRoles;
+window.buildRoles = function() {
+  if(typeof roles === 'undefined') return;
+  const grid = document.getElementById('rolesGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  roles.forEach((r, idx) => {
+    const card = document.createElement('div');
+    card.className = 'role-process-card';
+    card.id = 'role-' + r.id;
+    const qHTML = r.questions.map((q,i) => `
+      <div class="q-item">
+        <div class="q-num">Q${i+1}</div>
+        <div class="q-text">
+          <span style="font-size:10px;background:rgba(34,197,94,0.1);color:var(--green);padding:2px 8px;border-radius:6px;font-family:var(--mono);margin-right:6px;font-weight:700">${q.cat||'Q'}</span>
+          ${q.q}${q.hint?`<div class="q-hint">💡 ${q.hint}</div>`:''}
+        </div>
+      </div>`).join('');
+    card.innerHTML = `
+      <div class="role-process-head" onclick="toggleRole('${r.id}')">
+        <div class="role-num">${idx+1}</div>
+        <div class="role-icon-badge">${r.icon||'🎯'}</div>
+        <div>
+          <div class="role-title">${r.name}</div>
+          <div class="role-sub">${r.companies||''} ${r.salary?'· '+r.salary:''}</div>
+        </div>
+        <div class="role-arrow">▼</div>
+      </div>
+      <div class="role-body">${qHTML}</div>`;
+    grid.appendChild(card);
+  });
+};
+
+// Override buildRoadmap to use Helium process style
+const _origBuildRoadmap = window.buildRoadmap;
+window.buildRoadmap = function() {
+  if(typeof roadmapPhases === 'undefined') return;
+  const container = document.getElementById('roadmapContent');
+  if(!container) return;
+  container.innerHTML = '';
+  roadmapPhases.forEach((phase, pi) => {
+    const div = document.createElement('div');
+    div.className = 'rm-phase reveal';
+    const cardsHTML = phase.cards.map(card => `
+      <div class="rm-card">
+        <div class="rm-card-title">${card.emoji||''} ${card.title}</div>
+        <div class="rm-card-desc">${card.desc}</div>
+        <div class="rm-links">
+          ${(card.links||[]).map(link => `
+            <a href="${link.url}" target="_blank" class="rm-link">
+              ${link.text}<span class="rm-link-type ${link.type}">${link.type.toUpperCase()}</span>
+            </a>`).join('')}
+        </div>
+      </div>`).join('');
+    div.innerHTML = `
+      <div class="rm-phase-head">
+        <div class="rm-phase-num">${phase.phase||pi+1}</div>
+        <div>
+          <div class="rm-phase-title">${phase.title}</div>
+          <div class="rm-phase-sub">${phase.sub||''}</div>
+        </div>
+      </div>
+      <div class="rm-cards-grid">${cardsHTML}</div>`;
+    container.appendChild(div);
+  });
+  observeReveal();
+};
+
 </script>
 </body>
 </html>
