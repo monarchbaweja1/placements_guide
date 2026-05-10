@@ -1264,9 +1264,7 @@ code {
       <span class="icon">🎯</span> Role-wise Q&amp;A
       <span class="nav-badge">7</span>
     </a>
-    <a class="nav-item" onclick="showSection('resume')">
-      <span class="icon">👤</span> Resume Q&amp;A Tips
-    </a>
+
   </div>
   <div class="nav-section">
     <div class="nav-label">Learning</div>
@@ -1305,7 +1303,7 @@ code {
 
   <div id="overview" class="section active">
     <div class="section-header">
-      <div class="section-title">GIM BDA <span class="hi">PLACEMENT</span><br>PREP HUB</div>
+      <div class="section-title" id="overviewTitle">GIM BDA <span class="hi">PLACEMENT</span><br>PREP HUB</div>
       <div class="section-subtitle">The complete GIM PGDM-BDA placement preparation environment for the batch — companies, questions, roadmap & cheatsheets</div>
     </div>
 
@@ -1444,81 +1442,13 @@ code {
   <!-- ═══════════════════════════════════════════
        SECTION 4: RESUME Q&A
   ═══════════════════════════════════════════ -->
-  <div id="resume" class="section">
-    <div class="section-header">
-      <div class="section-title">RESUME <span class="hi">PREP</span><br>Q &amp; A GUIDE</div>
-      <div class="section-subtitle">Common resume-based questions for BDA profiles — ML projects, analytics internships, BFSI experience, certifications</div>
-    </div>
-
-    <div class="resume-split">
-      <!-- Left: Generic BDA Profile card -->
-      <div>
-        <div class="resume-panel">
-          <div class="rp-title">📄 Typical BDA Profile</div>
-          <div class="exp-item">
-            <div class="exp-company">Current Internship</div>
-            <div class="exp-role">Data / Research / Analytics Intern</div>
-            <div class="exp-dur">5 months (GIM mandatory internship)</div>
-            <div class="exp-tags">
-              <span class="exp-tag">Analytics</span>
-              <span class="exp-tag">Research</span>
-              <span class="exp-tag" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.2);color:var(--accent3);">CURRENT</span>
-            </div>
-          </div>
-          <div class="exp-item" style="border-left-color:var(--accent2);">
-            <div class="exp-company">Your Internship Company</div>
-            <div class="exp-role">Data / Analytics Intern</div>
-            <div class="exp-dur">May 2021 – June 2023 · 26 months</div>
-            <div class="exp-tags">
-              <span class="exp-tag">ML Modelling</span>
-              <span class="exp-tag">Churn Prediction</span>
-              <span class="exp-tag">Segmentation</span>
-              <span class="exp-tag">Power BI</span>
-            </div>
-          </div>
-          <div class="exp-item" style="border-left-color:var(--accent4);">
-            <div class="exp-company">PGDM BDA — GIM</div>
-            <div class="exp-role">Academic ML / Analytics Project</div>
-            <div class="exp-dur">Academic · ~70% accuracy</div>
-            <div class="exp-tags">
-              <span class="exp-tag">RNN/LSTM</span>
-              <span class="exp-tag">Python</span>
-              <span class="exp-tag">Temporal Data</span>
-            </div>
-          </div>
-          <div class="exp-item" style="border-left-color:var(--gold);">
-            <div class="exp-company">B.Tech / B.E. — Your Undergraduate College</div>
-            <div class="exp-role">Computer Science &amp; Engineering</div>
-            <div class="exp-dur">2020–2024 · Your GPA / %</div>
-            <div class="exp-tags">
-              <span class="exp-tag">CS Fundamentals</span>
-            </div>
-          </div>
-
-          <div style="margin-top:20px;">
-            <div class="rp-title" style="font-size:12px;">🏆 CERTIFICATIONS</div>
-            <div style="font-size:12px;color:var(--text2);line-height:2;">
-              • KPMG Data Analytics Consulting (Forage 2023)<br>
-              • HSBC Global Banking &amp; Markets (Forage 2025)<br>
-              • Quant Modeling — UPenn / Coursera (2025)<br>
-              • Financial Statement Analysis — LinkedIn (2025)
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: Questions -->
-      <div id="resumeQuestions"></div>
-    </div>
-  </div>
-
   <!-- ═══════════════════════════════════════════
        SECTION 5: ROADMAP
   ═══════════════════════════════════════════ -->
   <div id="roadmap" class="section">
     <div class="section-header">
-      <div class="section-title">AI/ML <span class="hi">MASTERY</span><br>ROADMAP</div>
-      <div class="section-subtitle">Your complete path from foundation to advanced AI — curated YouTube channels, websites, and courses</div>
+      <div class="section-title" id="roadmapTitle">LEARNING <span class="hi">MASTERY</span><br>ROADMAP</div>
+      <div class="section-subtitle" id="roadmapSub">Your complete learning path — curated resources, courses and guides</div>
     </div>
     <div class="roadmap-wrapper">
       <div class="roadmap-track"></div>
@@ -1532,17 +1462,10 @@ code {
   <div id="cheatsheets" class="section">
     <div class="section-header">
       <div class="section-title">QUICK <span class="hi">REFERENCE</span><br>CHEATSHEETS</div>
-      <div class="section-subtitle">Shortcuts, syntax, formulas and key concepts — Python · SQL · ML · Stats · Deep Learning · Power BI</div>
+      <div class="section-subtitle" id="cheatSub">Key concepts, frameworks and quick references for your programme</div>
     </div>
 
-    <div class="cheat-tabs">
-      <div class="cheat-tab active" onclick="showCheat('python',this)">🐍 Python</div>
-      <div class="cheat-tab" onclick="showCheat('sql',this)">🗄️ SQL</div>
-      <div class="cheat-tab" onclick="showCheat('ml',this)">🤖 ML Algos</div>
-      <div class="cheat-tab" onclick="showCheat('stats',this)">📊 Statistics</div>
-      <div class="cheat-tab" onclick="showCheat('dl',this)">🧠 Deep Learning</div>
-      <div class="cheat-tab" onclick="showCheat('powerbi',this)">📈 Power BI</div>
-    </div>
+    <div class="cheat-tabs" id="cheatTabs"></div>
 
     <div id="cheatContent"></div>
   </div>
@@ -4173,10 +4096,574 @@ function buildCheatsheets() {
 // ─────────────────────────────────────────────
 buildCompanies();
 buildRoles();
-buildResume();
 buildRoadmap();
 buildCheatsheets();
+// Init BDA cheat tabs (BDA is default programme)
+(function initBDACheatTabs() {
+  const bdaTabs = [
+    {key:'python', label:'🐍 Python'},{key:'sql', label:'🗄️ SQL'},
+    {key:'ml', label:'🤖 ML Algos'},{key:'stats', label:'📊 Statistics'},
+    {key:'dl', label:'🧠 Deep Learning'},{key:'powerbi', label:'📈 Power BI'}
+  ];
+  const cheatTabs = document.getElementById('cheatTabs');
+  if (cheatTabs) {
+    bdaTabs.forEach((tab, idx) => {
+      const el = document.createElement('div');
+      el.className = 'cheat-tab' + (idx === 0 ? ' active' : '');
+      el.textContent = tab.label;
+      el.onclick = function() { showCheat(tab.key, this); };
+      cheatTabs.appendChild(el);
+    });
+  }
+})();
 
+
+
+// ═══════════════════════════════════════════════════════════════
+// PROGRAMME-SPECIFIC: ROLES, ROADMAP, CHEATSHEETS
+// ═══════════════════════════════════════════════════════════════
+
+const progRolesData = {
+  bda: null, // uses existing global `roles` array
+
+  core: [
+    { id:'mt_core', icon:'🎯', name:'Management Trainee', color:'#f59e0b', bgColor:'rgba(245,158,11,0.12)',
+      companies:'Mondelez, HUL, Asian Paints, ITC, Godrej, Mahindra, Dell, Wipro', salary:'12–22 LPA',
+      questions:[
+        {cat:'Technical',q:'Walk me through how you would build a sales territory plan for a new FMCG product launch.',hint:'Define territory boundaries (geography/accounts), estimate market potential, assign targets based on potential, plan coverage frequency.'},
+        {cat:'Technical',q:'How would you use Excel to track and report monthly sales performance across 20 territories?',hint:'Pivot tables for region aggregation, conditional formatting for RAG status, VLOOKUP for target mapping, charts for trend visualisation.'},
+        {cat:'Technical',q:'What is market share and how would you calculate it for a consumer product?',hint:'Market share = (Brand Sales / Total Category Sales) × 100. Sources: Nielsen/IQVIA scanner data, audit data, distributor offtake.'},
+        {cat:'Behavioural',q:'MTs rotate across functions. How do you adapt quickly to a new role every 6 months?',hint:'Structured learning plan: 30-day listening tour, find a mentor per function, deliver one quick win early, document learnings for next rotation.'},
+        {cat:'Behavioural',q:'Describe a time you led a team to deliver a project under tight deadlines.',hint:'Use STAR. Emphasise planning, delegation, obstacle removal, and final outcome with quantified impact.'},
+        {cat:'Case Study',q:'CASE: Your FMCG company\'s product sales dropped 12% in Q3 in West India. As MT-Sales, diagnose and propose a plan.',hint:'Framework: Distribution → Pricing → Visibility → Consumer pull. Check weighted distribution, competitor pricing, shelf share, and seasonality. Propose corrective action per root cause.'}
+      ]
+    },
+    { id:'sales_core', icon:'💼', name:'Sales & Business Development', color:'#3b82f6', bgColor:'rgba(59,130,246,0.12)',
+      companies:'Flipkart, Reliance, Jio, Infosys, Cognizant, TCS, Tech Mahindra', salary:'10–18 LPA',
+      questions:[
+        {cat:'Technical',q:'What is the difference between B2B and B2C sales cycles? How does your approach change?',hint:'B2B: longer cycle, multiple stakeholders, ROI-driven, relationship-based. B2C: shorter, emotion + price driven, mass marketing. Tailor pitch accordingly.'},
+        {cat:'Technical',q:'What is CRM and how would you use Salesforce to manage a sales pipeline?',hint:'Salesforce: lead → opportunity → quote → close stages. Track deal value, close probability, next steps. Use dashboards to forecast revenue and identify stalled deals.'},
+        {cat:'Behavioural',q:'Sales requires handling rejection daily. How do you stay motivated?',hint:'Process mindset (activity metrics, not just outcomes), learning from each "no", celebrating small wins, tracking improvement in conversion rate.'},
+        {cat:'Case Study',q:'CASE: You are a BD executive at an IT services company. A large BFSI client is considering your competitor. How do you win?',hint:'Understand switching trigger → build business case for switching cost → position unique value → escalate to senior relationship → propose pilot/POC.'}
+      ]
+    },
+    { id:'marketing_core', icon:'📣', name:'Marketing & Brand Management', color:'#ec4899', bgColor:'rgba(236,72,153,0.12)',
+      companies:'HUL, Mondelez, AB InBev, Asian Paints, ITC, Godrej, J&J, Kellogg\'s', salary:'12–20 LPA',
+      questions:[
+        {cat:'Technical',q:'Explain the concept of Brand Equity. How would you measure it for a consumer brand?',hint:'Keller\'s CBBE: salience → performance → imagery → judgements → feelings → resonance. Measure: awareness (survey), NPS, price premium, brand tracking studies.'},
+        {cat:'Technical',q:'What is STP (Segmentation, Targeting, Positioning)? Apply it to a new instant noodles brand entering India.',hint:'Segment: urban youth 18–35, working professionals, students. Target: urban millennials with convenience need. Position: "Quick, tasty, guilt-free meal for busy achievers".'},
+        {cat:'Technical',q:'How would you evaluate the ROI of a social media campaign for an FMCG brand?',hint:'Investment: agency fees + media spend + content cost. Returns: reach, impressions, engagement rate, website traffic, attributable sales lift. ROI = (Returns - Investment) / Investment.'},
+        {cat:'Behavioural',q:'Creativity vs data — which drives better marketing decisions?',hint:'Both are essential. Data identifies the problem and measures outcomes; creativity solves it memorably. Best campaigns are insight-led, creatively executed.'},
+        {cat:'Case Study',q:'CASE: Maggi lost 70% market share after the 2015 crisis. Design the comeback strategy.',hint:'Trust restoration: transparency, product safety communication. Distribution rebuild: re-sign distributors. Consumer re-engagement: nostalgia campaign + trial packs. Timeline: phased 12-month plan.'}
+      ]
+    },
+    { id:'ops_core', icon:'⚙️', name:'Operations & Supply Chain', color:'#22c55e', bgColor:'rgba(34,197,94,0.12)',
+      companies:'Mahindra, Dell, FedEx, Reliance Retail, Wipro, IBM, Capgemini', salary:'10–18 LPA',
+      questions:[
+        {cat:'Technical',q:'What is the difference between push and pull supply chain strategies? When would you use each?',hint:'Push: forecast-driven production (FMCG staples). Pull: demand-driven (Toyota JIT). Push = inventory risk, Pull = stockout risk. Hybrid for most real-world cases.'},
+        {cat:'Technical',q:'How would you reduce delivery lead time in a last-mile logistics network?',hint:'Route optimisation (algorithms), hub location analysis, forward stocking locations, dynamic delivery slot booking, real-time tracking.'},
+        {cat:'Technical',q:'What are the key KPIs for measuring supply chain performance?',hint:'OTIF (On Time In Full), inventory days, order fill rate, perfect order rate, cost per unit delivered, demand forecast accuracy, supplier on-time delivery.'},
+        {cat:'Case Study',q:'CASE: A consumer electronics company has 45 days of excess inventory. What would you do?',hint:'Diagnose: SKU-level analysis (which SKUs are slow-moving). Short-term: promotional pricing, channel clearance. Medium-term: demand sensing improvement, safety stock recalibration.'}
+      ]
+    },
+    { id:'strategy_core', icon:'♟️', name:'Strategy & Consulting', color:'#a78bfa', bgColor:'rgba(167,139,250,0.12)',
+      companies:'McKinsey, Bain, Deloitte, KPMG, EY, Accenture, Thoucentric, PwC', salary:'14–26 LPA',
+      questions:[
+        {cat:'Technical',q:'What is the MECE principle and why is it important in consulting?',hint:'Mutually Exclusive, Collectively Exhaustive. Ensures no overlap in analysis and no gaps. Example: segmenting customers by age (18-30, 31-50, 50+) is MECE.'},
+        {cat:'Technical',q:'Walk me through a profitability framework for a struggling retail chain.',hint:'Revenue = Volume × Price. Costs = Fixed + Variable. Revenue: traffic, conversion, basket size. Costs: rent, labour, COGS. Diagnose each branch systematically.'},
+        {cat:'Behavioural',q:'Consulting requires quick onboarding to new industries. How do you get up to speed fast?',hint:'Industry report (3 hours) + talk to 3 domain experts + identify 5 key metrics + first hypothesis in 48 hours. Pattern matching from other industries.'},
+        {cat:'Case Study',q:'CASE: A hospital chain wants to expand from 3 cities to 10 cities in 5 years. Should they?',hint:'Market attractiveness (city healthcare demand, competition). Operational capacity (talent, capital, management bandwidth). Financial: NPV/IRR of expansion. Recommendation with risk mitigation.'}
+      ]
+    },
+    { id:'finance_core', icon:'💹', name:'Finance & General Management', color:'#fbbf24', bgColor:'rgba(251,191,36,0.12)',
+      companies:'Goldman Sachs, JP Morgan, Kotak, HDFC, Axis Bank, Tata Capital, IDFC', salary:'12–22 LPA',
+      questions:[
+        {cat:'Technical',q:'What is working capital and how do you optimise it?',hint:'Working Capital = Current Assets - Current Liabilities. Optimise: reduce debtor days (faster collections), increase creditor days (pay suppliers slower), reduce inventory. Cash conversion cycle = DIO + DSO - DPO.'},
+        {cat:'Technical',q:'Walk me through a DCF valuation. What are its key assumptions?',hint:'Project free cash flows → discount at WACC → terminal value using Gordon Growth Model → sum = Enterprise Value → minus net debt = Equity Value. Key assumptions: growth rate, WACC, terminal growth rate.'},
+        {cat:'Case Study',q:'CASE: A mid-size FMCG company wants to acquire a smaller competitor. Build the business case.',hint:'Strategic rationale (market share, synergies, geographic expansion) → financial modelling (accretion/dilution analysis, synergy NPV) → valuation range (DCF + comps) → integration risk assessment → recommendation.'}
+      ]
+    }
+  ],
+
+  hcm: [
+    { id:'hcsales', icon:'🏥', name:'Healthcare Sales & Territory Management', color:'#22c55e', bgColor:'rgba(34,197,94,0.12)',
+      companies:'Stryker, J&J MedTech, Philips Healthcare, Abbott, BD Medical, Medtronic', salary:'8–16 LPA',
+      questions:[
+        {cat:'Technical',q:'How would you develop a call plan for a medical devices territory with 120 hospitals?',hint:'Tier hospitals by potential (procedure volume × current market share gap). Tier A: weekly visits. Tier B: fortnightly. Tier C: monthly. Optimise travel routes. Track call frequency vs revenue.'},
+        {cat:'Technical',q:'What is the hospital procurement process for a high-value capital equipment purchase?',hint:'Clinical champion identifies need → department head approval → purchase committee evaluation (technical + commercial) → tender/RFP → negotiations → purchase order. Typical 6–18 month cycle.'},
+        {cat:'Behavioural',q:'Medical sales requires building trust with busy clinicians. How do you earn that?',hint:'Clinical knowledge, not just product pitch. Listen first. Respect time. Provide clinical evidence. Follow up on commitments. Build long-term relationship beyond transaction.'},
+        {cat:'Case Study',q:'CASE: Stryker lost a key orthopaedic account to a competitor in a government hospital. Recover it.',hint:'Understand switching driver (price, clinical, relationship). Clinical re-evaluation strategy, price matching analysis, build relationship with next generation of surgeons, reference site from private hospitals.'}
+      ]
+    },
+    { id:'pharmamarketing', icon:'💊', name:'Pharma Marketing & Medical Affairs', color:'#3b82f6', bgColor:'rgba(59,130,246,0.12)',
+      companies:'Novartis, MSD (Merck), Pfizer, Sun Pharma, Cipla, Dr Reddy\'s, ZS Associates', salary:'10–20 LPA',
+      questions:[
+        {cat:'Technical',q:'What is a brand plan in pharma marketing? What are its key components?',hint:'Situation analysis (SWOT, brand audit) → Brand positioning (differentiation, key messages) → Target customer segments (specialists, GPs, payers) → Promotional strategy (detailing, CME, digital) → Sales forecast → Budget.'},
+        {cat:'Technical',q:'What is the difference between Rx (prescription) and OTC (over-the-counter) marketing?',hint:'Rx: primary audience is doctors (HCPs), DCGI-regulated promotion, pull strategy through prescription. OTC: direct-to-consumer, can advertise mass media, brand recognition more critical.'},
+        {cat:'Technical',q:'How would you measure the ROI of a medical representative\'s detailing activity?',hint:'Track prescription share in target territory before vs after focused detailing. Prescription lift × average scripts × revenue per script = revenue impact. Compare vs MR cost.'},
+        {cat:'Case Study',q:'CASE: A new oncology drug is launching in India. Build the go-to-market strategy.',hint:'Identify KOLs (top oncologists at cancer centres) → CME and clinical symposia → market access (pricing, reimbursement, insurance coverage) → patient support programmes → digital education platform for oncologists.'}
+      ]
+    },
+    { id:'hospitalops', icon:'🏨', name:'Hospital Administration & Operations', color:'#f59e0b', bgColor:'rgba(245,158,11,0.12)',
+      companies:'Apollo Hospitals, Fortis, Max Healthcare, Manipal Hospitals, Aster, Narayana Health', salary:'8–14 LPA',
+      questions:[
+        {cat:'Technical',q:'What are the key operational KPIs of a hospital?',hint:'Bed occupancy rate (target 75–85%), ALOS (Average Length of Stay), OPD-to-IPD conversion, OT utilisation %, revenue per occupied bed, patient satisfaction (CSAT/NPS), readmission rate.'},
+        {cat:'Technical',q:'How would you reduce the Average Length of Stay (ALOS) for a surgical ward?',hint:'Pre-admission planning (labs, diagnostics done before admission), clinical pathway adherence, discharge planning from day 1, weekend discharge protocols, social work intervention for complex cases.'},
+        {cat:'Technical',q:'What is the Revenue Cycle Management (RCM) process in a hospital?',hint:'Patient registration → eligibility verification (insurance) → clinical documentation → medical coding (ICD-10, CPT) → claim submission → adjudication → payment posting → denial management.'},
+        {cat:'Case Study',q:'CASE: A 300-bed private hospital has bed occupancy of 58%. How do you improve it?',hint:'Demand side: referral network development (GP relationships), specialty marketing, corporate tie-ups. Supply side: reduce ALOS, improve scheduling efficiency. Pricing: package deals. Track by specialty.'}
+      ]
+    },
+    { id:'healthconsulting', icon:'📋', name:'Healthcare Consulting & Strategy', color:'#a78bfa', bgColor:'rgba(167,139,250,0.12)',
+      companies:'L.E.K. Consulting, Deloitte Health, EY Health, McKinsey Health, ZS Associates, Optum', salary:'12–22 LPA',
+      questions:[
+        {cat:'Technical',q:'How would you size the private hospital market in Tier 2 India?',hint:'Top-down: India population in Tier 2 cities (250M) × hospitalisation rate (5%) × % preferring private (40%) × average bill per hospitalisation (₹25K) = ~₹1.25 lakh crore. Validate bottom-up.'},
+        {cat:'Technical',q:'What is Health Technology Assessment (HTA) and why does it matter for pharma companies?',hint:'HTA evaluates clinical and economic value of new health technology (drug, device, procedure). Used by payers (government, insurance) for reimbursement decisions. Pharma must build health economics evidence for premium pricing.'},
+        {cat:'Case Study',q:'CASE: A PE firm wants to acquire a 5-hospital chain in South India. How do you evaluate it?',hint:'Clinical quality (NABH accreditation, outcomes data, mortality rates) → Financial (EBITDA/bed, ROCE, revenue mix) → Market position (catchment, competition) → Growth potential (bed addition, new specialties) → Management quality → Valuation (EV/EBITDA vs peers).'}
+      ]
+    },
+    { id:'clinicalresearch', icon:'🔬', name:'Clinical Research & Regulatory Affairs', color:'#06b6d4', bgColor:'rgba(6,182,212,0.12)',
+      companies:'IQVIA, Syneos Health, PPD, Novartis, MSD, Sun Pharma, CDSCO-related roles', salary:'6–14 LPA',
+      questions:[
+        {cat:'Technical',q:'What are the 4 phases of clinical trials? What is the objective of each?',hint:'Phase I: Safety, PK/PD, first-in-human, small N. Phase II: Efficacy signal, dose range, larger N. Phase III: Pivotal, confirmatory efficacy, randomised controlled, large N. Phase IV: Post-marketing surveillance, real-world evidence.'},
+        {cat:'Technical',q:'What is Good Clinical Practice (GCP) and why is it important?',hint:'ICH-GCP E6: international ethical and scientific quality standard for clinical trial design, conduct, monitoring, recording, and reporting. Ensures subject safety, data integrity, and regulatory acceptability.'},
+        {cat:'Case Study',q:'CASE: A Phase III trial for a new diabetes drug shows efficacy but a 2% incidence of a cardiac side effect. What happens next?',hint:'Risk-benefit assessment → additional safety data collection → regulatory consultation (CDSCO/FDA) → label update with warning → REMS programme (Risk Evaluation & Mitigation Strategy) → post-marketing surveillance requirement.'}
+      ]
+    }
+  ],
+
+  bifs: [
+    { id:'rm_bifs', icon:'🏦', name:'Relationship Manager / Bank Officer', color:'#3b82f6', bgColor:'rgba(59,130,246,0.12)',
+      companies:'HDFC Bank, ICICI Bank, Kotak, Axis Bank, Standard Chartered, NatWest, HSBC', salary:'8–16 LPA',
+      questions:[
+        {cat:'Technical',q:'What is the difference between a savings account and a current account? When would you recommend each to a customer?',hint:'Savings: interest-bearing, for individuals, limited transactions. Current: no interest, overdraft facility, for businesses with high transaction volume. Recommend current for business owners, savings for salaried individuals.'},
+        {cat:'Technical',q:'What is Net Interest Margin (NIM) and why is it critical for a bank\'s profitability?',hint:'NIM = (Interest Income - Interest Expense) / Earning Assets. Measures core lending profitability. High NIM = efficient lending. Affected by RBI repo rate changes, loan mix (retail vs corporate), and liability franchise quality.'},
+        {cat:'Technical',q:'How do you assess creditworthiness of a retail customer applying for a home loan?',hint:'5Cs: Character (credit score, repayment history), Capacity (income, EMI-to-income ratio ≤50%), Capital (down payment, assets), Collateral (property value, LTV ≤80%), Conditions (market, employment stability).'},
+        {cat:'Behavioural',q:'A long-standing customer wants to close all accounts and move to a competitor. How do you handle it?',hint:'Listen fully without interrupting. Understand root cause. Acknowledge issue. Present retention offer. Escalate if needed. If still leaving, ensure graceful exit to preserve relationship.'},
+        {cat:'Case Study',q:'CASE: HDFC Bank wants to grow its mass-affluent segment (₹25L–₹1Cr investable wealth) by 30% in FY26. Design the strategy.',hint:'Segment profile → product bundling (savings + investments + insurance + credit) → dedicated RM assignment → digital + physical channel mix → acquisition vs upgrade from existing base → referral programme.'}
+      ]
+    },
+    { id:'creditanalyst', icon:'📊', name:'Credit & Risk Analyst', color:'#ef4444', bgColor:'rgba(239,68,68,0.12)',
+      companies:'HDFC Bank, ICICI Bank, Kotak, IDFC, Tata Capital, Northern Arc, CRISIL, EY Risk', salary:'10–18 LPA',
+      questions:[
+        {cat:'Technical',q:'Walk me through how you would analyse the creditworthiness of a mid-size manufacturing company seeking a ₹50 crore term loan.',hint:'Financial analysis: 3 years P&L (revenue trend, EBITDA margin, PAT), balance sheet (leverage: D/E, interest coverage: EBIT/Interest expense, DSCR), cash flow statement. Business analysis: competitive position, management quality, sector outlook. Security: collateral cover.'},
+        {cat:'Technical',q:'What is DSCR and what is an acceptable range for a project finance loan?',hint:'DSCR = Net Operating Income / Total Debt Service (principal + interest). Acceptable: ≥1.25x for project finance. Below 1x means cash flows insufficient to service debt.'},
+        {cat:'Technical',q:'What is the difference between GNPA and NNPA? What do they tell you about a bank?',hint:'GNPA = total NPAs. NNPA = GNPA minus provisions. High GNPA: asset quality problem. High GNPA-NNPA gap: well-provisioned. Low PCR (Provision Coverage Ratio) = future pain if NPAs worsen.'},
+        {cat:'Technical',q:'How does a credit rating agency like CRISIL assess the rating of an NBFC?',hint:'Business risk: asset quality, portfolio granularity, geographic concentration. Financial risk: CAR, funding diversity, ALM, NPA ratios. Management: track record, governance, ownership. Outcome: rating with outlook (stable/positive/negative/watch).'},
+        {cat:'Case Study',q:'CASE: An NBFC\'s Q2 results show GNPA rising from 2.1% to 3.8% in one quarter. As a credit analyst, investigate.',hint:'Segment drill-down (which product, geography, vintage). Vintage analysis (which sanction batch is defaulting). Macro correlation (rate rise impact on EMI affordability). Management call for guidance. Revise rating outlook if structural, maintain if cyclical.'}
+      ]
+    },
+    { id:'ib_bifs', icon:'💰', name:'Investment Banking & Capital Markets', color:'#fbbf24', bgColor:'rgba(251,191,36,0.12)',
+      companies:'Goldman Sachs, JP Morgan, Nomura, BNY Mellon, D.E. Shaw, Axis Capital, Kotak IB', salary:'14–26 LPA',
+      questions:[
+        {cat:'Technical',q:'Walk me through a DCF valuation. What are the most sensitive assumptions?',hint:'Project FCF (EBIT × (1-t) + D&A - CapEx - ΔNWC) → discount at WACC → terminal value (Gordon Growth or Exit Multiple) → bridge to equity value. Most sensitive: terminal growth rate, WACC, near-term FCF margins.'},
+        {cat:'Technical',q:'What is the difference between EV/EBITDA and P/E as valuation multiples? When do you use each?',hint:'EV/EBITDA: capital structure neutral, useful for capital-intensive industries (manufacturing, telecom). P/E: equity-level, useful for banks, stable businesses. EV/EBITDA preferred for M&A; P/E for equity benchmarking.'},
+        {cat:'Technical',q:'What happens on each side of the balance sheet during an LBO?',hint:'Assets side: target\'s assets remain, plus goodwill (purchase premium). Liabilities side: new debt (term loans, high yield bonds). Equity: sponsor equity (30–40% of deal). Logic: use target\'s cash flows to service debt, equity gets IRR from leverage + value creation.'},
+        {cat:'Case Study',q:'CASE: A mid-size Indian IT company ($500M revenue, 18% EBITDA margin) is considering a PE buyout at 12x EV/EBITDA. Is the deal attractive?',hint:'EV = $500M × 0.18 × 12 = $1.08B. Sources: 60% debt ($648M), 40% equity ($432M). Model: debt paydown over 5 years, assume 15% revenue CAGR, exit at 14x. Calculate equity IRR. Compare to PE hurdle (20–25%).'}
+      ]
+    },
+    { id:'insurance', icon:'🛡️', name:'Insurance & Underwriting', color:'#22c55e', bgColor:'rgba(34,197,94,0.12)',
+      companies:'HDFC Life, ICICI Prudential, Future Generali, Bajaj Allianz, Star Health, Niva Bupa', salary:'8–16 LPA',
+      questions:[
+        {cat:'Technical',q:'What is the difference between life, health, and general insurance? What are the key products in each?',hint:'Life: term, endowment, ULIP, annuity. Health: individual mediclaim, corporate group health, critical illness. General: motor, home, travel, marine, crop insurance. Life is long-term; health/general are annual renewable contracts.'},
+        {cat:'Technical',q:'What is loss ratio and combined ratio in insurance? What do they indicate?',hint:'Loss Ratio = Claims Paid / Premiums Earned. Combined Ratio = Loss Ratio + Expense Ratio. Combined ratio < 100% = underwriting profit. > 100% = underwriting loss (must be offset by investment income). Key profitability metric for general insurers.'},
+        {cat:'Technical',q:'How is actuarial pricing done for a health insurance product?',hint:'Historical claims data → model frequency (number of claims) and severity (cost per claim) by age, gender, medical history → add expense loading → profit margin → final premium. Adjust for selection effects and anti-adverse selection.'},
+        {cat:'Case Study',q:'CASE: HDFC Life wants to increase its protection (term insurance) penetration in India from 3% to 8% in 5 years. How?',hint:'Awareness: digital campaigns on financial literacy, needs-based selling training. Distribution: bancassurance, online aggregators, employer group plans. Product: simplified underwriting for small ticket sizes. Price: competitive premium. Target: salaried millennials.'}
+      ]
+    },
+    { id:'treasury', icon:'📈', name:'Financial Analyst & Treasury', color:'#a78bfa', bgColor:'rgba(167,139,250,0.12)',
+      companies:'JP Morgan GCC, Goldman Sachs GCC, BNY Mellon, NatWest GBS, Barclays, Nomura India', salary:'10–20 LPA',
+      questions:[
+        {cat:'Technical',q:'What is ALM (Asset-Liability Management) in a bank? What is the key risk it manages?',hint:'ALM matches maturity/duration of assets (loans) with liabilities (deposits). Key risks: interest rate risk (NIM sensitivity) and liquidity risk (mismatched cash flows). Tools: GAP analysis, duration matching, stress testing, liquidity coverage ratio (LCR).'},
+        {cat:'Technical',q:'Explain VaR (Value at Risk). What are its limitations?',hint:'VaR: maximum expected loss over a time horizon at a given confidence level (e.g., 99% VaR = ₹10Cr means 1% chance of losing more than ₹10Cr in a day). Limitations: assumes normal distribution (fat tails), doesn\'t measure tail loss beyond threshold, historical VaR assumes past = future.'},
+        {cat:'Technical',q:'What is the yield curve and what does an inverted yield curve signal?',hint:'Yield curve plots yields vs maturities. Normal: upward sloping (long > short). Inverted: short > long yields, historically predicts recession (market expects rate cuts). Flat: transition or uncertainty. Banks profit from steep yield curve (borrow short, lend long).'},
+        {cat:'Case Study',q:'CASE: A corporate treasury is holding ₹500 crore in overnight call money. Design an investment policy for this corpus.',hint:'Objectives: safety → liquidity → returns. Instruments: T-bills, liquid mutual funds, commercial paper (A1+ rated), bank FDs (scheduled commercial banks). Limits: no single issuer >15%, duration <90 days for operating cash. Mark-to-market daily.'}
+      ]
+    }
+  ]
+};
+
+const progRoadmapData = {
+  bda: null, // uses existing global roadmapPhases
+
+  core: [
+    { phase:'01', title:'BUSINESS FOUNDATIONS', sub:'Build core management frameworks',
+      dotColor:'linear-gradient(135deg,#3b82f6,#06b6d4)', textColor:'#3b82f6',
+      cards:[
+        { emoji:'📊', title:'Financial Accounting & Analysis', desc:'Read financial statements, compute ratios, understand P&L, balance sheet, cash flows',
+          links:[{text:'Financial Statements — Khan Academy',url:'https://www.khanacademy.org/economics-finance-domain/core-finance/accounting-and-financial-statements',type:'web'},{text:'Accounting Basics — Prof. Damodaran (NYU)',url:'https://pages.stern.nyu.edu/~adamodar/',type:'web'}]},
+        { emoji:'📈', title:'Excel & Data for Managers', desc:'Pivot tables, VLOOKUP, financial modelling, scenario analysis, dashboard building',
+          links:[{text:'Excel Skills for Business — Macquarie (Coursera)',url:'https://www.coursera.org/specializations/excel',type:'course'},{text:'Excel Campus YouTube',url:'https://www.youtube.com/c/ExcelCampus',type:'yt'}]},
+        { emoji:'🏭', title:'Operations Management Basics', desc:'Supply chain, inventory management, process improvement, lean/Six Sigma concepts',
+          links:[{text:'Operations Management — MIT OCW',url:'https://ocw.mit.edu/courses/15-760b-introduction-to-operations-management-spring-2004/',type:'web'},{text:'Supply Chain 101 — Coursera',url:'https://www.coursera.org/learn/supply-chain-basics',type:'course'}]}
+      ]
+    },
+    { phase:'02', title:'MARKETING & SALES MASTERY', sub:'Consumer insights, brand building, and commercial skills',
+      dotColor:'linear-gradient(135deg,#ec4899,#f59e0b)', textColor:'#ec4899',
+      cards:[
+        { emoji:'🎯', title:'Marketing Strategy & Brand Management', desc:'4Ps, STP, brand equity, campaign planning, digital marketing fundamentals',
+          links:[{text:'Marketing Strategy — HBS Online',url:'https://online.hbs.edu/courses/marketing/',type:'course'},{text:'Philip Kotler Marketing Lectures',url:'https://www.youtube.com/results?search_query=philip+kotler+marketing',type:'yt'},{text:'Think With Google — Consumer Insights',url:'https://www.thinkwithgoogle.com/',type:'web'}]},
+        { emoji:'💼', title:'Sales Management & CRM', desc:'Sales pipeline, territory management, CRM tools, B2B/B2C selling techniques, negotiation',
+          links:[{text:'Sales Training — HubSpot Academy (Free)',url:'https://academy.hubspot.com/courses/sales-training',type:'web'},{text:'Negotiation Mastery — HBS Online',url:'https://online.hbs.edu/courses/negotiation-mastery/',type:'course'}]},
+        { emoji:'📱', title:'Digital Marketing', desc:'SEO, SEM, social media marketing, email marketing, content marketing, analytics (GA4)',
+          links:[{text:'Google Digital Garage (Free)',url:'https://learndigital.withgoogle.com/digitalgarage',type:'web'},{text:'Meta Blueprint (Free)',url:'https://www.facebook.com/business/learn',type:'web'}]}
+      ]
+    },
+    { phase:'03', title:'STRATEGY & CONSULTING PREP', sub:'Case interview and strategy frameworks',
+      dotColor:'linear-gradient(135deg,#a78bfa,#3b82f6)', textColor:'#a78bfa',
+      cards:[
+        { emoji:'♟️', title:'Business Strategy Frameworks', desc:'Porter\'s 5 Forces, BCG Matrix, Value Chain Analysis, SWOT, Blue Ocean Strategy',
+          links:[{text:'Strategy — Yale (Coursera)',url:'https://www.coursera.org/learn/art-of-strategy',type:'course'},{text:'Michael Porter Talks Strategy — HBR',url:'https://www.youtube.com/results?search_query=michael+porter+five+forces',type:'yt'}]},
+        { emoji:'💡', title:'Case Interview Preparation', desc:'Profitability cases, market entry, M&A, capacity planning — MECE thinking, structured communication',
+          links:[{text:'Case In Point (Book) — Cosentino',url:'https://www.caseinterview.com/',type:'web'},{text:'PrepLounge — Free Cases',url:'https://www.preplounge.com/en/management-consulting-cases',type:'web'},{text:'Victor Cheng Case Interview',url:'https://www.youtube.com/results?search_query=victor+cheng+case+interview',type:'yt'}]},
+        { emoji:'🗣️', title:'Communication & Leadership', desc:'Executive communication, persuasive presentations, stakeholder management',
+          links:[{text:'Communication Skills — Coursera (U Michigan)',url:'https://www.coursera.org/learn/communication-in-the-21st-century-workplace',type:'course'},{text:'Ted Talks — Leadership Playlist',url:'https://www.ted.com/topics/leadership',type:'web'}]}
+      ]
+    }
+  ],
+
+  hcm: [
+    { phase:'01', title:'HEALTHCARE SYSTEM FOUNDATIONS', sub:'Understand the Indian and global healthcare ecosystem',
+      dotColor:'linear-gradient(135deg,#22c55e,#06b6d4)', textColor:'#22c55e',
+      cards:[
+        { emoji:'🏥', title:'Indian Healthcare System', desc:'Public vs private healthcare, NHM, Ayushman Bharat, health insurance landscape, key regulators (MCI/NMC, CDSCO, IRDAI)',
+          links:[{text:'MOHFW India — Policy Documents',url:'https://www.mohfw.gov.in/',type:'web'},{text:'Healthcare India — WHO Country Office',url:'https://www.who.int/india/health-topics',type:'web'}]},
+        { emoji:'🏨', title:'Hospital Management & Operations', desc:'Hospital KPIs (bed occupancy, ALOS, OT utilisation), NABH accreditation, revenue cycle management',
+          links:[{text:'Hospital Management — NIHFW',url:'https://nihfw.org/',type:'web'},{text:'Healthcare Operations — Coursera',url:'https://www.coursera.org/search?query=hospital+management',type:'course'}]},
+        { emoji:'💊', title:'Pharmaceutical Industry', desc:'Drug development lifecycle, regulatory pathway (CDSCO, FDA), generic vs branded, supply chain',
+          links:[{text:'Pharma Industry Overview — EY Report',url:'https://www.ey.com/en_in/health-sciences-wellness',type:'web'},{text:'Drug Regulation in India — CDSCO',url:'https://cdsco.gov.in/',type:'web'}]}
+      ]
+    },
+    { phase:'02', title:'CLINICAL & RESEARCH KNOWLEDGE', sub:'Clinical trials, medical devices, health technology',
+      dotColor:'linear-gradient(135deg,#3b82f6,#a78bfa)', textColor:'#3b82f6',
+      cards:[
+        { emoji:'🔬', title:'Clinical Research Basics', desc:'Clinical trial phases, GCP (ICH E6), protocol design, informed consent, IRB/ethics committee, regulatory submissions',
+          links:[{text:'GCP Training — NIH (Free)',url:'https://phrp.nihtraining.com/',type:'web'},{text:'Clinical Trial Basics — ClinicalTrials.gov',url:'https://clinicaltrials.gov/ct2/about-studies/learn',type:'web'},{text:'Clinical Research Fundamentals — Coursera',url:'https://www.coursera.org/learn/clinical-research',type:'course'}]},
+        { emoji:'🩺', title:'Medical Devices & Health Technology', desc:'Device classification, 510(k) vs PMA, CDSCO MD rules 2017, HTA (Health Technology Assessment), market access',
+          links:[{text:'Medical Devices Regulation — CDSCO',url:'https://cdsco.gov.in/opencms/opencms/en/Medical-Device-Diagnostics/',type:'web'},{text:'HTAI — Health Technology Assessment',url:'https://htai.org/',type:'web'}]},
+        { emoji:'📊', title:'Healthcare Analytics', desc:'Hospital data analysis, patient outcome metrics, claims analytics, HCAHPS scores, quality improvement',
+          links:[{text:'Healthcare Data Analytics — Coursera',url:'https://www.coursera.org/specializations/healthcare-data-analytics',type:'course'},{text:'NEJM Catalyst — Analytics Articles',url:'https://catalyst.nejm.org/',type:'web'}]}
+      ]
+    },
+    { phase:'03', title:'HEALTHCARE BUSINESS & CONSULTING', sub:'Commercial skills for healthcare professionals',
+      dotColor:'linear-gradient(135deg,#f59e0b,#ec4899)', textColor:'#f59e0b',
+      cards:[
+        { emoji:'📋', title:'Healthcare Strategy & Consulting', desc:'Market sizing, hospital investment decisions, pharma go-to-market, HTA, PE in healthcare',
+          links:[{text:'McKinsey Healthcare Insights',url:'https://www.mckinsey.com/industries/healthcare',type:'web'},{text:'EY India Healthcare Report',url:'https://www.ey.com/en_in/health-sciences-wellness',type:'web'}]},
+        { emoji:'💼', title:'Pharma Sales & Marketing', desc:'Detailing effectiveness, KOL management, brand planning, market access, patient support programmes',
+          links:[{text:'ZS Associates Healthcare Blog',url:'https://www.zs.com/insights/industries/biopharma-and-medtech',type:'web'},{text:'Pharma Marketing Course — Coursera',url:'https://www.coursera.org/search?query=pharmaceutical+marketing',type:'course'}]},
+        { emoji:'🌐', title:'Global Health & Policy', desc:'SDGs for health, universal health coverage, global regulatory landscape, TRIPS and drug access',
+          links:[{text:'Global Health — Harvard (edX)',url:'https://www.edx.org/learn/global-health',type:'web'},{text:'WHO — Global Health Observatory',url:'https://www.who.int/data/gho',type:'web'}]}
+      ]
+    }
+  ],
+
+  bifs: [
+    { phase:'01', title:'FINANCIAL MARKETS FOUNDATIONS', sub:'Markets, instruments, and institutions',
+      dotColor:'linear-gradient(135deg,#a78bfa,#3b82f6)', textColor:'#a78bfa',
+      cards:[
+        { emoji:'📈', title:'Financial Markets & Instruments', desc:'Equity, debt, derivatives, forex, commodities — how each market works, key participants, pricing',
+          links:[{text:'Financial Markets — Yale (Coursera, Free Audit)',url:'https://www.coursera.org/learn/financial-markets-global',type:'course'},{text:'NSE Knowledge Hub (Free)',url:'https://www.nseindia.com/learn/education',type:'web'},{text:'Zerodha Varsity — Financial Education (Free)',url:'https://zerodha.com/varsity/',type:'web'}]},
+        { emoji:'🏦', title:'Banking Operations & Products', desc:'Retail banking, corporate banking, trade finance, treasury, NPA, Basel framework, RBI regulations',
+          links:[{text:'RBI Learning — Publications',url:'https://www.rbi.org.in/home.aspx',type:'web'},{text:'Banking Awareness — Investopedia',url:'https://www.investopedia.com/banking-4427763',type:'web'},{text:'IIBF Banking Diploma Materials',url:'https://www.iibf.org.in/',type:'web'}]},
+        { emoji:'🛡️', title:'Insurance Fundamentals', desc:'Life vs general vs health insurance, actuarial basics, IRDAI regulations, distribution channels, loss ratios',
+          links:[{text:'IRDAI — Insurance Regulatory Authority',url:'https://www.irdai.gov.in/',type:'web'},{text:'Insurance for Beginners — Investopedia',url:'https://www.investopedia.com/insurance-4427716',type:'web'}]}
+      ]
+    },
+    { phase:'02', title:'FINANCIAL ANALYSIS & VALUATION', sub:'Core analytical skills for BIFS roles',
+      dotColor:'linear-gradient(135deg,#fbbf24,#f59e0b)', textColor:'#fbbf24',
+      cards:[
+        { emoji:'📊', title:'Financial Statement Analysis', desc:'Reading P&L, balance sheet, cash flow — DuPont analysis, ratio analysis, peer benchmarking, quality of earnings',
+          links:[{text:'Financial Accounting — Wharton (Coursera)',url:'https://www.coursera.org/learn/wharton-accounting',type:'course'},{text:'Prof. Damodaran — NYU (Financial Statements)',url:'https://pages.stern.nyu.edu/~adamodar/New_Home_Page/littlebook.htm',type:'web'}]},
+        { emoji:'💹', title:'Valuation & Investment Banking', desc:'DCF, comparable company analysis, precedent transactions, LBO modelling, M&A process',
+          links:[{text:'Financial Modeling & Valuation — WSP (YouTube)',url:'https://www.youtube.com/@wsp_training',type:'yt'},{text:'Investment Banking — Mergers & Inquisitions',url:'https://www.mergersandinquisitions.com/',type:'web'},{text:'Corporate Finance — Damodaran (Free)',url:'https://pages.stern.nyu.edu/~adamodar/',type:'web'}]},
+        { emoji:'⚠️', title:'Credit & Risk Management', desc:'Credit analysis, Altman Z-score, DSCR, VaR, Basel III, IFRS 9 ECL, stress testing',
+          links:[{text:'Credit Analysis — CFA Institute',url:'https://www.cfainstitute.org/en/research',type:'web'},{text:'Risk Management — Coursera',url:'https://www.coursera.org/specializations/risk-management',type:'course'},{text:'S&P Global Ratings — Educational Resources',url:'https://www.spglobal.com/ratings/en/research-insights/research/financial-institutions',type:'web'}]}
+      ]
+    },
+    { phase:'03', title:'PROFESSIONAL CERTIFICATION PREP', sub:'Industry-recognised qualifications for BIFS careers',
+      dotColor:'linear-gradient(135deg,#22c55e,#06b6d4)', textColor:'#22c55e',
+      cards:[
+        { emoji:'🏆', title:'CFA Level 1 Preparation', desc:'Ethics, Quantitative Methods, Economics, Financial Reporting, Equity, Fixed Income, Derivatives, PM — globally recognised for investment roles',
+          links:[{text:'CFA Institute — Official Study Materials',url:'https://www.cfainstitute.org/en/programs/cfa',type:'web'},{text:'CFA Level 1 — Mark Meldrum (YouTube)',url:'https://www.youtube.com/@markmeldrum',type:'yt'},{text:'AnalystPrep — CFA Practice Questions (Paid)',url:'https://analystprep.com/',type:'web'}]},
+        { emoji:'📋', title:'NISM Certifications (India)', desc:'NISM Series V-A (Mutual Fund), Series VII (Securities Operations), Series VIII (Equity Derivatives) — mandatory for securities market roles in India',
+          links:[{text:'NISM — National Institute of Securities Markets',url:'https://www.nism.ac.in/',type:'web'},{text:'NISM Mock Tests (Free)',url:'https://www.nism.ac.in/index.php/mock-tests',type:'web'}]},
+        { emoji:'💼', title:'Financial Modelling (Excel/Python)', desc:'3-statement models, DCF, LBO, merger model, sensitivity analysis — Excel VBA and Python for finance',
+          links:[{text:'Financial Modelling — CFI (Free Courses)',url:'https://corporatefinanceinstitute.com/resources/excel/financial-modeling/',type:'web'},{text:'Python for Finance — Udemy',url:'https://www.udemy.com/topic/python-finance/',type:'web'},{text:'Excel Modelling — Wall Street Prep',url:'https://www.wallstreetprep.com/',type:'web'}]}
+      ]
+    }
+  ]
+};
+
+const progCheatData = {
+  bda: null, // uses existing buildCheatsheets()
+
+  core: {
+    tabs: [
+      {key:'frameworks', label:'🎯 Strategy Frameworks'},
+      {key:'marketing',  label:'📣 Marketing'},
+      {key:'caseinterview', label:'💡 Case Interview'},
+      {key:'excel',      label:'📊 Excel'},
+      {key:'finance',    label:'💹 Finance Basics'},
+      {key:'ops',        label:'⚙️ Operations'}
+    ],
+    sheets: {
+      frameworks:[
+        {title:"Porter's Five Forces",items:[["Threat of New Entrants","Barriers: capital, regulation, brand, economies of scale"],["Bargaining Power of Suppliers","Concentration, switching cost, uniqueness of input"],["Bargaining Power of Buyers","Volume, price sensitivity, switching ease"],["Threat of Substitutes","Alternative products that serve same need"],["Competitive Rivalry","Number of competitors, growth rate, product differentiation"]]},
+        {title:"BCG Matrix",items:[["Stars","High market share, high growth → invest"],["Cash Cows","High market share, low growth → harvest"],["Question Marks","Low share, high growth → decide: invest or divest"],["Dogs","Low share, low growth → divest or maintain"],["Usage","Portfolio planning tool for multi-business companies"]]},
+        {title:"SWOT & TOWS",items:[["Strengths","Internal positive factors"],["Weaknesses","Internal negative factors"],["Opportunities","External positive trends"],["Threats","External risks"],["TOWS","Use SW+OT to generate strategic options (SO, ST, WO, WT)"]]},
+        {title:"Value Chain (Porter)",items:[["Primary Activities","Inbound logistics, Operations, Outbound logistics, Marketing & Sales, Service"],["Support Activities","Firm infrastructure, HR, Technology, Procurement"],["Margin","Value added minus cost of activities"],["Usage","Identify where competitive advantage is created or cost is added"],["Application","Map competitor value chain to find differentiation opportunities"]]}
+      ],
+      marketing:[
+        {title:"STP Framework",items:[["Segmentation","Divide market: demographic, psychographic, behavioural, geographic"],["Targeting","Select most attractive segment(s) based on size, growth, fit"],["Positioning","Define unique place in target customer's mind vs competitors"],["Positioning Statement","For [target], [brand] is the [category] that [benefit] because [reason to believe]"],["Usage","Foundation of any brand or product launch strategy"]]},
+        {title:"4Ps / 7Ps of Marketing",items:[["Product","Features, quality, design, brand, packaging"],["Price","Skimming, penetration, value-based, competitive pricing"],["Place","Distribution channels, coverage, logistics"],["Promotion","Advertising, PR, sales promotion, digital, personal selling"],["People / Process / Physical Evidence","For services marketing (additional 3Ps)"]]},
+        {title:"Brand Equity (Keller's CBBE)",items:[["Brand Salience","Do customers know the brand? (top-of-mind awareness)"],["Brand Performance","Does product deliver on functional needs?"],["Brand Imagery","Psychological associations (user imagery, personality)"],["Brand Judgements","Customer opinions (quality, credibility, superiority)"],["Brand Feelings","Emotional responses"],["Brand Resonance","Deep loyalty, active engagement (highest level)"]]},
+        {title:"Key Marketing Metrics",items:[["Market Share","Brand sales / Total category sales × 100"],["CLTV","Customer Lifetime Value = Margin × (Retention Rate / (1+Discount Rate - Retention Rate))"],["CAC","Customer Acquisition Cost = Marketing Spend / New Customers Acquired"],["NPS","Net Promoter Score = % Promoters - % Detractors"],["ROAS","Return on Ad Spend = Revenue from Ads / Ad Spend"]]}
+      ],
+      caseinterview:[
+        {title:"Profitability Framework",items:[["Profit = Revenue - Cost","Start here always"],["Revenue = Volume × Price","Break down each"],["Volume = Market Size × Market Share","Drill further"],["Costs = Fixed + Variable","Identify which is rising"],["Step 1","Clarify: is this a revenue, cost, or both problem?"],["Step 2","Quantify: how much is the profit decline?"],["Step 3","Isolate root cause, then recommend"]]},
+        {title:"Market Entry Framework",items:[["Market Attractiveness","Size, growth rate, profitability, competitive intensity"],["Competitive Position","Can we win? Core competency fit, differentiation"],["Entry Mode","Organic build, acquire, JV/partnership"],["Financial Viability","Revenue model, time to breakeven, capital required"],["Risks","Regulatory, competitor response, execution"]]},
+        {title:"MECE Principle",items:[["Mutually Exclusive","No overlap between buckets"],["Collectively Exhaustive","No gaps — covers entire problem space"],["Example (Revenue)","Volume + Price (MECE) vs Volume + Customers (not MECE, overlap)"],["Issue Tree","Use MECE to build hypothesis trees"],["Usage","All case structuring, slide writing, analysis"]]},
+        {title:"Key Case Formulas",items:[["Break Even","Fixed Costs / (Price - Variable Cost per unit)"],["Market Share","Company Sales / Total Market Sales × 100"],["Payback Period","Initial Investment / Annual Cash Inflow"],["ROI","(Net Gain / Cost of Investment) × 100"],["Capacity Utilisation","Actual Output / Maximum Capacity × 100"]]}
+      ],
+      excel:[
+        {title:"Essential Excel Functions",items:[["VLOOKUP","=VLOOKUP(value, table, col_index, FALSE)"],["INDEX-MATCH","=INDEX(return_col, MATCH(lookup, lookup_col, 0))"],["SUMIFS","=SUMIFS(sum_range, criteria_range1, criteria1)"],["COUNTIFS","=COUNTIFS(range1, criteria1, range2, criteria2)"],["IF / IFS","=IF(condition, value_if_true, value_if_false)"]]},
+        {title:"Pivot Tables & Data",items:[["Insert Pivot","Insert → Pivot Table → select range"],["Value Field Settings","Right-click value → summarise by (Sum/Count/Average)"],["Slicer","Insert → Slicer → filter visually"],["Calculated Field","PivotTable Analyse → Fields → insert formula"],["GETPIVOTDATA","=GETPIVOTDATA(field, pivot, field1, item1)"]]},
+        {title:"Financial Formulas",items:[["NPV","=NPV(rate, cash_flow_range) + initial_investment"],["IRR","=IRR(cash_flow_range)"],["PMT (EMI)","=PMT(rate, nper, pv) — monthly rate, periods, principal"],["CAGR","=(End/Start)^(1/n) - 1"],["% Change","=(New-Old)/Old"]]}
+      ],
+      finance:[
+        {title:"Key Financial Ratios",items:[["Gross Margin","(Revenue - COGS) / Revenue × 100"],["EBITDA Margin","EBITDA / Revenue × 100"],["Net Profit Margin","Net Profit / Revenue × 100"],["ROE","Net Profit / Shareholders' Equity × 100"],["ROA","Net Profit / Total Assets × 100"],["Current Ratio","Current Assets / Current Liabilities (>1.5 healthy)"]]},
+        {title:"Working Capital Metrics",items:[["DSO (Days Sales Outstanding)","Receivables / Revenue × 365"],["DIO (Days Inventory Outstanding)","Inventory / COGS × 365"],["DPO (Days Payable Outstanding)","Payables / COGS × 365"],["Cash Conversion Cycle","DIO + DSO - DPO (lower is better)"],["Working Capital","Current Assets - Current Liabilities"]]},
+        {title:"Valuation Quick Reference",items:[["EV","Market Cap + Net Debt"],["EV/EBITDA","Enterprise value to EBITDA multiple (sector benchmark)"],["P/E Ratio","Price per Share / EPS"],["P/BV","Price per Share / Book Value per Share"],["DCF Formula","FCF / (WACC - g) for terminal value"]]}
+      ],
+      ops:[
+        {title:"Supply Chain KPIs",items:[["OTIF","On-Time In-Full delivery rate (target >95%)"],["Inventory Days","Inventory / COGS × 365"],["Order Fill Rate","Orders fully fulfilled / Total orders × 100"],["Perfect Order Rate","Orders with zero defects / Total orders × 100"],["Demand Forecast Accuracy","1 - |Actual-Forecast| / Actual × 100"]]},
+        {title:"Lean & Six Sigma",items:[["DMAIC","Define → Measure → Analyse → Improve → Control"],["5S","Sort, Set in order, Shine, Standardise, Sustain"],["Value Stream Map","Visualise all steps in a process to identify waste"],["7 Wastes (TIM WOOD)","Transport, Inventory, Motion, Waiting, Overproduction, Over-processing, Defects"],["Kaizen","Continuous small improvements, employee-driven"]]},
+        {title:"Operations Frameworks",items:[["OEE","Overall Equipment Effectiveness = Availability × Performance × Quality"],["Cycle Time","Time to complete one unit from start to finish"],["Bottleneck","Step with lowest capacity — constrains entire system"],["EOQ","Economic Order Quantity = √(2DS/H) — D=demand, S=order cost, H=holding cost"],["Safety Stock","Buffer inventory = Z × σ × √Lead Time"]]}
+      ]
+    }
+  },
+
+  hcm: {
+    tabs: [
+      {key:'healthsystem', label:'🏥 Healthcare System'},
+      {key:'pharma',       label:'💊 Pharma Industry'},
+      {key:'hospitalkpis', label:'📊 Hospital KPIs'},
+      {key:'clinical',     label:'🔬 Clinical Research'},
+      {key:'hcmfinance',   label:'💹 Healthcare Finance'},
+      {key:'regulations',  label:'📋 Regulations'}
+    ],
+    sheets: {
+      healthsystem:[
+        {title:"India Healthcare Ecosystem",items:[["Public Sector","AIIMS, district hospitals, PHCs, CHCs (MOHFW, State Departments)"],["Private Sector","Corporate chains (Apollo, Fortis, Max), nursing homes"],["PPP Models","PMJAY (Ayushman Bharat), NHM, ESIC, CGHS"],["Regulator","MCI/NMC (medical education), CDSCO (drugs/devices), IRDAI (insurance)"],["Financing","Out-of-pocket (60%+), government schemes, private insurance"]]},
+        {title:"Key Healthcare Acronyms",items:[["OPD / IPD","Outpatient Department / Inpatient Department"],["ALOS","Average Length of Stay (IPD patients)"],["BOR","Bed Occupancy Rate = Occupied Beds / Total Beds × 100"],["ARPOB","Average Revenue Per Occupied Bed (hospital profitability metric)"],["NABH","National Accreditation Board for Hospitals — quality standard"],["DRG","Diagnosis Related Group — hospital payment classification"]]},
+        {title:"Global Health Metrics",items:[["DALYs","Disability Adjusted Life Years — burden of disease measure"],["QALYs","Quality Adjusted Life Years — HTA effectiveness measure"],["UHC","Universal Health Coverage — WHO goal: access + quality + financial protection"],["MMR","Maternal Mortality Ratio per 100,000 live births"],["IMR","Infant Mortality Rate per 1,000 live births"]]}
+      ],
+      pharma:[
+        {title:"Drug Development Lifecycle",items:[["Discovery","Target identification, hit finding (5–10 years)"],["Preclinical","In vitro + animal studies, safety/toxicity (2–3 years)"],["Phase I","First-in-human, safety, PK/PD (1–2 years)"],["Phase II","Efficacy signal, dose finding (2–3 years)"],["Phase III","Pivotal confirmatory trial, large N (3–5 years)"],["Regulatory Filing","NDA/BLA (FDA), MAA (EMA), NDA (CDSCO India)"],["Phase IV","Post-marketing surveillance, real-world evidence"]]},
+        {title:"Pharma Business Terms",items:[["Innovator Drug","Patent-protected original molecule"],["Generic Drug","Off-patent copy of innovator, bioequivalent"],["Biosimilar","Similar biological product (not identical, unlike generics)"],["Life Cycle Management","Strategies to extend product revenue (new indications, dosage forms)"],["Patent Cliff","Revenue drop when blockbuster patent expires and generics enter"],["LoE","Loss of Exclusivity — end of patent/data protection"]]},
+        {title:"Pharma Market Terms",items:[["MR","Medical Representative — frontline sales to doctors"],["KOL","Key Opinion Leader — top physician who influences peers"],["CME","Continuing Medical Education — doctor education events"],["Detailing","1-on-1 MR visit to present drug to doctor"],["PCPM","Prescriptions per Call per Month — MR productivity metric"],["Market Share","Brand prescriptions / Total category prescriptions"]]}
+      ],
+      hospitalkpis:[
+        {title:"Operational KPIs",items:[["Bed Occupancy Rate","Occupied Beds / Total Beds × 100 (target 75–85%)"],["ALOS","Total Patient Days / Discharges (target: condition-specific)"],["OT Utilisation","Actual OT hours used / Available OT hours × 100"],["OPD-to-IPD Conversion","IPD admissions / OPD visits × 100"],["Patient Satisfaction","CSAT / NPS — HCAHPS scores"],["30-Day Readmission Rate","Readmitted within 30 days / Total discharges × 100 (lower is better)"]]},
+        {title:"Financial KPIs",items:[["ARPOB","Average Revenue Per Occupied Bed per day"],["Revenue per OPD Visit","Total OPD Revenue / OPD Visits"],["Revenue Mix","IP vs OP ratio, payer mix (self-pay vs insurance vs govt)"],["EBITDA per Bed","EBITDA / Total Beds — profitability per capacity unit"],["Collection Efficiency","Actual Collections / Gross Revenue × 100"],["Denial Rate","Insurance claims denied / Claims submitted × 100"]]},
+        {title:"Quality Indicators",items:[["Mortality Rate","Hospital deaths / Total discharges × 100 (risk-adjusted)"],["HAI Rate","Hospital Acquired Infections per 1000 patient days"],["Surgical Site Infection","SSI rate per 100 surgeries"],["Fall Rate","Patient falls per 1000 patient days"],["Critical Care Metrics","ICU bed ratio, ventilator-associated pneumonia rate"],["NABH Accreditation","10 chapters: AAC, COP, MOM, FMS, HRM, etc."]]}
+      ],
+      clinical:[
+        {title:"Clinical Trial Phases",items:[["Phase I","N=20–80, healthy volunteers, safety & PK/PD, dose-escalation"],["Phase II","N=100–300, patients, efficacy signal, dose ranging, safety"],["Phase III","N=1000–10,000+, randomised controlled, pivotal efficacy & safety"],["Phase IV","Post-marketing, real-world evidence, rare AEs, new populations"],["Adaptive Design","Pre-planned modifications based on interim analysis"],["Bioequivalence Study","For generic drugs: PK equivalence to innovator"]]},
+        {title:"GCP Key Principles (ICH E6)",items:[["Ethical Basis","WMA Declaration of Helsinki — subject welfare paramount"],["IRB/IEC","Institutional Review Board must approve before first patient"],["Informed Consent","Voluntary, comprehensible, signed before any study procedure"],["Investigator","Qualified physician responsible for site conduct"],["Sponsor","Entity initiating/managing/financing the trial"],["Monitoring","Sponsor monitors data accuracy via CRA visits"],["Audit Trail","All data changes must be documented with reason"]]},
+        {title:"Regulatory & Trial Terms",items:[["CRO","Contract Research Organisation — outsourced trial management"],["CRA","Clinical Research Associate — monitor at site"],["SAE","Serious Adverse Event — death, hospitalisation, disability"],["SUSAR","Suspected Unexpected Serious Adverse Reaction — expedited reporting"],["eCRF","Electronic Case Report Form — data capture system"],["DSMB","Data Safety Monitoring Board — independent safety review"],["ITT Analysis","Intent-to-Treat — all randomised patients included in analysis"]]}
+      ],
+      hcmfinance:[
+        {title:"Hospital Revenue Model",items:[["Inpatient Revenue","Room charges + Procedures + Pharmacy + Diagnostics + OT charges"],["Outpatient Revenue","Consultation fees + Diagnostics + Day care procedures"],["Payer Mix","Self-pay | TPA (insurance) | Government scheme | Corporate tie-up"],["Package Pricing","Fixed bundle price for a procedure (e.g., knee replacement ₹1.5L)"],["Revenue Cycle","Registration → Service → Billing → Claims → Collections"]]},
+        {title:"Healthcare Finance Terms",items:[["Break-even Occupancy","Occupancy rate at which hospital covers fixed costs"],["Revenue Per Bed","Annual Revenue / Total Beds"],["Cost Per Patient Day","Total Operating Cost / Total Patient Days"],["EBITDA Margin","Healthcare: 15–25% for well-run private hospitals"],["Capital Expenditure","High: imaging equipment (₹3–10Cr), OT equipment, IT systems"]]},
+        {title:"Health Insurance Finance",items:[["Claim Ratio","Claims Paid / Premiums Collected × 100 (target <85% for profitability)"],["Loss Ratio","Incurred Claims / Earned Premiums × 100"],["Combined Ratio","Loss Ratio + Expense Ratio (< 100% = underwriting profit)"],["TPA","Third Party Administrator — processes insurance claims"],["PMJAY Tariff","Ayushman Bharat fixed tariff per procedure for empanelled hospitals"]]}
+      ],
+      regulations:[
+        {title:"Key Regulators in India",items:[["CDSCO","Central Drugs Standard Control Organisation — approves drugs, devices, clinical trials"],["NMC","National Medical Commission — medical education, doctor registration"],["IRDAI","Insurance Regulatory & Development Authority of India — insurance sector"],["NPPA","National Pharmaceutical Pricing Authority — drug price control (DPCO 2013)"],["IPC","Indian Pharmacopoeia Commission — drug standards"],["NABH / NABL","Hospital & lab accreditation bodies"]]},
+        {title:"Important Healthcare Laws",items:[["Drugs & Cosmetics Act 1940","Primary law governing drug manufacture, sale, distribution"],["Medical Devices Rules 2017","Risk-based classification (A/B/C/D) and approval pathway for devices"],["PCPNDT Act","Prohibits prenatal sex determination"],["Pre-conception Act","Regulation of assisted reproduction technologies"],["Clinical Establishments Act 2010","Registration & regulation of hospitals, clinics"],["Pharmacy Act 1948","Regulation of pharmacy practice and pharmacists"]]},
+        {title:"Drug Approval Pathway (India)",items:[["New Drug","Phase I/II/III in India required (or waiver if approved in ICH countries first)"],["Generic Drug","ANDA (Abbreviated NDA) with bioequivalence data"],["Fast Track","Orphan drug designation or unmet medical need — accelerated review"],["SUGAM Portal","Online drug approval submission system (CDSCO)"],["Import Licence","Form 10 — required for each drug product imported to India"],["Manufacturing Licence","Form 25/28 under D&C Act from state licensing authority"]]}
+      ]
+    }
+  },
+
+  bifs: {
+    tabs: [
+      {key:'ratios',    label:'📊 Financial Ratios'},
+      {key:'banking',   label:'🏦 Banking Products'},
+      {key:'valuation', label:'💹 Valuation'},
+      {key:'insurance', label:'🛡️ Insurance'},
+      {key:'risk',      label:'⚠️ Risk Metrics'},
+      {key:'regulatory',label:'📋 Regulatory'}
+    ],
+    sheets: {
+      ratios:[
+        {title:"Profitability Ratios",items:[["Net Interest Margin (NIM)","(Interest Income - Interest Expense) / Earning Assets × 100"],["Return on Assets (ROA)","Net Profit / Total Assets × 100 (target: >1% for banks)"],["Return on Equity (ROE)","Net Profit / Shareholders Equity × 100 (target: >15%)"],["EBITDA Margin","EBITDA / Revenue × 100"],["Cost-to-Income Ratio","Operating Expenses / Net Income (lower is better, target <50%)"]]},
+        {title:"Asset Quality Ratios (Banking)",items:[["GNPA Ratio","Gross NPAs / Gross Advances × 100"],["NNPA Ratio","Net NPAs / Net Advances × 100"],["PCR","Provision Coverage Ratio = Provisions / GNPA × 100 (>70% is healthy)"],["Slippage Ratio","Fresh NPAs in period / Standard Advances at beginning × 100"],["Credit Cost","Provisions charged to P&L / Average Advances × 100"]]},
+        {title:"Leverage & Liquidity",items:[["Capital Adequacy Ratio","(Tier 1 + Tier 2 Capital) / Risk-Weighted Assets × 100 (min 11.5% India)"],["Tier 1 Ratio","Core Capital / RWA × 100 (min 9.5% India)"],["LCR","Liquidity Coverage Ratio = HQLA / Net Cash Outflows (min 100%)"],["NSFR","Net Stable Funding Ratio — stable funding vs required stable funding (min 100%)"],["D/E Ratio","Total Debt / Shareholders Equity (context-dependent by sector)"]]}
+      ],
+      banking:[
+        {title:"Retail Banking Products",items:[["Savings Account","Deposits, interest ~3–4%, withdrawal limits"],["Current Account","Business use, overdraft facility, no interest"],["Term Deposit (FD)","Fixed tenure, higher interest, premature withdrawal penalty"],["Home Loan","LTV up to 80%, EMI over 20–30 years, floating/fixed rate"],["Personal Loan","Unsecured, higher rate, credit score dependent"],["Credit Card","Revolving credit, reward points, 45-day interest-free period"]]},
+        {title:"Corporate & Wholesale Banking",items:[["Working Capital Loan","Cash credit, overdraft, WCDL — for operational funding needs"],["Term Loan","Fixed tenure, capital expenditure, principal + interest schedule"],["Trade Finance","LC (Letter of Credit), BG (Bank Guarantee), export finance"],["Syndication","Multiple banks sharing large loan — lead bank arranges syndicate"],["ECB","External Commercial Borrowing — foreign currency loans"],["PCG","Partial Credit Guarantee — government scheme for NBFC funding"]]},
+        {title:"Banking Regulatory Terms",items:[["CRR","Cash Reserve Ratio — % of deposits held with RBI (currently 4%)"],["SLR","Statutory Liquidity Ratio — % held in govt securities (currently 18%)"],["Repo Rate","Rate at which banks borrow from RBI overnight"],["Reverse Repo","Rate at which RBI borrows from banks"],["MSF","Marginal Standing Facility — emergency borrowing from RBI"],["MCLR","Marginal Cost of Funds-Based Lending Rate — floor for loan pricing"]]}
+      ],
+      valuation:[
+        {title:"DCF Valuation",items:[["Free Cash Flow","EBIT × (1-t) + D&A - CapEx - ΔNWC"],["WACC","(E/V × Re) + (D/V × Rd × (1-t)) — blended cost of capital"],["Terminal Value","FCF × (1+g) / (WACC - g) — Gordon Growth Model"],["Enterprise Value","PV of FCFs + Terminal Value"],["Equity Value","Enterprise Value - Net Debt (+ Cash)"],["Sensitivity Table","Vary WACC and growth rate to show valuation range"]]},
+        {title:"Comparable Company Analysis",items:[["EV/EBITDA","Most common; capital structure neutral; M&A benchmark"],["EV/Revenue","Used for high-growth / loss-making companies"],["P/E Ratio","Equity value; use for stable, profitable companies"],["P/BV (P/Book)","For banks and financial institutions"],["Peer Set","Select 5–8 truly comparable companies; adjust for size"],["Spread","Show mean, median, 25th/75th percentile across peers"]]},
+        {title:"LBO & M&A Terms",items:[["LBO","Leveraged Buyout — acquire using primarily debt (60–70%)"],["Entry/Exit Multiple","EV/EBITDA at acquisition vs sale — key return driver"],["IRR","Internal Rate of Return — PE hurdle rate typically 20–25%"],["MOIC","Multiple of Invested Capital = Exit Equity Value / Invested Equity"],["Accretion/Dilution","Will EPS go up (accretion) or down (dilution) post-merger?"],["Synergies","Revenue synergies (cross-sell) + Cost synergies (overlap elimination)"]]}
+      ],
+      insurance:[
+        {title:"Life Insurance Products",items:[["Term Plan","Pure death benefit, no maturity value, lowest premium"],["Endowment Plan","Death benefit + maturity benefit (saving + insurance)"],["ULIP","Unit Linked Insurance Plan — investment + insurance combined"],["Annuity","Regular income post-retirement (immediate or deferred)"],["Whole Life","Coverage for entire life, builds cash value"],["Group Term","Corporate employer-sponsored term cover for employees"]]},
+        {title:"General & Health Insurance",items:[["Mediclaim","Hospitalisation expenses cover — cashless or reimbursement"],["Critical Illness","Lump-sum on diagnosis of specified critical illness (cancer, heart attack)"],["Motor Insurance","Mandatory third-party liability + optional own damage"],["Marine Insurance","Cargo transit risk — import/export trade"],["D&O Insurance","Directors & Officers liability — professional indemnity"],["Crop Insurance","PMFBY — covers crop loss due to natural calamity"]]},
+        {title:"Insurance Financial Metrics",items:[["Loss Ratio","Claims Paid / Premiums Earned × 100"],["Expense Ratio","Operating Expenses / Net Written Premium × 100"],["Combined Ratio","Loss Ratio + Expense Ratio (<100% = underwriting profit)"],["Persistency","% policyholders who renew premium (13th month, 61st month)"],["Claim Settlement Ratio","Claims settled / Claims filed × 100 — customer trust metric"],["Solvency Margin","Assets over liabilities buffer — IRDAI minimum 150%"]]}
+      ],
+      risk:[
+        {title:"Credit Risk Metrics",items:[["PD","Probability of Default — likelihood of borrower defaulting"],["LGD","Loss Given Default — % of exposure lost if default occurs"],["EAD","Exposure at Default — outstanding amount at time of default"],["Expected Loss","PD × LGD × EAD — average anticipated credit loss"],["DSCR","Debt Service Coverage Ratio = Net Operating Income / Debt Service (>1.25x healthy)"],["Altman Z-Score","<1.81 = distress, 1.81–2.99 = grey zone, >2.99 = safe"]]},
+        {title:"Market Risk Metrics",items:[["VaR","Value at Risk — max loss at given confidence level over time horizon"],["CVaR / ES","Conditional VaR — expected loss beyond VaR threshold (tail risk)"],["Duration","Sensitivity of bond price to interest rate changes"],["DV01","Dollar Value of 01 — P&L change per 1bp rate move"],["Beta","Stock sensitivity to market movements (β>1 = amplified)"],["Sharpe Ratio","(Return - Risk-free rate) / Std deviation — risk-adjusted return"]]},
+        {title:"Operational & Liquidity Risk",items:[["LCR","Liquidity Coverage Ratio — 30-day stress scenario liquidity buffer"],["NSFR","Net Stable Funding Ratio — 1-year stable funding requirement"],["ALM Gap","Maturity mismatch between assets and liabilities"],["KRI","Key Risk Indicator — early warning metric for operational risk"],["RCA","Root Cause Analysis — investigate operational loss events"],["BCP","Business Continuity Plan — resilience for operational disruptions"]]}
+      ],
+      regulatory:[
+        {title:"Banking Regulation (India)",items:[["RBI","Reserve Bank of India — central bank, banking regulator"],["Basel III","Global capital, leverage, and liquidity framework"],["CAR Minimum","11.5% total capital adequacy (India) — Tier 1: 9.5%"],["PCA Framework","Prompt Corrective Action — RBI intervention when bank is weak"],["Ind AS 109","Indian equivalent of IFRS 9 — ECL-based provisioning"],["SARFAESI Act","Banks can recover secured assets without court order"]]},
+        {title:"Capital Markets Regulation",items:[["SEBI","Securities & Exchange Board of India — markets regulator"],["LODR","Listing Obligations & Disclosure Requirements"],["ICDR","Issue of Capital & Disclosure Requirements — IPO/FPO rules"],["Insider Trading","SEBI (PIT) Regulations 2015 — prohibits trading on UPSI"],["AIF Regulations","Alternative Investment Fund categorisation (Cat I, II, III)"],["AMFI","Association of Mutual Funds — self-regulatory, NISM certifications"]]},
+        {title:"Insurance Regulation",items:[["IRDAI","Insurance Regulatory & Development Authority of India"],["Solvency Ratio","Minimum 150% — available solvency margin / required solvency margin"],["Investment Regulations","IRDAI mandates: 50%+ in govt securities for life insurer"],["Surrender Value","Cash value policyholder gets on premature exit"],["Free Look Period","15 days to cancel new policy with full refund"],["Co-payment","% of claim paid by insured — reduces moral hazard"]]}
+      ]
+    }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// REBUILD SECTIONS FOR SELECTED PROGRAMME
+// ═══════════════════════════════════════════════════════════════
+function rebuildForProg(prog) {
+  const pd = progData[prog];
+  if (!pd) return;
+
+  // ── Overview labels ───────────────────────────────────────────
+  const overviewTitles = {
+    bda:  'GIM BDA <span class="hi">PLACEMENT</span><br>PREP HUB',
+    core: 'GIM CORE <span class="hi">PLACEMENT</span><br>PREP HUB',
+    hcm:  'GIM HCM <span class="hi">PLACEMENT</span><br>PREP HUB',
+    bifs: 'GIM BIFS <span class="hi">PLACEMENT</span><br>PREP HUB'
+  };
+  const overviewSubs = {
+    bda:  'The complete GIM PGDM-BDA placement preparation environment — companies, questions, roadmap &amp; cheatsheets',
+    core: 'The complete GIM PGDM-Core placement preparation environment — companies, questions, roadmap &amp; cheatsheets',
+    hcm:  'The complete GIM PGDM-HCM placement preparation environment — companies, questions, roadmap &amp; cheatsheets',
+    bifs: 'The complete GIM PGDM-BIFS placement preparation environment — companies, questions, roadmap &amp; cheatsheets'
+  };
+  const roadmapTitles = {
+    bda:  'AI/ML <span class="hi">MASTERY</span><br>ROADMAP',
+    core: 'MANAGEMENT <span class="hi">MASTERY</span><br>ROADMAP',
+    hcm:  'HEALTHCARE <span class="hi">MASTERY</span><br>ROADMAP',
+    bifs: 'FINANCE <span class="hi">MASTERY</span><br>ROADMAP'
+  };
+
+  const el = (id) => document.getElementById(id);
+  if (el('overviewTitle')) el('overviewTitle').innerHTML = overviewTitles[prog] || overviewTitles.bda;
+  if (el('overviewSub'))   el('overviewSub').textContent = overviewSubs[prog] || overviewSubs.bda;
+  if (el('roadmapTitle'))  el('roadmapTitle').innerHTML  = roadmapTitles[prog] || roadmapTitles.bda;
+
+  // ── Roles ─────────────────────────────────────────────────────
+  const rolesArr = progRolesData[prog];
+  const rolesGrid = el('rolesGrid');
+  if (rolesArr && rolesGrid) {
+    rolesGrid.innerHTML = '';
+    rolesArr.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'role-card';
+      card.id = 'role-' + r.id;
+      const qHTML = r.questions.map((q, i) => `
+        <div class="q-item">
+          <div class="q-num" style="color:${r.color}">${i+1}</div>
+          <div class="q-text">
+            <span style="font-size:10px;background:${r.bgColor};color:${r.color};padding:2px 8px;border-radius:8px;font-family:var(--font-mono);margin-right:8px;font-weight:600;">${q.cat}</span>
+            ${q.q}
+            ${q.hint ? `<div class="q-hint">💡 ${q.hint}</div>` : ''}
+          </div>
+        </div>`).join('');
+      card.innerHTML = `
+        <div class="role-card-head" onclick="toggleRole('${r.id}')">
+          <div class="role-icon" style="background:${r.bgColor}">${r.icon}</div>
+          <div>
+            <div class="role-card-title">${r.name}</div>
+            <div class="role-card-sub">${r.companies} · ${r.salary}</div>
+          </div>
+          <div style="margin-left:auto;color:var(--text3)">▼</div>
+        </div>
+        <div class="role-body" id="rb-${r.id}">${qHTML}</div>`;
+      rolesGrid.appendChild(card);
+    });
+  } else if (!rolesArr && prog === 'bda') {
+    // BDA: already built by buildRoles(), do nothing or rebuild
+  }
+
+  // ── Roadmap ───────────────────────────────────────────────────
+  const phases = progRoadmapData[prog];
+  const roadmapContainer = el('roadmapContent');
+  if (phases && roadmapContainer) {
+    roadmapContainer.innerHTML = '';
+    phases.forEach(phase => {
+      const div = document.createElement('div');
+      div.className = 'rm-phase';
+      const cardsHTML = phase.cards.map(card => `
+        <div class="rm-card">
+          <div class="rm-card-title">${card.emoji} ${card.title}</div>
+          <div class="rm-card-desc">${card.desc}</div>
+          <div class="rm-links">
+            ${card.links.map(link => `
+              <a href="${link.url}" target="_blank" class="rm-link">
+                ${link.text}
+                <span class="rm-link-type ${link.type}">${link.type.toUpperCase()}</span>
+              </a>`).join('')}
+          </div>
+        </div>`).join('');
+      div.innerHTML = `
+        <div class="rm-phase-header">
+          <div class="rm-dot" style="background:${phase.dotColor};">
+            <span style="color:#fff;font-size:16px;font-weight:900;">${phase.phase}</span>
+          </div>
+          <div>
+            <div class="rm-phase-title" style="color:${phase.textColor}">${phase.title}</div>
+            <div class="rm-phase-sub">${phase.sub}</div>
+          </div>
+        </div>
+        <div class="rm-cards">${cardsHTML}</div>`;
+      roadmapContainer.appendChild(div);
+    });
+  }
+
+  // ── Cheatsheets ───────────────────────────────────────────────
+  const cheatData = progCheatData[prog];
+  const cheatTabs = el('cheatTabs');
+  const cheatContent = el('cheatContent');
+  if (cheatData && cheatTabs && cheatContent) {
+    cheatTabs.innerHTML = '';
+    cheatContent.innerHTML = '';
+    cheatData.tabs.forEach((tab, idx) => {
+      const tabEl = document.createElement('div');
+      tabEl.className = 'cheat-tab' + (idx === 0 ? ' active' : '');
+      tabEl.textContent = tab.label;
+      tabEl.onclick = function() { showCheat(tab.key, this); };
+      cheatTabs.appendChild(tabEl);
+
+      const pane = document.createElement('div');
+      pane.className = 'cheat-pane' + (idx === 0 ? ' active' : '');
+      pane.id = 'cheat-' + tab.key;
+      const grid = document.createElement('div');
+      grid.className = 'cheat-grid';
+      (cheatData.sheets[tab.key] || []).forEach(card => {
+        const c = document.createElement('div');
+        c.className = 'cheat-card';
+        const rows = card.items.map(([code, desc]) =>
+          `<tr><td>${code}</td><td>${desc}</td></tr>`).join('');
+        c.innerHTML = `<div class="cheat-card-head">${card.title}</div>
+          <div class="cheat-body"><table class="cheat-table">${rows}</table></div>`;
+        grid.appendChild(c);
+      });
+      pane.appendChild(grid);
+      cheatContent.appendChild(pane);
+    });
+  }
+}
 
 // ═══════════════════════════════════════════════════════
 // PROGRAMME DATA — Core, HCM, BIFS
@@ -4470,6 +4957,9 @@ window.selectProg = function(prog) {
   // Update overview section stats
   const ds1 = document.querySelector('#overview .dash-num.c1');
   if (ds1) ds1.textContent = pd.stats.companies;
+
+  // Rebuild programme-specific sections
+  rebuildForProg(prog);
 };
 
 window.backToSelector = function() {
