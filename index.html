@@ -4586,7 +4586,11 @@ window.sendOTP = async function() {
   btn.disabled = true; btn.textContent = 'Sending...';
 
   const { error } = await sbIndex.auth.signInWithOtp({
-    email, options: { shouldCreateUser: true }
+    email,
+    options: {
+      shouldCreateUser: true,
+      emailRedirectTo: undefined  // Forces OTP code, not magic link
+    }
   });
 
   if (error) {
