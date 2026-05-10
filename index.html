@@ -986,14 +986,14 @@ code {
   color: var(--accent); margin-bottom: 32px;
 }
 .otp-boxes {
-  display: flex; gap: 10px;
+  display: flex; gap: 7px;
   justify-content: center; margin-bottom: 24px;
 }
 .otp-box {
-  width: 52px; height: 60px;
+  width: 44px; height: 56px;
   background: var(--bg2); border: 1.5px solid var(--border2);
   border-radius: 12px; color: var(--text);
-  font-family: var(--font-head); font-size: 26px;
+  font-family: var(--font-head); font-size: 22px;
   font-weight: 800; text-align: center;
   outline: none; transition: all .2s;
   caret-color: var(--accent);
@@ -1040,7 +1040,7 @@ code {
       <input type="email" class="lc-input" id="lcEmail" placeholder="Enter your email address" autocomplete="email">
       <button class="lc-btn" id="lcBtn" onclick="doLogin()">Send OTP Code →</button>
       <div class="lc-note" style="margin-top:10px">
-        Enter your email → get a 6-digit code → enter it below<br>
+        Enter your email → get an 8-digit code → enter it below<br>
         No password needed · Free forever
       </div>
     </div>
@@ -1050,7 +1050,7 @@ code {
       <div style="font-size:13px;color:var(--text2);margin-bottom:14px;font-family:var(--font-mono)">
         ✉️ Code sent to <strong id="otpEmailLabel" style="color:var(--accent)"></strong>
       </div>
-      <input type="text" class="lc-input" id="lcOTP" placeholder="Enter 6-digit code" maxlength="6"
+      <input type="text" class="lc-input" id="lcOTP" placeholder="Enter 8-digit code" maxlength="8"
         style="text-align:center;font-size:22px;letter-spacing:8px;font-family:var(--font-mono)"
         oninput="this.value=this.value.replace(/[^0-9]/g,'')">
       <button class="lc-btn" id="otpBtn" onclick="verifyOTP()" style="margin-top:8px">Verify &amp; Enter Hub →</button>
@@ -1109,7 +1109,7 @@ code {
         Continue with Email →
       </button>
       <div class="auth-helper">
-        We'll send a 6-digit code to your inbox.<br>
+        We'll send an 8-digit code to your inbox.<br>
         No password · Free forever · Any email
       </div>
     </div>
@@ -1144,7 +1144,7 @@ code {
   <div class="auth-header" style="margin-bottom:32px">
     <div class="auth-gim-tag">Check your inbox</div>
     <div class="auth-main-title" style="font-size:clamp(32px,5vw,52px)">
-      Enter the<br><span class="line2">6-digit code</span>
+      Enter the<br><span class="line2">8-digit code</span>
     </div>
     <div class="auth-main-sub" style="margin-top:12px">Code sent to</div>
     <div class="otp-email-badge" id="otpEmailShow">—</div>
@@ -1158,6 +1158,8 @@ code {
       <input class="otp-box" id="otp3" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
       <input class="otp-box" id="otp4" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
       <input class="otp-box" id="otp5" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-box" id="otp6" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-box" id="otp7" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
     </div>
 
     <button class="auth-cta" id="verifyOtpBtn" onclick="verifyOTP()" style="max-width:340px">
@@ -3682,14 +3684,14 @@ function downloadSectionAsPDF(title, contentId) {
   color: var(--accent); margin-bottom: 32px;
 }
 .otp-boxes {
-  display: flex; gap: 10px;
+  display: flex; gap: 7px;
   justify-content: center; margin-bottom: 24px;
 }
 .otp-box {
-  width: 52px; height: 60px;
+  width: 44px; height: 56px;
   background: var(--bg2); border: 1.5px solid var(--border2);
   border-radius: 12px; color: var(--text);
-  font-family: var(--font-head); font-size: 26px;
+  font-family: var(--font-head); font-size: 22px;
   font-weight: 800; text-align: center;
   outline: none; transition: all .2s;
   caret-color: var(--accent);
@@ -3743,7 +3745,7 @@ function downloadSectionAsPDF(title, contentId) {
       <input type="email" class="lc-input" id="lcEmail" placeholder="Enter your email address" autocomplete="email">
       <button class="lc-btn" id="lcBtn" onclick="doLogin()">Send OTP Code →</button>
       <div class="lc-note" style="margin-top:10px">
-        Enter your email → get a 6-digit code → enter it below<br>
+        Enter your email → get an 8-digit code → enter it below<br>
         No password needed · Free forever
       </div>
     </div>
@@ -3753,7 +3755,7 @@ function downloadSectionAsPDF(title, contentId) {
       <div style="font-size:13px;color:var(--text2);margin-bottom:14px;font-family:var(--font-mono)">
         ✉️ Code sent to <strong id="otpEmailLabel" style="color:var(--accent)"></strong>
       </div>
-      <input type="text" class="lc-input" id="lcOTP" placeholder="Enter 6-digit code" maxlength="6"
+      <input type="text" class="lc-input" id="lcOTP" placeholder="Enter 8-digit code" maxlength="8"
         style="text-align:center;font-size:22px;letter-spacing:8px;font-family:var(--font-mono)"
         oninput="this.value=this.value.replace(/[^0-9]/g,'')">
       <button class="lc-btn" id="otpBtn" onclick="verifyOTP()" style="margin-top:8px">Verify &amp; Enter Hub →</button>
@@ -3812,7 +3814,7 @@ function downloadSectionAsPDF(title, contentId) {
         Continue with Email →
       </button>
       <div class="auth-helper">
-        We'll send a 6-digit code to your inbox.<br>
+        We'll send an 8-digit code to your inbox.<br>
         No password · Free forever · Any email
       </div>
     </div>
@@ -3847,7 +3849,7 @@ function downloadSectionAsPDF(title, contentId) {
   <div class="auth-header" style="margin-bottom:32px">
     <div class="auth-gim-tag">Check your inbox</div>
     <div class="auth-main-title" style="font-size:clamp(32px,5vw,52px)">
-      Enter the<br><span class="line2">6-digit code</span>
+      Enter the<br><span class="line2">8-digit code</span>
     </div>
     <div class="auth-main-sub" style="margin-top:12px">Code sent to</div>
     <div class="otp-email-badge" id="otpEmailShow">—</div>
@@ -3861,6 +3863,8 @@ function downloadSectionAsPDF(title, contentId) {
       <input class="otp-box" id="otp3" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
       <input class="otp-box" id="otp4" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
       <input class="otp-box" id="otp5" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-box" id="otp6" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+      <input class="otp-box" id="otp7" type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
     </div>
 
     <button class="auth-cta" id="verifyOtpBtn" onclick="verifyOTP()" style="max-width:340px">
@@ -4607,9 +4611,9 @@ window.sendOTP = async function() {
 
 // ── Step 2: Verify OTP
 window.verifyOTP = async function() {
-  const token = ['otp0','otp1','otp2','otp3','otp4','otp5']
+  const token = ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7']
     .map(id => document.getElementById(id).value).join('');
-  if (token.length !== 6) { showToastIdx('Enter all 6 digits', 'err'); return; }
+  if (token.length !== 8) { showToastIdx('Enter all 8 digits', 'err'); return; }
 
   const btn = document.getElementById('verifyOtpBtn');
   btn.disabled = true; btn.textContent = 'Verifying...';
@@ -4621,7 +4625,7 @@ window.verifyOTP = async function() {
   if (error) {
     showToastIdx('Wrong code. Try again.', 'err');
     btn.disabled = false; btn.textContent = 'Verify & Continue →';
-    ['otp0','otp1','otp2','otp3','otp4','otp5'].forEach(id => {
+    ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
       document.getElementById(id).value = '';
       document.getElementById(id).classList.remove('filled');
     });
@@ -4639,7 +4643,7 @@ window.verifyOTP = async function() {
 window.resendOTP = async function() {
   await sbIndex.auth.signInWithOtp({ email: _authEmail, options: { shouldCreateUser: true } });
   showToastIdx('New code sent!', 'ok');
-  ['otp0','otp1','otp2','otp3','otp4','otp5'].forEach(id => {
+  ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
     document.getElementById(id).value = '';
     document.getElementById(id).classList.remove('filled');
   });
@@ -4649,7 +4653,7 @@ window.resendOTP = async function() {
 // ── Back to email
 window.backToEmail = function() {
   showScreen('screen-email');
-  ['otp0','otp1','otp2','otp3','otp4','otp5'].forEach(id => {
+  ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'].forEach(id => {
     document.getElementById(id).value = '';
     document.getElementById(id).classList.remove('filled');
   });
@@ -4662,7 +4666,7 @@ window.doSignOutIndex = async function() {
 
 // ── OTP box keyboard navigation (auto-advance)
 document.addEventListener('DOMContentLoaded', function() {
-  const boxes = ['otp0','otp1','otp2','otp3','otp4','otp5'];
+  const boxes = ['otp0','otp1','otp2','otp3','otp4','otp5','otp6','otp7'];
   boxes.forEach((id, i) => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -4670,7 +4674,7 @@ document.addEventListener('DOMContentLoaded', function() {
       this.value = this.value.replace(/[^0-9]/g,'').slice(-1);
       if (this.value) {
         this.classList.add('filled');
-        if (i < 5) document.getElementById(boxes[i+1]).focus();
+        if (i < 7) document.getElementById(boxes[i+1]).focus();
         // Auto-verify when all filled
         const allFilled = boxes.every(bid => document.getElementById(bid).value);
         if (allFilled) verifyOTP();
